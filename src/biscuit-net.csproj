@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <RootNamespace>biscuit_net</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+    
+  <!--
+  <ItemGroup>
+    <PackageReference Include="protobuf-net" Version="3.1.22" />    
+  </ItemGroup>
+-->
+  <ItemGroup>
+    <ProjectReference Include="..\..\VeryNaiveDatalog\VeryNaiveDatalog\VeryNaiveDatalog.csproj" />
+    <ProjectReference Include="..\proto\proto.csproj" />
+  </ItemGroup>
+</Project>
