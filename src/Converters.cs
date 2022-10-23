@@ -27,7 +27,7 @@ public static class Converters
             TermV2.ContentOneofCase.Date => 
                 new Date(term.Date),
             TermV2.ContentOneofCase.String => 
-                new Symbol(Lookup(term.String, blockSymbols)),
+                new String(Lookup(term.String, blockSymbols)),
             TermV2.ContentOneofCase.Bool => 
                 new Boolean(term.Bool),
             _ => throw new NotImplementedException($"{term.ContentCase}")

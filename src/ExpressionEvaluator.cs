@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using biscuit_net.Proto;
 using VeryNaiveDatalog;
 
@@ -8,6 +9,14 @@ public static class ExpressionEvaluator
     public static bool Evaluate(Substitution substitution, List<Op> ops, List<string> symbols)
     {
         var stack = new Stack<Term>();
+
+        bool StringRegex(Term term1, Term term2)
+        {
+            var str = (String) term1;
+            var regex = (String) term2;
+            return Regex.IsMatch(str.Value, regex.Value);
+        };
+
         foreach(var op in ops)
         {
            switch(op.ContentCase)
@@ -27,10 +36,13 @@ public static class ExpressionEvaluator
                         OpBinary.Kind.GreaterOrEqual => (Date)value1 >= (Date)value2,
                         OpBinary.Kind.LessOrEqual => (Date)value1 <= (Date)value2,
                         OpBinary.Kind.Equal => (Date)value1 == (Date)value2,
+                        OpBinary.Kind.Regex => StringRegex(value1, value2),
+
+                        /*
                         OpBinary.Kind.Contains => throw new NotImplementedException(),
                         OpBinary.Kind.Prefix => throw new NotImplementedException(),
                         OpBinary.Kind.Suffix => throw new NotImplementedException( ),
-                        OpBinary.Kind.Regex => throw new NotImplementedException(),
+                        
                         OpBinary.Kind.Add => throw new NotImplementedException(),
                         OpBinary.Kind.Sub => throw new NotImplementedException(),
                         OpBinary.Kind.Mul => throw new NotImplementedException(),
@@ -39,6 +51,7 @@ public static class ExpressionEvaluator
                         OpBinary.Kind.Or => throw new NotImplementedException(),
                         OpBinary.Kind.Intersection => throw new NotImplementedException(),
                         OpBinary.Kind.Union => throw new NotImplementedException(),
+                        */
                         _ => throw new NotSupportedException($"{op.Binary.kind}")
                     };
                     

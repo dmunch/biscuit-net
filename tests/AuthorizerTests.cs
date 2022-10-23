@@ -19,7 +19,7 @@ public class AuthorizerTests
     //[BiscuitCases("test18_unbound_variables_in_rule.bc")] //TODO
     //[BiscuitCases("test19_generating_ambient_from_variables.bc")] //OK
     //[BiscuitCases("test23_execution_scope.bc")] //TODO contains int term
-    [BiscuitCases(BiscuitCases.CaseType.Success)]
+    [BiscuitCases(BiscuitCases.CaseType.ErrFailedLogic)]
     public void Test(BiscuitCase biscuitCase)
     {
         var biscuit = Biscuit.Deserialize(biscuitCase.Token);
@@ -70,7 +70,7 @@ public class AuthorizerTests
                     var name = stringMatch.Groups[1].Value;
                     var value = stringMatch.Groups[2].Value;
 
-                    return new Atom(name, new Symbol(value));
+                    return new Atom(name, new String(value));
                 }
 
                 var dateMatch = dateRegex.Match(line);
