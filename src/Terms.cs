@@ -17,6 +17,11 @@ public sealed record Boolean(bool Value) : Constant
     public override string ToString() => Value.ToString();
 }
 
+public sealed record Integer(long Value) : Constant
+{
+    public override string ToString() => Value.ToString();
+}
+
 public sealed record Date(ulong Timestamp) : Constant
 {
     public override string ToString() => DateTime.ToLongDateString();

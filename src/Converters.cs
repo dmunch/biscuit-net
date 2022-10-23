@@ -30,6 +30,8 @@ public static class Converters
                 new String(Lookup(term.String, blockSymbols)),
             TermV2.ContentOneofCase.Bool => 
                 new Boolean(term.Bool),
+            TermV2.ContentOneofCase.Integer => 
+                new Integer(term.Integer),
             _ => throw new NotImplementedException($"{term.ContentCase}")
         };
     }
