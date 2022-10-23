@@ -48,18 +48,43 @@ public class AuthorizerTests
 
     IEnumerable<Atom> Parse(string code)
     {
-        string pattern = @"^([a-zA-Z]+)\(""([a-zA-Z0-9]+)""\);";
-        var regex = new Regex(pattern);
+        string stringPattern = @"^([a-zA-Z]+)\(""([a-zA-Z.0-9]+)""\);$";
+        string datePattern = @"^([a-zA-Z]+)\(((?:(\d{4}-\d{2}-\d{2})T(\d{2}:\d{2}:\d{2}(?:\.\d+)?))(Z|[\+-]\d{2}:\d{2})?)\);$";
+
+        var stringRegex = new Regex(stringPattern);
+        var dateRegex = new Regex(datePattern);
+
+        var lines = code
+            .Split("\n")
+            .Where(line => !string.IsNullOrEmpty(line));
+
+        
         return code
             .Split("\n")
             .Where(line => !string.IsNullOrEmpty(line))
             .Select(line => {
-                var match = regex.Match(line);
                 
-                var name = match.Groups[1].Value;
-                var value = match.Groups[2].Value;
+                var stringMatch = stringRegex.Match(line);
+                if(stringMatch.Success) 
+                {
+                    var name = stringMatch.Groups[1].Value;
+                    var value = stringMatch.Groups[2].Value;
 
-                return new Atom(name, new Symbol(value));
+                    return new Atom(name, new Symbol(value));
+                }
+
+                var dateMatch = dateRegex.Match(line);
+                if(dateMatch.Success) 
+                {
+                    var name = dateMatch.Groups[1].Value;
+                    var date = dateMatch.Groups[2].Value;
+
+                    var dateParsed = DateTime.Parse(date);
+                    var dateTAI = Date.ToTAI64(dateParsed);
+                    return new Atom(name, new Date(dateTAI));
+                }
+
+                throw new NotSupportedException(line);
             }).ToList();
     }
 }

@@ -4,6 +4,7 @@
     <RootNamespace>biscuit_net.Proto</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <ProtoOneOf>enum</ProtoOneOf>
   </PropertyGroup>
   
   <ItemGroup>

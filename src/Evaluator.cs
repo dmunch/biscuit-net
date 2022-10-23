@@ -1,3 +1,4 @@
+using biscuit_net.Proto;
 using VeryNaiveDatalog;
 
 namespace biscuit_net;
@@ -6,21 +7,21 @@ namespace biscuit_net;
 public static class Evaluator
 {
     // Just a lifting of Rule.Apply to an IEnumerable<Rule>.
-    public static IEnumerable<Atom> ApplyWithExpressions(this IEnumerable<Rule> rules, IEnumerable<Atom> kb) => rules.SelectMany(r => r.ApplyWithExpressions(kb)).ToHashSet();
+    public static IEnumerable<Atom> Apply(this IEnumerable<RuleExpressions> rules, IEnumerable<Atom> kb, List<string> symbols) => rules.SelectMany(r => r.Apply(kb, symbols)).ToHashSet();
 
-    public static IEnumerable<Atom> EvaluateWithExpressions(this IEnumerable<Atom> kb, IEnumerable<Rule> rules)
+    public static IEnumerable<Atom> Evaluate(this IEnumerable<Atom> kb, IEnumerable<RuleExpressions> rules, List<string> symbols)
     {
-        var nextKb = rules.ApplyWithExpressions(kb);
+        var nextKb = rules.Apply(kb, symbols);
         if (nextKb.Except(kb).Any())
         {
             var union = kb.Union(nextKb);
-            return union.EvaluateWithExpressions(rules);
+            return union.Evaluate(rules, symbols);
         }
 
         return nextKb;
     }
 
-    public static IEnumerable<Atom> ApplyWithExpressions(this Rule rule, IEnumerable<Atom> kb)
+    public static IEnumerable<Atom> Apply(this RuleExpressions rule, IEnumerable<Atom> kb, List<string> symbols)
     {
         // The initial collection of bindings from which to build upon
         var seed = new[] {new Substitution()}.AsEnumerable();
@@ -28,13 +29,22 @@ public static class Evaluator
         // Attempt to match (unify) the rule's body with the collection of atoms.
         // Returns all successful bindings.
         var matches = rule.Body.Aggregate(seed, (envs, a) => a.UnifyWith(kb, envs));
-            
-        
-        // Apply the bindings accumulated in the rule's body (the premises) to the rule's head (the conclusion),
-        // thus obtaining the new atoms.
-        return matches.Select(rule.Head.Apply);
-    }
 
-    public static IEnumerable<Substitution> Query(this IEnumerable<Atom> kb, Atom q, IEnumerable<Rule> rules) =>
-        q.UnifyWith(kb.Evaluate(rules), new Substitution());
+        var s = new Substitution();
+        foreach(var m in matches)   
+        {
+            foreach(var kvp in m)
+            {
+                s.Add(kvp.Key, kvp.Value);
+            }
+        }
+
+        var passed = rule.Expressions.All(ex => ExpressionEvaluator.Evaluate(s, ex.Ops, symbols));
+        if(passed)
+            // Apply the bindings accumulated in the rule's body (the premises) to the rule's head (the conclusion),
+            // thus obtaining the new atoms.
+            return matches.Select(rule.Head.Apply);
+        else
+            return Enumerable.Empty<Atom>();
+    }
 }

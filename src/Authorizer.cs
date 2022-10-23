@@ -19,7 +19,7 @@ public class Authorizer
         
         world.Atoms.AddRange(_authorizerAtoms);
 
-        var (check, authorityFailedCheckId, authorityFailedRule) = Check(world, b.Authority);
+        var (check, authorityFailedCheckId, authorityFailedRule) = Check(world, b.Authority, b.Symbols);
 
         if(!check)
             return (false, 0, authorityFailedCheckId, authorityFailedRule);
@@ -29,7 +29,7 @@ public class Authorizer
         {
             world.Atoms.AddRange(block.Atoms);
 
-            var (blockCheck, failedCheckId, failedRule) = Check(world, block);
+            var (blockCheck, failedCheckId, failedRule) = Check(world, block, b.Symbols);
             check &= blockCheck;
 
             if(!check) return (false, blockId, failedCheckId, failedRule);
@@ -39,9 +39,9 @@ public class Authorizer
         return (true, -1, -1, null);
     }
 
-    (bool, int, Rule?) Check(World world, Block block)
+    (bool, int, Rule?) Check(World world, Block block, List<string> symbols)
     {
-        var rulesAtoms = block.Atoms.EvaluateWithExpressions(block.Rules);
+        var rulesAtoms = block.Atoms.Evaluate(block.Rules, symbols);
 
         var blockScopedAtoms = world.Atoms.ToList();
         blockScopedAtoms.AddRange(rulesAtoms);
@@ -51,7 +51,7 @@ public class Authorizer
         var i = 0;
         foreach(var query in block.CheckQueries)
         {
-            var eval = world.Atoms.EvaluateWithExpressions(new []{query});
+            var eval = world.Atoms.Evaluate(new []{query}, symbols);
 
             var checkScopedAtoms = blockScopedAtoms.ToList();
             checkScopedAtoms.AddRange(eval);

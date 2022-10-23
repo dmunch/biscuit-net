@@ -1,10 +1,31 @@
 using VeryNaiveDatalog;
 
-public sealed record Date(ulong Timestamp) : Term
+
+public record Constant : Term
 {
     public override Term Apply(Substitution env) => this;
+}
+
+
+public sealed record String(string Value) : Constant
+{
+    public override string ToString() => Value;
+}
+
+public sealed record Boolean(bool Value) : Constant
+{
+    public override string ToString() => Value.ToString();
+}
+
+public sealed record Date(ulong Timestamp) : Constant
+{
     public override string ToString() => DateTime.ToLongDateString();
     public DateTime DateTime => FromTAI64(Timestamp);
+
+    public static bool operator <(Date one, Date two) => one.Timestamp < two.Timestamp;
+    public static bool operator >(Date one, Date two) => one.Timestamp > two.Timestamp;
+    public static bool operator <=(Date one, Date two) => one.Timestamp <= two.Timestamp;
+    public static bool operator >=(Date one, Date two) => one.Timestamp >= two.Timestamp;
 
     public static DateTime FromTAI64(ulong timestamp)
     {
@@ -16,6 +37,14 @@ public sealed record Date(ulong Timestamp) : Term
         DateTime dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
         dateTime = dateTime.AddSeconds( unixTimeStamp ).ToLocalTime();
         return dateTime;
+    }
+
+    public static ulong ToTAI64(DateTime dateTime)
+    {
+        var universal = dateTime.ToUniversalTime();
+        var unixTimeStamp = (ulong)universal.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
+
+        return unixTimeStamp + (2^62);
     }
 
     // EpochTime returns the time.Time at secs seconds and nsec nanoseconds since

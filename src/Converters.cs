@@ -20,45 +20,38 @@ public static class Converters
 
     static public Term ToAtom(TermV2 term, List<string> blockSymbols)
     {
-        if(term.ShouldSerializeVariable())
-            return (Term)new Variable(Lookup(term.Variable, blockSymbols));
-        if(term.ShouldSerializeDate())
-            return new Date(term.Date);
-        if(term.ShouldSerializeString())
-            return new Symbol(Lookup(term.String, blockSymbols));
-        
-        /*
-        if(t.ShouldSerializeBool())
-            return new Symbol(t.Bool.ToString());
-        if(t.ShouldSerializeBytes())
-            return new Symbol(t.Bytes.ToString());
-        
-        if(t.ShouldSerializeInteger())
-            return new Symbol(t.Integer.ToString());
-        if(t.ShouldSerializeSet())
-            return new Symbol(t.Set.ToString());
-        */
-        throw new Exception();
+        return term.ContentCase switch 
+        {
+            TermV2.ContentOneofCase.Variable => 
+                (Term)new Variable(Lookup(term.Variable, blockSymbols)),
+            TermV2.ContentOneofCase.Date => 
+                new Date(term.Date),
+            TermV2.ContentOneofCase.String => 
+                new Symbol(Lookup(term.String, blockSymbols)),
+            TermV2.ContentOneofCase.Bool => 
+                new Boolean(term.Bool),
+            _ => throw new NotImplementedException($"{term.ContentCase}")
+        };
     }
 
-    static public IEnumerable<Rule> ToRules(this IEnumerable<RuleV2> rules, List<string> blockSymbols)
+    static public IEnumerable<RuleExpressions> ToRules(this IEnumerable<RuleV2> rules, List<string> blockSymbols)
     {
         return rules.Select(rule =>  {
             var head = ToAtom(rule.Head, blockSymbols);
             var body = rule.Bodies.Select(body => ToAtom(body, blockSymbols));
             
-            return new Rule(head, body);
+            return new RuleExpressions(head, body, rule.Expressions);
         }).ToList();
     }
 
-    static public IEnumerable<Rule> ToQueries(this IEnumerable<CheckV2> checks, List<string> blockSymbols)
+    static public IEnumerable<RuleExpressions> ToQueries(this IEnumerable<CheckV2> checks, List<string> blockSymbols)
     {
         return checks.SelectMany(check => {
             return check.Queries.Select(query => {
                 var head = ToAtom(query.Head, blockSymbols);
                 var body = query.Bodies.Select(body => ToAtom(body, blockSymbols));
 
-                return new Rule(head, body);
+                return new RuleExpressions(head, body, query.Expressions);
             });
         });
     }

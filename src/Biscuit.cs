@@ -4,13 +4,21 @@ using VeryNaiveDatalog;
 
 namespace biscuit_net;
 
+
+public record RuleExpressions(
+        Atom Head, 
+        IEnumerable<Atom> Body, 
+        IEnumerable<ExpressionV2> Expressions) 
+    : Rule(Head, Body);
+
+
 public class Block
 {
     Proto.Block block;
 
     public IEnumerable<Atom> Atoms { get; protected set; }
-    public IEnumerable<Rule> Rules { get; protected set; }
-    public IEnumerable<Rule> CheckQueries { get; protected set; }
+    public IEnumerable<RuleExpressions> Rules { get; protected set; }
+    public IEnumerable<RuleExpressions> CheckQueries { get; protected set; }
 
     public List<string> Symbols { get; private set; }
 
@@ -31,14 +39,14 @@ public class Biscuit
     Proto.Biscuit _biscuit;
     public Block Authority { get; private set; }
 
-    List<string> _symbols = new List<string>();
+    public List<string> Symbols { get; protected set; }= new List<string>();
     Block[] _blocks;
     Biscuit(Proto.Biscuit biscuit, Block authority)
     {
         _biscuit = biscuit;
         Authority = authority;
 
-        _symbols.AddRange(authority.Symbols.ToList());
+        Symbols.AddRange(authority.Symbols.ToList());
         _blocks = new Block[_biscuit.Blocks.Count];
     }
 
@@ -56,9 +64,9 @@ public class Biscuit
                 var blockBytes = (ReadOnlySpan<byte>)_biscuit.Blocks[blockId].Block;
                 var blockProto = Serializer.Deserialize<Proto.Block>(blockBytes);
 
-                _symbols.AddRange(blockProto.Symbols);
+                Symbols.AddRange(blockProto.Symbols);
 
-                _blocks[blockId] = new Block(blockProto, _symbols);
+                _blocks[blockId] = new Block(blockProto, Symbols);
                 yield return _blocks[blockId];
             }
         }
