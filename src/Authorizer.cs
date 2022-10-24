@@ -3,8 +3,8 @@ using VeryNaiveDatalog;
 namespace biscuit_net;
 
 public record World(List<Atom> Atoms, List<string> Symbols, List<RuleExpressions> Checks);
-public record FailedBlockCheck(int BlockId, int CheckId, RuleExpressions Rule);
-public record FailedAuthorizerCheck(int CheckId, RuleExpressions Rule);
+public record FailedBlockCheck(int BlockId, int CheckId/*, RuleExpressions Rule*/);
+public record FailedAuthorizerCheck(int CheckId/*, RuleExpressions Rule*/);
 public record Error(FailedBlockCheck Block, FailedAuthorizerCheck Authorizer);
 
 public class Authorizer
@@ -52,14 +52,14 @@ public class Authorizer
         
         if(!blockCheck) 
         {
-            err = new Error(new FailedBlockCheck(blockId, failedCheckId, failedRule), null);
+            err = new Error(new FailedBlockCheck(blockId, failedCheckId/*, failedRule*/), null);
             return false;
         }
 
         var (blockAuthorizerCheck, failedAuthorizerCheckId, failedAuthorizerRule) = Check(blockAtoms, world.Checks, world);
         if(!blockAuthorizerCheck) 
         {
-            err = new Error(null, new FailedAuthorizerCheck(failedAuthorizerCheckId, failedAuthorizerRule));
+            err = new Error(null, new FailedAuthorizerCheck(failedAuthorizerCheckId/*, failedAuthorizerRule*/));
             return false;
         }
 

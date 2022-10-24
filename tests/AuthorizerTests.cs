@@ -20,14 +20,14 @@ public class AuthorizerTests
     //[BiscuitCases("test19_generating_ambient_from_variables.bc")] //OK
     //[BiscuitCases("test22_default_symbols.bc")] //TODO contains int term
     //[BiscuitCases("test23_execution_scope.bc")] //TODO contains int term
-    [BiscuitCases(BiscuitCases.CaseType.ErrFailedLogic)]
+    [BiscuitCases(BiscuitCases.CaseType.Success | BiscuitCases.CaseType.Error | BiscuitCases.CaseType.FailedLogic)]
     public void Test(BiscuitCase biscuitCase)
     {
         var biscuit = Biscuit.Deserialize(biscuitCase.Token);
         
         var authorizer = new Authorizer();
 
-        foreach(var (authorizerAtom, authorizerCheckRule) in Parse(biscuitCase.Validation.Authorizer_code))
+        foreach(var (authorizerAtom, authorizerCheckRule) in Parse(biscuitCase.Validation.AuthorizerCode))
         {
             if(authorizerAtom != null)
             {
@@ -40,26 +40,13 @@ public class AuthorizerTests
         }
         
         var check = authorizer.TryAuthorize(biscuit, out var err);
-        if(biscuitCase.Validation.Result.Ok != null)
+        if(biscuitCase.Success)
         {
             Assert.True(check);
             return;
         }
         
-        //we currently only assert on a single failed logic/unauthorized check
-        Assert.NotNull(biscuitCase.Validation.Result.Err?.FailedLogic?.Unauthorized?.Checks?.SingleOrDefault());
-        var blockCheck = biscuitCase.Validation.Result.Err.FailedLogic.Unauthorized.Checks.First().Block;
-        var authorizerCheck = biscuitCase.Validation.Result.Err.FailedLogic.Unauthorized.Checks.First().Authorizer;
-
-        if(blockCheck != null)
-        {
-            Assert.Equal(blockCheck.Block_id, err.Block.BlockId);
-            Assert.Equal(blockCheck.Check_id, err.Block.CheckId);
-        } 
-        else
-        {
-            Assert.Equal(authorizerCheck.CheckId, err.Authorizer.CheckId);
-        }
+        Assert.Equal(biscuitCase.Validation.Error, err);
     }
 
     IEnumerable<(Atom?, RuleExpressions?)> Parse(string code)
