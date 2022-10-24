@@ -111,6 +111,7 @@ public class BiscuitCases : DataAttribute
     {
         FailedAuthorizerCheck authorizerCheck = null;
         FailedBlockCheck blockCheck = null;
+        InvalidBlockRule invalidBlockRule = null;
 
         if(file.Result?.Err?.FailedLogic?.Unauthorized != null)
         {
@@ -124,8 +125,17 @@ public class BiscuitCases : DataAttribute
                 blockCheck = new FailedBlockCheck(block.Block_id, block.Check_id/*, null*/);
         }
 
-        var error = authorizerCheck != null | blockCheck != null 
-                    ? new Error(blockCheck, authorizerCheck)
+        if(file.Result?.Err?.FailedLogic?.InvalidBlockRule != null)
+        {
+            var ibr = file.Result.Err.FailedLogic.InvalidBlockRule;
+            var ruleId = (long)  ibr[0]; //assuming this is ruleId - not clear in the specs
+            var rule = (string) ibr[1];
+            
+            invalidBlockRule = new InvalidBlockRule((int)ruleId/*, rule*/);
+        }
+
+        var error = authorizerCheck != null || blockCheck != null || invalidBlockRule != null 
+                    ? new Error(blockCheck, authorizerCheck, invalidBlockRule)
                     : null;
 
         return new Asserts(file.Authorizer_code, error);

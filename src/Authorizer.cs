@@ -5,7 +5,7 @@ namespace biscuit_net;
 public record World(List<Atom> Atoms, List<string> Symbols, List<RuleExpressions> Checks);
 public record FailedBlockCheck(int BlockId, int CheckId/*, RuleExpressions Rule*/);
 public record FailedAuthorizerCheck(int CheckId/*, RuleExpressions Rule*/);
-public record Error(FailedBlockCheck Block, FailedAuthorizerCheck Authorizer);
+public record Error(FailedBlockCheck Block, FailedAuthorizerCheck Authorizer, InvalidBlockRule InvalidBlockRule);
 
 public class Authorizer
 {
@@ -24,6 +24,12 @@ public class Authorizer
 
     public bool TryAuthorize(Biscuit b, out Error err)
     {
+        if(!b.CheckBoundVariables(out var invalidBlockRule))
+        {
+            err = new Error(null, null, invalidBlockRule);
+            return false;
+        }
+        
         var world = new World(_authorizerAtoms.ToList(), b.Symbols, _authorizerChecks);
         world.Atoms.AddRange(b.Authority.Atoms);
 
@@ -52,14 +58,14 @@ public class Authorizer
         
         if(!blockCheck) 
         {
-            err = new Error(new FailedBlockCheck(blockId, failedCheckId/*, failedRule*/), null);
+            err = new Error(new FailedBlockCheck(blockId, failedCheckId/*, failedRule*/), null, null);
             return false;
         }
 
         var (blockAuthorizerCheck, failedAuthorizerCheckId, failedAuthorizerRule) = Check(blockAtoms, world.Checks, world);
         if(!blockAuthorizerCheck) 
         {
-            err = new Error(null, new FailedAuthorizerCheck(failedAuthorizerCheckId/*, failedAuthorizerRule*/));
+            err = new Error(null, new FailedAuthorizerCheck(failedAuthorizerCheckId/*, failedAuthorizerRule*/), null);
             return false;
         }
 

@@ -49,3 +49,9 @@ public partial class Authorizer
     [DataMember(Name = "Rule", EmitDefaultValue = false, Order = 1)]
     public string Rule { get; set; }
 }
+
+public partial class FailedLogic
+{
+    [DataMember(Name = "InvalidBlockRule", EmitDefaultValue = false, Order = 0)]
+    public object[] InvalidBlockRule { get; set; }
+}

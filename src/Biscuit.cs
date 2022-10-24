@@ -11,6 +11,9 @@ public record RuleExpressions(
         IEnumerable<ExpressionV2> Expressions) 
     : Rule(Head, Body);
 
+//TODO Assuming the int is a RuleId - specification and examples are unclear here
+public record InvalidBlockRule(int RuleId/*, RuleExpressions Rule*/);
+
 
 public class Block
 {
@@ -40,35 +43,27 @@ public class Biscuit
     public Block Authority { get; private set; }
 
     public List<string> Symbols { get; protected set; }= new List<string>();
-    Block[] _blocks;
+    
     Biscuit(Proto.Biscuit biscuit, Block authority)
     {
         _biscuit = biscuit;
         Authority = authority;
 
         Symbols.AddRange(authority.Symbols.ToList());
-        _blocks = new Block[_biscuit.Blocks.Count];
+        Blocks = LoadBlocks();
     }
-
-    public IEnumerable<Block> Blocks 
+    public IEnumerable<Block> Blocks { get; protected set; }
+    
+    IEnumerable<Block> LoadBlocks() 
     {
-        get
+        foreach(var block in _biscuit.Blocks)
         {
-            for(int blockId = 0; blockId < _biscuit.Blocks.Count; blockId++)
-            {
-                if(_blocks[blockId] != null) 
-                {
-                    yield return _blocks[blockId];
-                }
-                
-                var blockBytes = (ReadOnlySpan<byte>)_biscuit.Blocks[blockId].Block;
-                var blockProto = Serializer.Deserialize<Proto.Block>(blockBytes);
+            var blockBytes = (ReadOnlySpan<byte>) block.Block;
+            var blockProto = Serializer.Deserialize<Proto.Block>(blockBytes);
+            
+            Symbols.AddRange(blockProto.Symbols);
 
-                Symbols.AddRange(blockProto.Symbols);
-
-                _blocks[blockId] = new Block(blockProto, Symbols);
-                yield return _blocks[blockId];
-            }
+            yield return new Block(blockProto, Symbols);
         }
     }
 
@@ -80,5 +75,44 @@ public class Biscuit
         var authority = new Block(authorityProto, authorityProto.Symbols);
 
         return new Biscuit(biscuit, authority);
+    }
+
+    public bool CheckBoundVariables(out InvalidBlockRule invalidBlockRule)
+    {
+        if(!CheckBoundVariables(Authority, out invalidBlockRule))
+        {
+            return false;
+        }
+
+        foreach(var block in Blocks)
+        {
+            if(!CheckBoundVariables(block, out invalidBlockRule))
+            {
+                return false;
+            }
+        }
+
+        invalidBlockRule = null;
+        return true;
+    }
+
+    bool CheckBoundVariables(Block block, out InvalidBlockRule invalidBlockRule)
+    {
+        int ruleId = 0;
+        foreach(var rule in block.Rules)
+        {
+            var headVariables = rule.Head.Terms.OfType<Variable>();
+            var bodyVariables = rule.Body.SelectMany(b => b.Terms).OfType<Variable>().ToHashSet();
+            
+            if(!headVariables.All(hv => bodyVariables.Contains(hv)))
+            {
+                invalidBlockRule = new InvalidBlockRule(ruleId);
+                return false;
+            }
+            ruleId++;
+        }
+
+        invalidBlockRule = null;
+        return true;
     }
 }
