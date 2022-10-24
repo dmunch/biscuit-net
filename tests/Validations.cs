@@ -35,3 +35,17 @@ public partial class Signature
     [DataMember(Name = "InvalidSignature", EmitDefaultValue = false, Order = 0)]
     public string InvalidSignature { get; set; }
 }
+
+public partial class Check
+{
+    [DataMember(Name = "Authorizer", EmitDefaultValue = false, Order = 1)]
+    public Authorizer Authorizer { get; set; }
+}
+
+public partial class Authorizer
+{
+    [DataMember(Name = "check_id", EmitDefaultValue = false, Order = 0)]
+    public int CheckId { get; set; }
+    [DataMember(Name = "Rule", EmitDefaultValue = false, Order = 1)]
+    public string Rule { get; set; }
+}
