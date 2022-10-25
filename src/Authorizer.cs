@@ -75,7 +75,7 @@ public class Authorizer
 
     IEnumerable<Atom> EvaluateBlockRules(World world, Block block, IEnumerable<Atom> authorityAtoms)
     {
-        var rulesAtoms = block.Atoms.Evaluate(block.Rules, world.Symbols);
+        var rulesAtoms = world.Atoms.Evaluate(block.Rules, world.Symbols);
 
         var blockScopedAtoms = authorityAtoms.ToList();
         blockScopedAtoms.AddRange(rulesAtoms);

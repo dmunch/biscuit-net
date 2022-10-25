@@ -39,7 +39,13 @@ public static class Evaluator
             }
         }
 
-        var passed = rule.Expressions.All(ex => ExpressionEvaluator.Evaluate(s, ex.Ops, symbols));
+        
+        //if we have expressions, but not substitutions, we fail rule application
+        //otherwise we evaluate the expression 
+        var passed = rule.Expressions.Any() && !s.Any()
+            ? false
+            : rule.Expressions.All(ex => ExpressionEvaluator.Evaluate(s, ex.Ops, symbols));
+        
         if(passed)
             // Apply the bindings accumulated in the rule's body (the premises) to the rule's head (the conclusion),
             // thus obtaining the new atoms.
