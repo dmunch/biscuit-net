@@ -130,6 +130,17 @@ public class AuthorizerTests
                     Enumerable.Empty<biscuit_net.Proto.ExpressionV2>()
                 ));
             }
+            else if(line.StartsWith("check if ns::fact_123(\"hello é\t😁\");"))
+            {
+                yield return (null, new RuleExpressions(
+                    new Atom("check1"), 
+                    new []
+                    {
+                        new Atom("ns::fact_123", new String("hello é\t😁"))
+                    }, 
+                    Enumerable.Empty<biscuit_net.Proto.ExpressionV2>()
+                ));
+            }
 
 
             
