@@ -15,6 +15,12 @@ public sealed record String(string Value) : Constant
 public sealed record Boolean(bool Value) : Constant
 {
     public override string ToString() => Value.ToString();
+
+    public static bool operator &(Boolean one, Boolean two) => one.Value && two.Value;
+    public static bool operator |(Boolean one, Boolean two) => one.Value || two.Value;
+    public static bool operator !(Boolean value) => !value.Value;
+    public static bool operator true(Boolean value) => value.Value;
+    public static bool operator false(Boolean value) => value.Value;
 }
 
 public sealed record Integer(long Value) : Constant

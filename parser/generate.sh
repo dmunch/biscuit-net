@@ -1,1 +1,1 @@
-antlr -Dlanguage=CSharp Expressions.g4 -o gen
+antlr -Dlanguage=CSharp Expressions.g4 -visitor -o gen

@@ -10,4 +10,9 @@
     <PackageReference Include="Antlr4.Runtime.Standard" Version="4.11.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\src\biscuit-net.csproj" />
+    <ProjectReference Include="..\proto\proto.csproj" />
+  </ItemGroup>
+
 </Project>

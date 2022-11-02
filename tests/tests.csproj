@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Antlr4.Runtime.Standard" Version="4.11.1" />
     <PackageReference Include="JsonByExampleGenerator" Version="0.9.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.2.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
@@ -27,6 +28,7 @@
   <ItemGroup>
     <ProjectReference Include="..\src\biscuit-net.csproj" />
     <ProjectReference Include="..\..\VeryNaiveDatalog\VeryNaiveDatalog\VeryNaiveDatalog.csproj" />
+    <ProjectReference Include="..\parser\parser.csproj" />
   </ItemGroup>
   <ItemGroup>
     <AdditionalFiles Include="samples-v2/samples.json" />

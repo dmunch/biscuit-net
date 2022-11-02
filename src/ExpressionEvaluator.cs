@@ -22,14 +22,14 @@ public static class ExpressionEvaluator
            switch(op.ContentCase)
            {
                 case Op.ContentOneofCase.None: break;
-                case Op.ContentOneofCase.Binary:
+                case Op.ContentOneofCase.Binary: {
                     //binary operation: an operation that applies on two arguments.
                     //When executed, it pops two values from the stack, applies the operation, then pushes the result
 
                     var value2 = stack.Pop();
                     var value1 = stack.Pop();
 
-                    var value = op.Binary.kind switch
+                    var result = op.Binary.kind switch
                     {
                         OpBinary.Kind.LessThan => (Date)value1 < (Date)value2,
                         OpBinary.Kind.GreaterThan => (Date)value1 > (Date)value2,
@@ -47,20 +47,34 @@ public static class ExpressionEvaluator
                         OpBinary.Kind.Sub => throw new NotImplementedException(),
                         OpBinary.Kind.Mul => throw new NotImplementedException(),
                         OpBinary.Kind.Div => throw new NotImplementedException(),
-                        OpBinary.Kind.And => throw new NotImplementedException(),
-                        OpBinary.Kind.Or => throw new NotImplementedException(),
+                        */
+                        OpBinary.Kind.And => (Boolean) value1 & (Boolean) value2,
+                        OpBinary.Kind.Or => (Boolean) value1 | (Boolean) value2,
+                        /*
                         OpBinary.Kind.Intersection => throw new NotImplementedException(),
                         OpBinary.Kind.Union => throw new NotImplementedException(),
                         */
                         _ => throw new NotSupportedException($"{op.Binary.kind}")
                     };
                     
-                    stack.Push(new Boolean(value));
+                    stack.Push(new Boolean(result));
                     break;
-                case Op.ContentOneofCase.Unary: break;
+                }
+                case Op.ContentOneofCase.Unary: {
                     //unary operation: an operation that applies on one argument.
                     //When executed, it pops a value from the stack, applies the operation, then pushes the result
-                case Op.ContentOneofCase.Value: 
+                    var value = stack.Pop();
+                    var result = op.Unary.kind switch
+                    {
+                        OpUnary.Kind.Length => throw new NotImplementedException(),
+                        OpUnary.Kind.Negate => !(Boolean) value,
+                        OpUnary.Kind.Parens => throw new NotImplementedException(),
+                        _ => throw new NotSupportedException($"{op.Binary.kind}")
+                    };
+                    stack.Push(new Boolean(result));
+                    break; 
+                }
+                case Op.ContentOneofCase.Value: {
                     //value: a raw value of any type.
                     //If it is a variable, the variable must also appear in a predicate, so the variable gets a real value for execution.
                     //When encountering a value opcode, we push it onto the stack
@@ -68,6 +82,7 @@ public static class ExpressionEvaluator
                     
                     stack.Push(atom.Apply(substitution));
                     break;
+                }
            }
         }
 
