@@ -7,7 +7,19 @@ namespace biscuit_net;
 
 public static class ExpressionEvaluator
 {
-    static bool BinaryOp<T1, T2>(Term t1, Term t2, Func<T1, T1, bool> op1, Func<T2, T2, bool> op2)  
+    static TResult BinaryOp<T1, TResult>(Term t1, Term t2, Func<T1, T1, TResult> op1)
+        where T1: Term
+    {
+        switch (t1, t2) {
+            case (T1 t11, T1 t21): {
+                return op1(t11, t21);
+            }
+        }
+
+        throw new Exception();
+    }
+
+    static TResult BinaryOp<T1, T2, TResult>(Term t1, Term t2, Func<T1, T1, TResult> op1, Func<T2, T2, TResult> op2)  
         where T1: Term
         where T2: Term
     {
@@ -46,40 +58,57 @@ public static class ExpressionEvaluator
                     var value2 = stack.Pop();
                     var value1 = stack.Pop();
                     
-                    var result = op.Binary.kind switch
+                    var boolResult = op.Binary.kind switch
                     {
                         OpBinary.Kind.LessThan => 
-                            BinaryOp<Date, Integer>(value1, value2, (t1, t2) => t1 < t2, (t1, t2) => t1 < t2),
+                            BinaryOp<Date, Integer, bool>(value1, value2, (t1, t2) => t1 < t2, (t1, t2) => t1 < t2),
                         OpBinary.Kind.GreaterThan => 
-                            BinaryOp<Date, Integer>(value1, value2, (t1, t2) => t1 > t2, (t1, t2) => t1 > t2),
+                            BinaryOp<Date, Integer, bool>(value1, value2, (t1, t2) => t1 > t2, (t1, t2) => t1 > t2),
                         OpBinary.Kind.GreaterOrEqual => 
-                            BinaryOp<Date, Integer>(value1, value2, (t1, t2) => t1 >= t2, (t1, t2) => t1 >= t2),
+                            BinaryOp<Date, Integer, bool>(value1, value2, (t1, t2) => t1 >= t2, (t1, t2) => t1 >= t2),
                         OpBinary.Kind.LessOrEqual => 
-                            BinaryOp<Date, Integer>(value1, value2, (t1, t2) => t1 <= t2, (t1, t2) => t1 <= t2),
+                            BinaryOp<Date, Integer, bool>(value1, value2, (t1, t2) => t1 <= t2, (t1, t2) => t1 <= t2),
                         OpBinary.Kind.Equal => 
-                            BinaryOp<Date, Integer>(value1, value2, (t1, t2) => t1 == t2, (t1, t2) => t1 == t2),
+                            BinaryOp<Date, Integer, bool>(value1, value2, (t1, t2) => t1 == t2, (t1, t2) => t1 == t2),
+                        OpBinary.Kind.And => 
+                            BinaryOp<Boolean, bool>(value1, value2, (t1, t2) => t1 & t2),
+                        OpBinary.Kind.Or => 
+                            BinaryOp<Boolean, bool>(value1, value2, (t1, t2) => t1 | t2),
                         OpBinary.Kind.Regex => StringRegex(value1, value2),
                         /*
                         OpBinary.Kind.Contains => throw new NotImplementedException(),
                         OpBinary.Kind.Prefix => throw new NotImplementedException(),
                         OpBinary.Kind.Suffix => throw new NotImplementedException( ),
-                        
-                        OpBinary.Kind.Add => throw new NotImplementedException(),
-                        OpBinary.Kind.Sub => throw new NotImplementedException(),
-                        OpBinary.Kind.Mul => throw new NotImplementedException(),
-                        OpBinary.Kind.Div => throw new NotImplementedException(),
-                        */
-                        OpBinary.Kind.And => (Boolean) value1 & (Boolean) value2,
-                        OpBinary.Kind.Or => (Boolean) value1 | (Boolean) value2,
-                        /*
                         OpBinary.Kind.Intersection => throw new NotImplementedException(),
                         OpBinary.Kind.Union => throw new NotImplementedException(),
                         */
-                        _ => throw new NotSupportedException($"{op.Binary.kind}")
+                        _ => (bool?)null
                     };
                     
-                    stack.Push(new Boolean(result));
-                    break;
+
+                    if(boolResult.HasValue) 
+                    {
+                        stack.Push(new Boolean(boolResult.Value));
+                        break;
+                    }
+
+                    var intResult = op.Binary.kind switch
+                    {
+                        OpBinary.Kind.Add => BinaryOp<Integer, long>(value1, value2, (t1, t2) => t1.Value + t2.Value),
+                        OpBinary.Kind.Sub => BinaryOp<Integer, long>(value1, value2, (t1, t2) => t1.Value - t2.Value),
+                        OpBinary.Kind.Mul => BinaryOp<Integer, long>(value1, value2, (t1, t2) => t1.Value * t2.Value),
+                        OpBinary.Kind.Div => BinaryOp<Integer, long>(value1, value2, (t1, t2) => t1.Value / t2.Value),
+
+                        _ => (long?)null
+                    };
+                    
+                    if(intResult.HasValue) 
+                    {
+                        stack.Push(new Integer(intResult.Value));
+                        break;
+                    }
+
+                    throw new NotImplementedException();
                 }
                 case Op.ContentOneofCase.Unary: {
                     //unary operation: an operation that applies on one argument.

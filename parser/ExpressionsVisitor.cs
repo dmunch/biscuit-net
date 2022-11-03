@@ -23,16 +23,57 @@ public class ExpressionsVisitor : ExpressionsBaseVisitor<List<Op>>
         if(eeList.Count != operatorContext.Count() + 1)
             throw new Exception("Parsing Error");
 
-        var binaryExpressions = new List<Op>();
+        
+        var operands = new List<Op>();
+        var operatorStack = new Stack<Op>();
+
+        void PushOperator(Op incomingOp)
+        {
+            if(operatorStack.Count == 0)
+            {
+                operatorStack.Push(incomingOp);
+                return;
+            } 
+            
+            var topOp = operatorStack.Peek();
+
+            if(precedence[incomingOp.Binary.kind] > precedence[topOp.Binary.kind])
+            {
+                operatorStack.Push(incomingOp);
+                return;
+            }
+
+            if(precedence[incomingOp.Binary.kind] == precedence[topOp.Binary.kind])
+            {
+                operatorStack.Pop();
+                operands.Add(topOp);
+                operatorStack.Push(incomingOp);
+                return;
+            }
+            
+            
+            operatorStack.Pop();
+            operands.Add(topOp);
+            PushOperator(incomingOp);
+        }
+
+        operands.AddRange(eeList[0]);
         for(int opId = 0; opId < operatorContext.Count(); opId++)
         {
             var opText = operatorContext[opId].GetText();
 
-            binaryExpressions.AddRange(eeList[opId]);
-            binaryExpressions.AddRange(eeList[opId + 1]);
-            binaryExpressions.Add(ToBinaryOp(opText));
+            var incomingOp = ToBinaryOp(opText);
+            PushOperator(incomingOp);
+            
+            operands.AddRange(eeList[opId + 1]);
         }
-        return binaryExpressions;
+
+        while(operatorStack.TryPop(out var op))
+        {
+            operands.Add(op);
+        }
+        
+        return operands;
     }
 
     static Op ToBinaryOp(string opText)
@@ -54,6 +95,20 @@ public class ExpressionsVisitor : ExpressionsBaseVisitor<List<Op>>
         
         return new Op() { Binary = new OpBinary() { kind = kind }};
     }
+
+    Dictionary<OpBinary.Kind, int> precedence = new Dictionary<OpBinary.Kind, int> {
+         {OpBinary.Kind.LessThan, 0},
+         {OpBinary.Kind.GreaterThan, 0},
+         {OpBinary.Kind.LessOrEqual, 0},
+         {OpBinary.Kind.GreaterOrEqual, 0},
+         {OpBinary.Kind.Equal, 0},
+         {OpBinary.Kind.And, 2},
+         {OpBinary.Kind.Add, 1},
+         {OpBinary.Kind.Sub, 1},
+         {OpBinary.Kind.Mul, 2},
+         {OpBinary.Kind.Div, 2}
+    };
+
 
     public override List<Op> VisitExpression_unary([NotNull] ExpressionsParser.Expression_unaryContext context) 
     {
