@@ -9,7 +9,6 @@ public class ParserTests
     [InlineData("check if !false && true;")]
     [InlineData("check if false or true;")]
     [InlineData("check if (true || false) && true;")]
-    /*
     [InlineData("check if 1 < 2;")]
     [InlineData("check if 2 > 1;")]
     [InlineData("check if 1 <= 2;")]
@@ -17,6 +16,7 @@ public class ParserTests
     [InlineData("check if 2 >= 1;")]
     [InlineData("check if 2 >= 2;")]
     [InlineData("check if 3 == 3;")]
+    /*
     [InlineData("check if 1 + 2 * 3 - 4 / 2 == 5;")]
     [InlineData("check if \"hello world\".starts_with(\"hello\") && \"hello world\".ends_with(\"world\");")]
     [InlineData("check if \"aaabde\".matches(\"a*c?.e\");")]

@@ -17,4 +17,17 @@ public class TermVisitor : ExpressionsBaseVisitor<Op>
             }
         };
     }
+
+    public override Op VisitNumberFactTerm([NotNull] ExpressionsParser.NumberFactTermContext context) 
+    { 
+        var text = context.NUMBER().GetText();
+
+        return new Op() 
+        {
+            Value = new TermV2()
+            {
+               Integer = long.Parse(text)
+            }
+        };
+    }
 }

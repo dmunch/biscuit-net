@@ -1,10 +1,5 @@
+using System.Numerics;
 using VeryNaiveDatalog;
-
-
-public record Constant : Term
-{
-    public override Term Apply(Substitution env) => this;
-}
 
 
 public sealed record String(string Value) : Constant
@@ -23,20 +18,24 @@ public sealed record Boolean(bool Value) : Constant
     public static bool operator false(Boolean value) => value.Value;
 }
 
-public sealed record Integer(long Value) : Constant
+public abstract record Comparable<T>(T Value) : Constant, 
+    IComparisonOperators<Comparable<T>, Comparable<T>, bool>
+    where T: IComparisonOperators<T, T, bool>
 {
-    public override string ToString() => Value.ToString();
+    public static bool operator <(Comparable<T> one, Comparable<T> two) => one.Value < two.Value;
+    public static bool operator >(Comparable<T> one, Comparable<T> two) => one.Value > two.Value;
+    public static bool operator <=(Comparable<T> one, Comparable<T> two) => one.Value <= two.Value;
+    public static bool operator >=(Comparable<T> one, Comparable<T> two) => one.Value >= two.Value;
 }
 
-public sealed record Date(ulong Timestamp) : Constant
+public sealed record Integer(long value) : Comparable<long>(value)
+{
+}
+
+public sealed record Date(ulong value) : Comparable<ulong>(value)
 {
     public override string ToString() => DateTime.ToLongDateString();
-    public DateTime DateTime => FromTAI64(Timestamp);
-
-    public static bool operator <(Date one, Date two) => one.Timestamp < two.Timestamp;
-    public static bool operator >(Date one, Date two) => one.Timestamp > two.Timestamp;
-    public static bool operator <=(Date one, Date two) => one.Timestamp <= two.Timestamp;
-    public static bool operator >=(Date one, Date two) => one.Timestamp >= two.Timestamp;
+    public DateTime DateTime => FromTAI64(Value);
 
     public static DateTime FromTAI64(ulong timestamp)
     {
