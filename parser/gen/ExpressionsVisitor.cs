@@ -50,35 +50,68 @@ public interface IExpressionsVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitRule_body_element([NotNull] ExpressionsParser.Rule_body_elementContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="ExpressionsParser.expression"/>.
+	/// Visit a parse tree produced by the <c>expressionAdd</c>
+	/// labeled alternative in <see cref="ExpressionsParser.expression"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitExpression([NotNull] ExpressionsParser.ExpressionContext context);
+	Result VisitExpressionAdd([NotNull] ExpressionsParser.ExpressionAddContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="ExpressionsParser.expression_element"/>.
+	/// Visit a parse tree produced by the <c>expressionLogic</c>
+	/// labeled alternative in <see cref="ExpressionsParser.expression"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitExpression_element([NotNull] ExpressionsParser.Expression_elementContext context);
+	Result VisitExpressionLogic([NotNull] ExpressionsParser.ExpressionLogicContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="ExpressionsParser.expression_unary"/>.
+	/// Visit a parse tree produced by the <c>expressionUnary</c>
+	/// labeled alternative in <see cref="ExpressionsParser.expression"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitExpression_unary([NotNull] ExpressionsParser.Expression_unaryContext context);
+	Result VisitExpressionUnary([NotNull] ExpressionsParser.ExpressionUnaryContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="ExpressionsParser.expression_term"/>.
+	/// Visit a parse tree produced by the <c>expressionParentheses</c>
+	/// labeled alternative in <see cref="ExpressionsParser.expression"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitExpression_term([NotNull] ExpressionsParser.Expression_termContext context);
+	Result VisitExpressionParentheses([NotNull] ExpressionsParser.ExpressionParenthesesContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="ExpressionsParser.expression_method"/>.
+	/// Visit a parse tree produced by the <c>expressionComp</c>
+	/// labeled alternative in <see cref="ExpressionsParser.expression"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitExpression_method([NotNull] ExpressionsParser.Expression_methodContext context);
+	Result VisitExpressionComp([NotNull] ExpressionsParser.ExpressionCompContext context);
+	/// <summary>
+	/// Visit a parse tree produced by the <c>expressionMethod</c>
+	/// labeled alternative in <see cref="ExpressionsParser.expression"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitExpressionMethod([NotNull] ExpressionsParser.ExpressionMethodContext context);
+	/// <summary>
+	/// Visit a parse tree produced by the <c>expressionTerm</c>
+	/// labeled alternative in <see cref="ExpressionsParser.expression"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitExpressionTerm([NotNull] ExpressionsParser.ExpressionTermContext context);
+	/// <summary>
+	/// Visit a parse tree produced by the <c>expressionMult</c>
+	/// labeled alternative in <see cref="ExpressionsParser.expression"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitExpressionMult([NotNull] ExpressionsParser.ExpressionMultContext context);
+	/// <summary>
+	/// Visit a parse tree produced by the <c>expressionVariable</c>
+	/// labeled alternative in <see cref="ExpressionsParser.expression"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitExpressionVariable([NotNull] ExpressionsParser.ExpressionVariableContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="ExpressionsParser.term"/>.
 	/// </summary>

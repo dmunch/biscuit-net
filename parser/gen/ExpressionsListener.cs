@@ -61,55 +61,113 @@ public interface IExpressionsListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitRule_body_element([NotNull] ExpressionsParser.Rule_body_elementContext context);
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="ExpressionsParser.expression"/>.
+	/// Enter a parse tree produced by the <c>expressionAdd</c>
+	/// labeled alternative in <see cref="ExpressionsParser.expression"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void EnterExpression([NotNull] ExpressionsParser.ExpressionContext context);
+	void EnterExpressionAdd([NotNull] ExpressionsParser.ExpressionAddContext context);
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="ExpressionsParser.expression"/>.
+	/// Exit a parse tree produced by the <c>expressionAdd</c>
+	/// labeled alternative in <see cref="ExpressionsParser.expression"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void ExitExpression([NotNull] ExpressionsParser.ExpressionContext context);
+	void ExitExpressionAdd([NotNull] ExpressionsParser.ExpressionAddContext context);
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="ExpressionsParser.expression_element"/>.
+	/// Enter a parse tree produced by the <c>expressionLogic</c>
+	/// labeled alternative in <see cref="ExpressionsParser.expression"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void EnterExpression_element([NotNull] ExpressionsParser.Expression_elementContext context);
+	void EnterExpressionLogic([NotNull] ExpressionsParser.ExpressionLogicContext context);
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="ExpressionsParser.expression_element"/>.
+	/// Exit a parse tree produced by the <c>expressionLogic</c>
+	/// labeled alternative in <see cref="ExpressionsParser.expression"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void ExitExpression_element([NotNull] ExpressionsParser.Expression_elementContext context);
+	void ExitExpressionLogic([NotNull] ExpressionsParser.ExpressionLogicContext context);
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="ExpressionsParser.expression_unary"/>.
+	/// Enter a parse tree produced by the <c>expressionUnary</c>
+	/// labeled alternative in <see cref="ExpressionsParser.expression"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void EnterExpression_unary([NotNull] ExpressionsParser.Expression_unaryContext context);
+	void EnterExpressionUnary([NotNull] ExpressionsParser.ExpressionUnaryContext context);
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="ExpressionsParser.expression_unary"/>.
+	/// Exit a parse tree produced by the <c>expressionUnary</c>
+	/// labeled alternative in <see cref="ExpressionsParser.expression"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void ExitExpression_unary([NotNull] ExpressionsParser.Expression_unaryContext context);
+	void ExitExpressionUnary([NotNull] ExpressionsParser.ExpressionUnaryContext context);
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="ExpressionsParser.expression_term"/>.
+	/// Enter a parse tree produced by the <c>expressionParentheses</c>
+	/// labeled alternative in <see cref="ExpressionsParser.expression"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void EnterExpression_term([NotNull] ExpressionsParser.Expression_termContext context);
+	void EnterExpressionParentheses([NotNull] ExpressionsParser.ExpressionParenthesesContext context);
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="ExpressionsParser.expression_term"/>.
+	/// Exit a parse tree produced by the <c>expressionParentheses</c>
+	/// labeled alternative in <see cref="ExpressionsParser.expression"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void ExitExpression_term([NotNull] ExpressionsParser.Expression_termContext context);
+	void ExitExpressionParentheses([NotNull] ExpressionsParser.ExpressionParenthesesContext context);
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="ExpressionsParser.expression_method"/>.
+	/// Enter a parse tree produced by the <c>expressionComp</c>
+	/// labeled alternative in <see cref="ExpressionsParser.expression"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void EnterExpression_method([NotNull] ExpressionsParser.Expression_methodContext context);
+	void EnterExpressionComp([NotNull] ExpressionsParser.ExpressionCompContext context);
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="ExpressionsParser.expression_method"/>.
+	/// Exit a parse tree produced by the <c>expressionComp</c>
+	/// labeled alternative in <see cref="ExpressionsParser.expression"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void ExitExpression_method([NotNull] ExpressionsParser.Expression_methodContext context);
+	void ExitExpressionComp([NotNull] ExpressionsParser.ExpressionCompContext context);
+	/// <summary>
+	/// Enter a parse tree produced by the <c>expressionMethod</c>
+	/// labeled alternative in <see cref="ExpressionsParser.expression"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterExpressionMethod([NotNull] ExpressionsParser.ExpressionMethodContext context);
+	/// <summary>
+	/// Exit a parse tree produced by the <c>expressionMethod</c>
+	/// labeled alternative in <see cref="ExpressionsParser.expression"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitExpressionMethod([NotNull] ExpressionsParser.ExpressionMethodContext context);
+	/// <summary>
+	/// Enter a parse tree produced by the <c>expressionTerm</c>
+	/// labeled alternative in <see cref="ExpressionsParser.expression"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterExpressionTerm([NotNull] ExpressionsParser.ExpressionTermContext context);
+	/// <summary>
+	/// Exit a parse tree produced by the <c>expressionTerm</c>
+	/// labeled alternative in <see cref="ExpressionsParser.expression"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitExpressionTerm([NotNull] ExpressionsParser.ExpressionTermContext context);
+	/// <summary>
+	/// Enter a parse tree produced by the <c>expressionMult</c>
+	/// labeled alternative in <see cref="ExpressionsParser.expression"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterExpressionMult([NotNull] ExpressionsParser.ExpressionMultContext context);
+	/// <summary>
+	/// Exit a parse tree produced by the <c>expressionMult</c>
+	/// labeled alternative in <see cref="ExpressionsParser.expression"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitExpressionMult([NotNull] ExpressionsParser.ExpressionMultContext context);
+	/// <summary>
+	/// Enter a parse tree produced by the <c>expressionVariable</c>
+	/// labeled alternative in <see cref="ExpressionsParser.expression"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterExpressionVariable([NotNull] ExpressionsParser.ExpressionVariableContext context);
+	/// <summary>
+	/// Exit a parse tree produced by the <c>expressionVariable</c>
+	/// labeled alternative in <see cref="ExpressionsParser.expression"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitExpressionVariable([NotNull] ExpressionsParser.ExpressionVariableContext context);
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="ExpressionsParser.term"/>.
 	/// </summary>

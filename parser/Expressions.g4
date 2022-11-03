@@ -5,11 +5,18 @@ check: 'check' 'if' rule_body ('or' rule_body)*;
 rule_body: rule_body_element (',' rule_body_element)*;
 rule_body_element: /*predicate |*/ expression;
 
-expression: expression_element (OPERATOR expression_element)*;
-expression_element: expression_unary | (expression_term expression_method? );
-expression_unary: '!' expression;
-expression_term: term | '(' expression ')';
-expression_method: '.' METHOD_NAME '(' (term ( ',' term)* )? ')';
+
+expression
+    : '!' expression #expressionUnary
+    | '(' expression ')' #expressionParentheses
+    | expression mult=('*' | '/') expression #expressionMult
+    | expression add=('+' | '-') expression #expressionAdd
+    | expression logic=('||' | '&&') expression #expressionLogic
+    | expression comp=('>=' | '<=' | '>' | '<' | '==') expression #expressionComp
+    | expression '.' METHOD_NAME '(' (term ( ',' term)* )? ')' #expressionMethod
+    | fact_term #expressionTerm
+    | VARIABLE #expressionVariable
+    ;
 
 term: fact_term | VARIABLE;
 fact_term: BOOLEAN #booleanFactTerm

@@ -2,77 +2,35 @@ namespace parser;
 
 using Antlr4.Runtime.Misc;
 using biscuit_net.Proto;
-using System.Linq;
 
 public class ExpressionsVisitor : ExpressionsBaseVisitor<List<Op>>
 {
     TermVisitor _termVisitor = new TermVisitor();
+    
+     public override List<Op> VisitExpressionParentheses([NotNull] ExpressionsParser.ExpressionParenthesesContext context) 
+    {
+        return base.Visit(context.expression());
+    }
 
-    public override List<Op> VisitExpression([NotNull] ExpressionsParser.ExpressionContext context) 
-    { 
-        var eeList = context.expression_element().Select(ee => Visit(ee)).ToList();
-        
-        var operatorContext = context.OPERATOR();
+    public override List<Op> VisitExpressionMult([NotNull] ExpressionsParser.ExpressionMultContext context) 
+        => VisitExpressionBinary(context.expression(0), context.expression(1), context.mult);
+    
+    public override List<Op> VisitExpressionAdd([NotNull] ExpressionsParser.ExpressionAddContext context) 
+        => VisitExpressionBinary(context.expression(0), context.expression(1), context.add);
+    
+    public override List<Op> VisitExpressionLogic([NotNull] ExpressionsParser.ExpressionLogicContext context) 
+        => VisitExpressionBinary(context.expression(0), context.expression(1), context.logic);
+    
+    public override List<Op> VisitExpressionComp([NotNull] ExpressionsParser.ExpressionCompContext context) 
+        => VisitExpressionBinary(context.expression(0), context.expression(1), context.comp);
+    
 
-        if(eeList.Count() == 1)
-        {
-            return eeList.First();
-        }
-
-        //binary expression(s)
-        if(eeList.Count != operatorContext.Count() + 1)
-            throw new Exception("Parsing Error");
-
-        
+    List<Op> VisitExpressionBinary(ExpressionsParser.ExpressionContext context1, ExpressionsParser.ExpressionContext context2, Antlr4.Runtime.IToken op) 
+    {
         var operands = new List<Op>();
-        var operatorStack = new Stack<Op>();
-
-        void PushOperator(Op incomingOp)
-        {
-            if(operatorStack.Count == 0)
-            {
-                operatorStack.Push(incomingOp);
-                return;
-            } 
-            
-            var topOp = operatorStack.Peek();
-
-            if(precedence[incomingOp.Binary.kind] > precedence[topOp.Binary.kind])
-            {
-                operatorStack.Push(incomingOp);
-                return;
-            }
-
-            if(precedence[incomingOp.Binary.kind] == precedence[topOp.Binary.kind])
-            {
-                operatorStack.Pop();
-                operands.Add(topOp);
-                operatorStack.Push(incomingOp);
-                return;
-            }
-            
-            
-            operatorStack.Pop();
-            operands.Add(topOp);
-            PushOperator(incomingOp);
-        }
-
-        operands.AddRange(eeList[0]);
-        for(int opId = 0; opId < operatorContext.Count(); opId++)
-        {
-            var opText = operatorContext[opId].GetText();
-
-            var incomingOp = ToBinaryOp(opText);
-            PushOperator(incomingOp);
-            
-            operands.AddRange(eeList[opId + 1]);
-        }
-
-        while(operatorStack.TryPop(out var op))
-        {
-            operands.Add(op);
-        }
-        
+        operands.AddRange(base.Visit(context1));
+        operands.AddRange(base.Visit(context2));
+        operands.Add(ToBinaryOp(op.Text));
         return operands;
     }
 
@@ -96,21 +54,7 @@ public class ExpressionsVisitor : ExpressionsBaseVisitor<List<Op>>
         return new Op() { Binary = new OpBinary() { kind = kind }};
     }
 
-    Dictionary<OpBinary.Kind, int> precedence = new Dictionary<OpBinary.Kind, int> {
-         {OpBinary.Kind.LessThan, 0},
-         {OpBinary.Kind.GreaterThan, 0},
-         {OpBinary.Kind.LessOrEqual, 0},
-         {OpBinary.Kind.GreaterOrEqual, 0},
-         {OpBinary.Kind.Equal, 0},
-         {OpBinary.Kind.And, 2},
-         {OpBinary.Kind.Add, 1},
-         {OpBinary.Kind.Sub, 1},
-         {OpBinary.Kind.Mul, 2},
-         {OpBinary.Kind.Div, 2}
-    };
-
-
-    public override List<Op> VisitExpression_unary([NotNull] ExpressionsParser.Expression_unaryContext context) 
+    public override List<Op> VisitExpressionUnary([NotNull] ExpressionsParser.ExpressionUnaryContext context) 
     {
         var ops = Visit(context.expression());
         ops.Add(new Op() { Unary = new OpUnary() { kind = OpUnary.Kind.Negate }});
@@ -118,13 +62,9 @@ public class ExpressionsVisitor : ExpressionsBaseVisitor<List<Op>>
         return ops;
     }
 
-    public override List<Op> VisitExpression_term([NotNull] ExpressionsParser.Expression_termContext context) 
+    public override List<Op> VisitExpressionTerm([NotNull] ExpressionsParser.ExpressionTermContext context) 
     {
-        if(context.term() != null)
-        {
-            var op = _termVisitor.Visit(context.term());
-            return new List<Op> { op };
-        }
-        return base.Visit(context.expression());
+        var op = _termVisitor.Visit(context.fact_term());
+        return new List<Op> { op };
     }
 }
