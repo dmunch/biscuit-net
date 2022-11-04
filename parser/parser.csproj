@@ -4,6 +4,7 @@
     <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <LangVersion>preview</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -11,7 +12,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\biscuit-net.csproj" />
+    <!--<ProjectReference Include="..\src\biscuit-net.csproj" />-->
+    <ProjectReference Include="..\..\VeryNaiveDatalog\VeryNaiveDatalog\VeryNaiveDatalog.csproj" />
     <ProjectReference Include="..\proto\proto.csproj" />
   </ItemGroup>
 

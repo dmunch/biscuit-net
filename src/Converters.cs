@@ -58,6 +58,16 @@ public static class Converters
         });
     }
 
+    static public parser.Op ToParserOp(Op op, List<string> symbols)
+     => op.ContentCase switch
+        {
+            Proto.Op.ContentOneofCase.None => new parser.Op(),
+            Proto.Op.ContentOneofCase.Value => new parser.Op(Converters.ToAtom(op.Value, symbols)),
+            Proto.Op.ContentOneofCase.Binary => new parser.Op(new parser.OpBinary((parser.OpBinary.Kind)op.Binary.kind)),
+            Proto.Op.ContentOneofCase.Unary =>  new parser.Op(new parser.OpUnary((parser.OpUnary.Kind)op.Unary.kind)),
+            _ => throw new NotImplementedException()
+        };
+
     public static string Lookup(ulong pos, List<string> blockSymbols)
     {
         var table = new []{

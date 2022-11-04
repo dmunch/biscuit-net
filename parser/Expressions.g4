@@ -9,11 +9,11 @@ rule_body_element: /*predicate |*/ expression;
 expression
     : '!' expression #expressionUnary
     | '(' expression ')' #expressionParentheses
+    | expression '.' METHOD_NAME '(' (term ( ',' term)* )? ')' #expressionMethod
     | expression mult=('*' | '/') expression #expressionMult
     | expression add=('+' | '-') expression #expressionAdd
     | expression logic=('||' | '&&') expression #expressionLogic
     | expression comp=('>=' | '<=' | '>' | '<' | '==') expression #expressionComp
-    | expression '.' METHOD_NAME '(' (term ( ',' term)* )? ')' #expressionMethod
     | fact_term #expressionTerm
     | VARIABLE #expressionVariable
     ;

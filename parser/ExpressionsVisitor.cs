@@ -1,7 +1,6 @@
 namespace parser;
 
 using Antlr4.Runtime.Misc;
-using biscuit_net.Proto;
 
 public class ExpressionsVisitor : ExpressionsBaseVisitor<List<Op>>
 {
@@ -24,7 +23,19 @@ public class ExpressionsVisitor : ExpressionsBaseVisitor<List<Op>>
     public override List<Op> VisitExpressionComp([NotNull] ExpressionsParser.ExpressionCompContext context) 
         => VisitExpressionBinary(context.expression(0), context.expression(1), context.comp);
     
+    public override List<Op> VisitExpressionMethod([NotNull] ExpressionsParser.ExpressionMethodContext context) 
+    {
+        var methodParams = context.term();
 
+        var operands = new List<Op>();
+        operands.AddRange(base.Visit(context.expression()));
+        operands.Add(_termVisitor.Visit(methodParams[0]));
+        
+        operands.Add(ToBinaryOp(context.METHOD_NAME().GetText()));
+
+        return operands;
+    }
+    
     List<Op> VisitExpressionBinary(ExpressionsParser.ExpressionContext context1, ExpressionsParser.ExpressionContext context2, Antlr4.Runtime.IToken op) 
     {
         var operands = new List<Op>();
@@ -48,16 +59,20 @@ public class ExpressionsVisitor : ExpressionsBaseVisitor<List<Op>>
             "-" =>  OpBinary.Kind.Sub,
             "*" =>  OpBinary.Kind.Mul,
             "/" =>  OpBinary.Kind.Div,
+            "starts_with" => OpBinary.Kind.Prefix,
+            "ends_with" => OpBinary.Kind.Suffix,
+            "contains" => OpBinary.Kind.Contains,
+            "matches" => OpBinary.Kind.Regex,
             _ => throw new NotSupportedException(opText)
         };
         
-        return new Op() { Binary = new OpBinary() { kind = kind }};
+        return new Op(new OpBinary(kind));
     }
 
     public override List<Op> VisitExpressionUnary([NotNull] ExpressionsParser.ExpressionUnaryContext context) 
     {
         var ops = Visit(context.expression());
-        ops.Add(new Op() { Unary = new OpUnary() { kind = OpUnary.Kind.Negate }});
+        ops.Add(new Op(new OpUnary(OpUnary.Kind.Negate)));
 
         return ops;
     }

@@ -49,8 +49,8 @@ public partial class ExpressionsParser : Parser {
 	};
 
 	private static readonly string[] _LiteralNames = {
-		null, "'check'", "'if'", "'or'", "','", "'!'", "'('", "')'", "'*'", "'/'", 
-		"'+'", "'-'", "'||'", "'&&'", "'>='", "'<='", "'>'", "'<'", "'=='", "'.'", 
+		null, "'check'", "'if'", "'or'", "','", "'!'", "'('", "')'", "'.'", "'*'", 
+		"'/'", "'+'", "'-'", "'||'", "'&&'", "'>='", "'<='", "'>'", "'<'", "'=='", 
 		"'['", "']'"
 	};
 	private static readonly string[] _SymbolicNames = {
@@ -603,11 +603,11 @@ public partial class ExpressionsParser : Parser {
 						_localctx = new ExpressionMultContext(new ExpressionContext(_parentctx, _parentState));
 						PushNewRecursionContext(_localctx, _startState, RULE_expression);
 						State = 47;
-						if (!(Precpred(Context, 7))) throw new FailedPredicateException(this, "Precpred(Context, 7)");
+						if (!(Precpred(Context, 6))) throw new FailedPredicateException(this, "Precpred(Context, 6)");
 						State = 48;
 						((ExpressionMultContext)_localctx).mult = TokenStream.LT(1);
 						_la = TokenStream.LA(1);
-						if ( !(_la==T__7 || _la==T__8) ) {
+						if ( !(_la==T__8 || _la==T__9) ) {
 							((ExpressionMultContext)_localctx).mult = ErrorHandler.RecoverInline(this);
 						}
 						else {
@@ -615,7 +615,7 @@ public partial class ExpressionsParser : Parser {
 						    Consume();
 						}
 						State = 49;
-						expression(8);
+						expression(7);
 						}
 						break;
 					case 2:
@@ -623,11 +623,11 @@ public partial class ExpressionsParser : Parser {
 						_localctx = new ExpressionAddContext(new ExpressionContext(_parentctx, _parentState));
 						PushNewRecursionContext(_localctx, _startState, RULE_expression);
 						State = 50;
-						if (!(Precpred(Context, 6))) throw new FailedPredicateException(this, "Precpred(Context, 6)");
+						if (!(Precpred(Context, 5))) throw new FailedPredicateException(this, "Precpred(Context, 5)");
 						State = 51;
 						((ExpressionAddContext)_localctx).add = TokenStream.LT(1);
 						_la = TokenStream.LA(1);
-						if ( !(_la==T__9 || _la==T__10) ) {
+						if ( !(_la==T__10 || _la==T__11) ) {
 							((ExpressionAddContext)_localctx).add = ErrorHandler.RecoverInline(this);
 						}
 						else {
@@ -635,7 +635,7 @@ public partial class ExpressionsParser : Parser {
 						    Consume();
 						}
 						State = 52;
-						expression(7);
+						expression(6);
 						}
 						break;
 					case 3:
@@ -643,11 +643,11 @@ public partial class ExpressionsParser : Parser {
 						_localctx = new ExpressionLogicContext(new ExpressionContext(_parentctx, _parentState));
 						PushNewRecursionContext(_localctx, _startState, RULE_expression);
 						State = 53;
-						if (!(Precpred(Context, 5))) throw new FailedPredicateException(this, "Precpred(Context, 5)");
+						if (!(Precpred(Context, 4))) throw new FailedPredicateException(this, "Precpred(Context, 4)");
 						State = 54;
 						((ExpressionLogicContext)_localctx).logic = TokenStream.LT(1);
 						_la = TokenStream.LA(1);
-						if ( !(_la==T__11 || _la==T__12) ) {
+						if ( !(_la==T__12 || _la==T__13) ) {
 							((ExpressionLogicContext)_localctx).logic = ErrorHandler.RecoverInline(this);
 						}
 						else {
@@ -655,7 +655,7 @@ public partial class ExpressionsParser : Parser {
 						    Consume();
 						}
 						State = 55;
-						expression(6);
+						expression(5);
 						}
 						break;
 					case 4:
@@ -663,11 +663,11 @@ public partial class ExpressionsParser : Parser {
 						_localctx = new ExpressionCompContext(new ExpressionContext(_parentctx, _parentState));
 						PushNewRecursionContext(_localctx, _startState, RULE_expression);
 						State = 56;
-						if (!(Precpred(Context, 4))) throw new FailedPredicateException(this, "Precpred(Context, 4)");
+						if (!(Precpred(Context, 3))) throw new FailedPredicateException(this, "Precpred(Context, 3)");
 						State = 57;
 						((ExpressionCompContext)_localctx).comp = TokenStream.LT(1);
 						_la = TokenStream.LA(1);
-						if ( !(((_la) & ~0x3f) == 0 && ((1L << _la) & 507904L) != 0) ) {
+						if ( !(((_la) & ~0x3f) == 0 && ((1L << _la) & 1015808L) != 0) ) {
 							((ExpressionCompContext)_localctx).comp = ErrorHandler.RecoverInline(this);
 						}
 						else {
@@ -675,7 +675,7 @@ public partial class ExpressionsParser : Parser {
 						    Consume();
 						}
 						State = 58;
-						expression(5);
+						expression(4);
 						}
 						break;
 					case 5:
@@ -683,9 +683,9 @@ public partial class ExpressionsParser : Parser {
 						_localctx = new ExpressionMethodContext(new ExpressionContext(_parentctx, _parentState));
 						PushNewRecursionContext(_localctx, _startState, RULE_expression);
 						State = 59;
-						if (!(Precpred(Context, 3))) throw new FailedPredicateException(this, "Precpred(Context, 3)");
+						if (!(Precpred(Context, 7))) throw new FailedPredicateException(this, "Precpred(Context, 7)");
 						State = 60;
-						Match(T__18);
+						Match(T__7);
 						State = 61;
 						Match(METHOD_NAME);
 						State = 62;
@@ -1284,11 +1284,11 @@ public partial class ExpressionsParser : Parser {
 	}
 	private bool expression_sempred(ExpressionContext _localctx, int predIndex) {
 		switch (predIndex) {
-		case 0: return Precpred(Context, 7);
-		case 1: return Precpred(Context, 6);
-		case 2: return Precpred(Context, 5);
-		case 3: return Precpred(Context, 4);
-		case 4: return Precpred(Context, 3);
+		case 0: return Precpred(Context, 6);
+		case 1: return Precpred(Context, 5);
+		case 2: return Precpred(Context, 4);
+		case 3: return Precpred(Context, 3);
+		case 4: return Precpred(Context, 7);
 		}
 		return true;
 	}
@@ -1301,8 +1301,8 @@ public partial class ExpressionsParser : Parser {
 		3,1,3,1,3,5,3,67,8,3,10,3,12,3,70,9,3,3,3,72,8,3,1,3,5,3,75,8,3,10,3,12,
 		3,78,9,3,1,4,1,4,3,4,82,8,4,1,5,1,5,1,5,1,5,1,5,1,5,3,5,90,8,5,1,6,1,6,
 		1,6,1,6,1,6,3,6,97,8,6,1,7,1,7,1,7,1,7,5,7,103,8,7,10,7,12,7,106,9,7,3,
-		7,108,8,7,1,7,1,7,1,7,0,1,6,8,0,2,4,6,8,10,12,14,0,4,1,0,8,9,1,0,10,11,
-		1,0,12,13,1,0,14,18,127,0,16,1,0,0,0,2,26,1,0,0,0,4,34,1,0,0,0,6,45,1,
+		7,108,8,7,1,7,1,7,1,7,0,1,6,8,0,2,4,6,8,10,12,14,0,4,1,0,9,10,1,0,11,12,
+		1,0,13,14,1,0,15,19,127,0,16,1,0,0,0,2,26,1,0,0,0,4,34,1,0,0,0,6,45,1,
 		0,0,0,8,81,1,0,0,0,10,89,1,0,0,0,12,96,1,0,0,0,14,98,1,0,0,0,16,17,5,1,
 		0,0,17,18,5,2,0,0,18,23,3,2,1,0,19,20,5,3,0,0,20,22,3,2,1,0,21,19,1,0,
 		0,0,22,25,1,0,0,0,23,21,1,0,0,0,23,24,1,0,0,0,24,1,1,0,0,0,25,23,1,0,0,
@@ -1311,24 +1311,24 @@ public partial class ExpressionsParser : Parser {
 		35,5,1,0,0,0,36,37,6,3,-1,0,37,38,5,5,0,0,38,46,3,6,3,9,39,40,5,6,0,0,
 		40,41,3,6,3,0,41,42,5,7,0,0,42,46,1,0,0,0,43,46,3,10,5,0,44,46,5,22,0,
 		0,45,36,1,0,0,0,45,39,1,0,0,0,45,43,1,0,0,0,45,44,1,0,0,0,46,76,1,0,0,
-		0,47,48,10,7,0,0,48,49,7,0,0,0,49,75,3,6,3,8,50,51,10,6,0,0,51,52,7,1,
-		0,0,52,75,3,6,3,7,53,54,10,5,0,0,54,55,7,2,0,0,55,75,3,6,3,6,56,57,10,
-		4,0,0,57,58,7,3,0,0,58,75,3,6,3,5,59,60,10,3,0,0,60,61,5,19,0,0,61,62,
-		5,28,0,0,62,71,5,6,0,0,63,68,3,8,4,0,64,65,5,4,0,0,65,67,3,8,4,0,66,64,
-		1,0,0,0,67,70,1,0,0,0,68,66,1,0,0,0,68,69,1,0,0,0,69,72,1,0,0,0,70,68,
-		1,0,0,0,71,63,1,0,0,0,71,72,1,0,0,0,72,73,1,0,0,0,73,75,5,7,0,0,74,47,
-		1,0,0,0,74,50,1,0,0,0,74,53,1,0,0,0,74,56,1,0,0,0,74,59,1,0,0,0,75,78,
-		1,0,0,0,76,74,1,0,0,0,76,77,1,0,0,0,77,7,1,0,0,0,78,76,1,0,0,0,79,82,3,
-		10,5,0,80,82,5,22,0,0,81,79,1,0,0,0,81,80,1,0,0,0,82,9,1,0,0,0,83,90,5,
-		26,0,0,84,90,5,23,0,0,85,90,5,24,0,0,86,90,5,25,0,0,87,90,5,27,0,0,88,
-		90,3,14,7,0,89,83,1,0,0,0,89,84,1,0,0,0,89,85,1,0,0,0,89,86,1,0,0,0,89,
-		87,1,0,0,0,89,88,1,0,0,0,90,11,1,0,0,0,91,97,5,26,0,0,92,97,5,23,0,0,93,
-		97,5,24,0,0,94,97,5,25,0,0,95,97,5,27,0,0,96,91,1,0,0,0,96,92,1,0,0,0,
-		96,93,1,0,0,0,96,94,1,0,0,0,96,95,1,0,0,0,97,13,1,0,0,0,98,107,5,20,0,
-		0,99,104,3,10,5,0,100,101,5,4,0,0,101,103,3,12,6,0,102,100,1,0,0,0,103,
-		106,1,0,0,0,104,102,1,0,0,0,104,105,1,0,0,0,105,108,1,0,0,0,106,104,1,
-		0,0,0,107,99,1,0,0,0,107,108,1,0,0,0,108,109,1,0,0,0,109,110,5,21,0,0,
-		110,15,1,0,0,0,12,23,31,45,68,71,74,76,81,89,96,104,107
+		0,47,48,10,6,0,0,48,49,7,0,0,0,49,75,3,6,3,7,50,51,10,5,0,0,51,52,7,1,
+		0,0,52,75,3,6,3,6,53,54,10,4,0,0,54,55,7,2,0,0,55,75,3,6,3,5,56,57,10,
+		3,0,0,57,58,7,3,0,0,58,75,3,6,3,4,59,60,10,7,0,0,60,61,5,8,0,0,61,62,5,
+		28,0,0,62,71,5,6,0,0,63,68,3,8,4,0,64,65,5,4,0,0,65,67,3,8,4,0,66,64,1,
+		0,0,0,67,70,1,0,0,0,68,66,1,0,0,0,68,69,1,0,0,0,69,72,1,0,0,0,70,68,1,
+		0,0,0,71,63,1,0,0,0,71,72,1,0,0,0,72,73,1,0,0,0,73,75,5,7,0,0,74,47,1,
+		0,0,0,74,50,1,0,0,0,74,53,1,0,0,0,74,56,1,0,0,0,74,59,1,0,0,0,75,78,1,
+		0,0,0,76,74,1,0,0,0,76,77,1,0,0,0,77,7,1,0,0,0,78,76,1,0,0,0,79,82,3,10,
+		5,0,80,82,5,22,0,0,81,79,1,0,0,0,81,80,1,0,0,0,82,9,1,0,0,0,83,90,5,26,
+		0,0,84,90,5,23,0,0,85,90,5,24,0,0,86,90,5,25,0,0,87,90,5,27,0,0,88,90,
+		3,14,7,0,89,83,1,0,0,0,89,84,1,0,0,0,89,85,1,0,0,0,89,86,1,0,0,0,89,87,
+		1,0,0,0,89,88,1,0,0,0,90,11,1,0,0,0,91,97,5,26,0,0,92,97,5,23,0,0,93,97,
+		5,24,0,0,94,97,5,25,0,0,95,97,5,27,0,0,96,91,1,0,0,0,96,92,1,0,0,0,96,
+		93,1,0,0,0,96,94,1,0,0,0,96,95,1,0,0,0,97,13,1,0,0,0,98,107,5,20,0,0,99,
+		104,3,10,5,0,100,101,5,4,0,0,101,103,3,12,6,0,102,100,1,0,0,0,103,106,
+		1,0,0,0,104,102,1,0,0,0,104,105,1,0,0,0,105,108,1,0,0,0,106,104,1,0,0,
+		0,107,99,1,0,0,0,107,108,1,0,0,0,108,109,1,0,0,0,109,110,5,21,0,0,110,
+		15,1,0,0,0,12,23,31,45,68,71,74,76,81,89,96,104,107
 	};
 
 	public static readonly ATN _ATN =

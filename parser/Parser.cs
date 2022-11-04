@@ -1,7 +1,6 @@
 ﻿namespace parser;
 
 using Antlr4.Runtime;
-using biscuit_net.Proto;
 
 public class Parser
 {
