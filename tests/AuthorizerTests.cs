@@ -1,6 +1,7 @@
 using VeryNaiveDatalog;
 using biscuit_net;
 using System.Text.RegularExpressions;
+using parser;
 
 namespace tests;
 public class AuthorizerTests
@@ -16,6 +17,7 @@ public class AuthorizerTests
     //[BiscuitCases("test13_block_rules.bc")] //TODO contains time and string set expressions
     //[BiscuitCases("test14_regex_constraint.bc")] //TODO contains string expressions regex
     //[BiscuitCases("test16_caveat_head_name.bc")] //OK
+    //[BiscuitCases("test17_expressions.bc")] //OK
     //[BiscuitCases("test18_unbound_variables_in_rule.bc")] //TODO
     //[BiscuitCases("test19_generating_ambient_from_variables.bc")] //OK
     //[BiscuitCases("test22_default_symbols.bc")] //TODO contains int term
@@ -35,7 +37,7 @@ public class AuthorizerTests
             }
             if(authorizerCheckRule != null)
             {
-                authorizer.AddCheck(authorizerCheckRule);
+                authorizer.AddCheck(new Check(new []{authorizerCheckRule}));
             }
         }
         

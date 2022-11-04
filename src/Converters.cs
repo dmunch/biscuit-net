@@ -2,6 +2,8 @@ using VeryNaiveDatalog;
 
 namespace biscuit_net;
 using Proto;
+using parser;
+
 
 public static class Converters
 {
@@ -32,6 +34,10 @@ public static class Converters
                 new Boolean(term.Bool),
             TermV2.ContentOneofCase.Integer => 
                 new Integer(term.Integer),
+            TermV2.ContentOneofCase.Bytes => 
+                new Bytes(term.Bytes),
+            TermV2.ContentOneofCase.Set => 
+                new Set(term.Set.Sets.Select(item => ToAtom(item, blockSymbols)).ToList()),
             _ => throw new NotImplementedException($"{term.ContentCase}")
         };
     }
@@ -46,15 +52,16 @@ public static class Converters
         }).ToList();
     }
 
-    static public IEnumerable<RuleExpressions> ToQueries(this IEnumerable<CheckV2> checks, List<string> blockSymbols)
+    static public IEnumerable<Check> ToChecks(this IEnumerable<CheckV2> checks, List<string> blockSymbols)
     {
-        return checks.SelectMany(check => {
-            return check.Queries.Select(query => {
-                var head = ToAtom(query.Head, blockSymbols);
-                var body = query.Bodies.Select(body => ToAtom(body, blockSymbols));
+        return checks.Select(check => {
+                var rules = check.Queries.Select(query => {
+                    var head = ToAtom(query.Head, blockSymbols);
+                    var body = query.Bodies.Select(body => ToAtom(body, blockSymbols));
 
-                return new RuleExpressions(head, body, ToParserExpr(query.Expressions, blockSymbols));
-            });
+                    return new RuleExpressions(head, body, ToParserExpr(query.Expressions, blockSymbols));
+                });
+                return new Check(rules);
         });
     }
 

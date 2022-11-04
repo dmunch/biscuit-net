@@ -14,3 +14,5 @@ public record RuleExpressions(
         public virtual bool Equals(RuleExpressions? other) => base.Equals(other) && Expressions.SequenceEqual(other.Expressions);
         public override int GetHashCode() => HashCode.Combine(base.GetHashCode(), Expressions.Aggregate(0, HashCode.Combine));
     }
+
+public record Check(IEnumerable<RuleExpressions> Rules);

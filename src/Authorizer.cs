@@ -1,8 +1,9 @@
 using VeryNaiveDatalog;
+using parser;
 
 namespace biscuit_net;
 
-public record World(List<Atom> Atoms, List<string> Symbols, List<RuleExpressions> Checks);
+public record World(List<Atom> Atoms, List<string> Symbols, List<Check> Checks);
 public record FailedBlockCheck(int BlockId, int CheckId/*, RuleExpressions Rule*/);
 public record FailedAuthorizerCheck(int CheckId/*, RuleExpressions Rule*/);
 public record Error(FailedBlockCheck Block, FailedAuthorizerCheck Authorizer, InvalidBlockRule InvalidBlockRule);
@@ -10,14 +11,14 @@ public record Error(FailedBlockCheck Block, FailedAuthorizerCheck Authorizer, In
 public class Authorizer
 {
     List<Atom> _authorizerAtoms = new List<Atom>();
-    List<RuleExpressions> _authorizerChecks = new List<RuleExpressions>();
+    List<Check> _authorizerChecks = new List<Check>();
 
     public void AddAtom(Atom atom)
     {
         _authorizerAtoms.Add(atom);
     }
 
-    public void AddCheck(RuleExpressions check)
+    public void AddCheck(Check check)
     {
         _authorizerChecks.Add(check);
     }
@@ -54,7 +55,7 @@ public class Authorizer
 
     bool TryCheckBlock(World world, Block block, IEnumerable<Atom> blockAtoms, int blockId, out Error err)
     {
-        var (blockCheck, failedCheckId, failedRule) = Check(blockAtoms, block.CheckQueries, world);
+        var (blockCheck, failedCheckId, failedRule) = Check(blockAtoms, block.Checks, world);
         
         if(!blockCheck) 
         {
@@ -83,26 +84,39 @@ public class Authorizer
         return blockScopedAtoms;
     }
 
-    (bool, int, RuleExpressions?) Check(IEnumerable<Atom> blockAtoms, IEnumerable<RuleExpressions> checks, World world)
+    (bool, int, Check?) Check(IEnumerable<Atom> blockAtoms, IEnumerable<Check> checks, World world)
     {
-        var result = true;
-        var i = 0;
-        foreach(var query in checks)
+        var result = true; 
+        var checkId = 0;
+        foreach(var check in checks)
         {
-            var eval = blockAtoms.Evaluate(new []{query}, world.Symbols);
+            var ruleResult = false; 
+            foreach(var rule in check.Rules)
+            {
+                var eval = blockAtoms.Evaluate(rule, world.Symbols, out var expressionResult);
 
-            var checkScopedAtoms = blockAtoms.ToList();
-            checkScopedAtoms.AddRange(eval);
-            var subs = query.Head.UnifyWith(checkScopedAtoms, new Substitution());
+                var checkScopedAtoms = blockAtoms.ToList();
+                checkScopedAtoms.AddRange(eval);
+                var subs = rule.Head.UnifyWith(checkScopedAtoms, new Substitution());
 
-            result &= subs.Any();
+                if(rule.Body.Any())
+                {
+                    ruleResult |= subs.Any();
+                }
+                if(rule.Expressions.Any())
+                {
+                    ruleResult |= expressionResult;
+                }
+            }
+
+            result &= ruleResult;
             if(!result) 
             {
                 //check failed? we return false, alongside
                 //the check index and the actual rule used for the check
-                return (false, i, query);
+                return (false, checkId, check);
             }
-            i++;
+            checkId++;
         }
         return (true, -1, null);
     }

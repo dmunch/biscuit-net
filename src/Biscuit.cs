@@ -14,7 +14,7 @@ public class Block
 
     public IEnumerable<Atom> Atoms { get; protected set; }
     public IEnumerable<RuleExpressions> Rules { get; protected set; }
-    public IEnumerable<RuleExpressions> CheckQueries { get; protected set; }
+    public IEnumerable<Check> Checks { get; protected set; }
 
     public List<string> Symbols { get; private set; }
 
@@ -22,7 +22,7 @@ public class Block
     {
         Atoms = block.FactsV2s.ToAtoms(symbols);
         Rules = block.RulesV2s.ToRules(symbols);
-        CheckQueries = block.ChecksV2s.ToQueries(symbols);
+        Checks = block.ChecksV2s.ToChecks(symbols);
 
         Symbols = symbols;
     }

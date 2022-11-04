@@ -8,8 +8,9 @@ namespace biscuit_net;
 public static class Evaluator
 {
     // Just a lifting of Rule.Apply to an IEnumerable<Rule>.
-    public static IEnumerable<Atom> Apply(this IEnumerable<RuleExpressions> rules, IEnumerable<Atom> kb, List<string> symbols) => rules.SelectMany(r => r.Apply(kb, symbols)).ToHashSet();
-
+    public static IEnumerable<Atom> Apply(this IEnumerable<RuleExpressions> rules, IEnumerable<Atom> kb, List<string> symbols) 
+        =>  rules.SelectMany(r =>  r.Apply(kb, symbols, out var innerExpressionResult)).ToHashSet();
+    
     public static IEnumerable<Atom> Evaluate(this IEnumerable<Atom> kb, IEnumerable<RuleExpressions> rules, List<string> symbols)
     {
         var nextKb = rules.Apply(kb, symbols);
@@ -22,7 +23,19 @@ public static class Evaluator
         return nextKb;
     }
 
-    public static IEnumerable<Atom> Apply(this RuleExpressions rule, IEnumerable<Atom> kb, List<string> symbols)
+    public static IEnumerable<Atom> Evaluate(this IEnumerable<Atom> kb, RuleExpressions rule, List<string> symbols, out bool expressionResult)
+    {
+        var nextKb = rule.Apply(kb, symbols, out expressionResult);
+        if (nextKb.Except(kb).Any())
+        {
+            var union = kb.Union(nextKb);
+            return union.Evaluate(rule, symbols, out expressionResult);
+        }
+
+        return nextKb;
+    }
+
+    public static IEnumerable<Atom> Apply(this RuleExpressions rule, IEnumerable<Atom> kb, List<string> symbols, out bool expressionResult)
     {
         // The initial collection of bindings from which to build upon
         var seed = new[] {new Substitution()}.AsEnumerable();
@@ -40,17 +53,11 @@ public static class Evaluator
             }
         }
 
-        //if we have expressions, but not substitutions, we fail rule application
-        //otherwise we evaluate the expression 
-        var passed = rule.Expressions.Any() && !s.Any()
-            ? false
-            : rule.Expressions.All(ex => {
-                    var parserOps = ex.Ops.Select(op => Converters.ToParserOp(op, symbols)).ToList();
-                     return ExpressionEvaluator.Evaluate(parserOps, v => v.Apply(s));
-                }                
-            );
-        
-        if(passed)
+        expressionResult = rule.Expressions.All(ex =>
+            ExpressionEvaluator.Evaluate(ex.Ops, v => v.Apply(s))
+        );
+
+        if(expressionResult)
             // Apply the bindings accumulated in the rule's body (the premises) to the rule's head (the conclusion),
             // thus obtaining the new atoms.
             return matches.Select(rule.Head.Apply);

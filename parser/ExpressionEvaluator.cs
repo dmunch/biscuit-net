@@ -61,18 +61,15 @@ public static class ExpressionEvaluator
                     stack.Push(res);
                     break;            
                 }
-                case Op.OpType.Unary: {
+                case Op.OpType.Unary when op.UnaryOp.OpKind == OpUnary.Kind.Parens: break; //do nothing
+                case Op.OpType.Unary when op.UnaryOp.OpKind == OpUnary.Kind.Length: break; //TODO
+                case Op.OpType.Unary when op.UnaryOp.OpKind == OpUnary.Kind.Negate: {
                     //unary operation: an operation that applies on one argument.
                     //When executed, it pops a value from the stack, applies the operation, then pushes the result
+
                     var value = stack.Pop();
-                    var result = op.UnaryOp.OpKind switch
-                    {
-                        OpUnary.Kind.Length => throw new NotImplementedException(),
-                        OpUnary.Kind.Negate => !(Boolean) value,
-                        OpUnary.Kind.Parens => throw new NotImplementedException(),
-                        _ => throw new NotSupportedException($"{op.UnaryOp.OpKind}")
-                    };
-                    stack.Push(new Boolean(result));
+                    stack.Push(new Boolean(!(Boolean) value));
+                    
                     break; 
                 }
                 case Op.OpType.Value when op.Value != null: {
@@ -82,7 +79,13 @@ public static class ExpressionEvaluator
 
                     if(op.Value is Variable v)
                     {
-                        stack.Push(variableResolver(v));
+                        var resolved = variableResolver(v);
+                        if(resolved is Variable)
+                        {
+                            //variable couldn't be resolved, expression evulation thus results to false
+                            return false;
+                        }
+                        stack.Push(resolved);
                         break;
                     }
 
