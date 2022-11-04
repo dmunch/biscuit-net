@@ -21,4 +21,22 @@ public class Parser
         
         return ops;
     }
+
+    public RuleExpressions ParseRule(string ruleString)
+    {
+        var charStream = new AntlrInputStream(ruleString);
+        var lexer = new ExpressionsLexer(charStream);
+        var tokenStream = new CommonTokenStream(lexer);
+        var parser = new ExpressionsParser(tokenStream);
+        
+        parser.AddErrorListener(new ErrorListener());
+
+        var ruleListener = new RuleListener();
+        parser.AddParseListener(ruleListener);
+        var tree = parser.check();
+
+        var errors = parser.NumberOfSyntaxErrors;
+        
+        return ruleListener.GetRuleExpressions();
+    }
 }

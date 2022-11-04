@@ -50,6 +50,12 @@ public interface IExpressionsVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitRule_body_element([NotNull] ExpressionsParser.Rule_body_elementContext context);
 	/// <summary>
+	/// Visit a parse tree produced by <see cref="ExpressionsParser.predicate"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitPredicate([NotNull] ExpressionsParser.PredicateContext context);
+	/// <summary>
 	/// Visit a parse tree produced by the <c>expressionAdd</c>
 	/// labeled alternative in <see cref="ExpressionsParser.expression"/>.
 	/// </summary>

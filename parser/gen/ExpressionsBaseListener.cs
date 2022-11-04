@@ -72,6 +72,18 @@ public partial class ExpressionsBaseListener : IExpressionsListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitRule_body_element([NotNull] ExpressionsParser.Rule_body_elementContext context) { }
 	/// <summary>
+	/// Enter a parse tree produced by <see cref="ExpressionsParser.predicate"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterPredicate([NotNull] ExpressionsParser.PredicateContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="ExpressionsParser.predicate"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitPredicate([NotNull] ExpressionsParser.PredicateContext context) { }
+	/// <summary>
 	/// Enter a parse tree produced by the <c>expressionAdd</c>
 	/// labeled alternative in <see cref="ExpressionsParser.expression"/>.
 	/// <para>The default implementation does nothing.</para>

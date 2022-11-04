@@ -42,7 +42,7 @@ public static class Converters
             var head = ToAtom(rule.Head, blockSymbols);
             var body = rule.Bodies.Select(body => ToAtom(body, blockSymbols));
             
-            return new RuleExpressions(head, body, rule.Expressions);
+            return new RuleExpressions(head, body, ToParserExpr(rule.Expressions, blockSymbols));
         }).ToList();
     }
 
@@ -53,12 +53,18 @@ public static class Converters
                 var head = ToAtom(query.Head, blockSymbols);
                 var body = query.Bodies.Select(body => ToAtom(body, blockSymbols));
 
-                return new RuleExpressions(head, body, query.Expressions);
+                return new RuleExpressions(head, body, ToParserExpr(query.Expressions, blockSymbols));
             });
         });
     }
 
-    static public parser.Op ToParserOp(Op op, List<string> symbols)
+    static public IEnumerable<parser.Expression> ToParserExpr(IEnumerable<Proto.ExpressionV2> exprs, List<string> symbols)
+        => exprs.Select(expr => new parser.Expression(ToParserOp(expr.Ops, symbols).ToList()));
+
+    static public IEnumerable<parser.Op> ToParserOp(IEnumerable<Proto.Op> ops, List<string> symbols)
+        => ops.Select(op => ToParserOp(op, symbols));
+
+    static public parser.Op ToParserOp(Proto.Op op, List<string> symbols)
      => op.ContentCase switch
         {
             Proto.Op.ContentOneofCase.None => new parser.Op(),

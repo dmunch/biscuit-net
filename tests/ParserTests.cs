@@ -1,6 +1,8 @@
 using biscuit_net;
 using System.Text.RegularExpressions;
 using parser;
+using VeryNaiveDatalog;
+
 namespace tests;
 public class ParserTests
 {
@@ -41,5 +43,88 @@ public class ParserTests
         var ops = parser.Parse(expression);
 
         Assert.True(ExpressionEvaluator.Evaluate(ops, v => throw new NotImplementedException()));
+    }
+
+    [Fact]
+    public void Should_Parse_Rule_1()
+    {
+        var parser = new parser.Parser();
+        var rule = parser.ParseRule("check if right($0, $1), resource($0), operation($1)");
+
+        Assert.Equal(new RuleExpressions(
+            new Atom("check1"), 
+            new List<Atom>
+            {
+                new Atom("right", new Variable("0"), new Variable("1")),
+                new Atom("resource", new Variable("0")),
+                new Atom("operation", new Variable("1")),
+            }, 
+            new List<parser.Expression>()
+        ), rule);
+    }
+
+    [Fact]
+    public void Should_Parse_Rule_With_Or()
+    {
+        var parser = new parser.Parser();
+        var rule = parser.ParseRule("check if must_be_present($0) or must_be_present($0)");
+
+        Assert.Equal(new RuleExpressions(
+            new Atom("check1"), 
+            new []
+            {
+                new Atom("must_be_present", new Variable("0")),
+                new Atom("must_be_present", new Variable("0"))
+            }, 
+            Enumerable.Empty<parser.Expression>()
+        ), rule);
+    }
+
+    [Fact]
+    public void Should_Parse_Rule_With_Default_Symbols()
+    {
+        var parser = new parser.Parser();
+        var check = "check if read(0), write(1), resource(2), operation(3), right(4), time(5), role(6), owner(7), tenant(8), namespace(9), user(10), team(11), service(12), admin(13), email(14), group(15), member(16), ip_address(17), client(18), client_ip(19), domain(20), path(21), version(22), cluster(23), node(24), hostname(25), nonce(26), query(27)";
+        var rule = parser.ParseRule(check);
+
+        var tokens = check.Split(", ");
+        tokens[0] = tokens[0].Remove(0, "check if ".Length);
+
+        string intTermPattern = @"^([a-zA-Z_]+)\((\d+)\)$";
+        var intTermRegex = new Regex(intTermPattern);
+        
+        var atoms = new List<Atom>();
+        foreach(var token in tokens)
+        {
+            var match = intTermRegex.Match(token.Trim(';'));
+            var name = match.Groups[1];
+            var intValueString = match.Groups[2];
+            
+            Assert.True(int.TryParse(intValueString.Value, out var intValue));
+            atoms.Add(new Atom(name.Value, new Integer(intValue)));
+        }
+        
+        Assert.Equal(new RuleExpressions(
+            new Atom("check1"), 
+            atoms,
+            Enumerable.Empty<parser.Expression>()
+        ), rule);
+    }
+
+    [Fact]
+    public void Should_Parse_Rule_With_Funny_Characters()
+    {
+        var parser = new parser.Parser();
+        var rule = parser.ParseRule("check if ns::fact_123(\"hello é\t😁\");");
+
+        
+        Assert.Equal(new RuleExpressions(
+            new Atom("check1"), 
+            new []
+            {
+                new Atom("ns::fact_123", new String("hello é\t😁"))
+            }, 
+            Enumerable.Empty<parser.Expression>()
+        ), rule);
     }
 }

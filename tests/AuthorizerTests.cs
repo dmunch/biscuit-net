@@ -83,67 +83,12 @@ public class AuthorizerTests
                 var dateTAI = Date.ToTAI64(dateParsed);
                 yield return (new Atom(name, new Date(dateTAI)), null);
             }
-            else if(line.StartsWith("check if right($0, $1), resource($0), operation($1)"))
+            else if(line.StartsWith("check if"))
             {
-                yield return (null, new RuleExpressions(
-                    new Atom("check1"), 
-                    new []
-                    {
-                        new Atom("right", new Variable("0"), new Variable("1")),
-                        new Atom("resource", new Variable("0")),
-                        new Atom("operation", new Variable("1")),
-                    }, 
-                    Enumerable.Empty<biscuit_net.Proto.ExpressionV2>()
-                ));
-            }
-            else if(line.StartsWith("check if must_be_present($0) or must_be_present($0)"))
-            {
-                yield return (null, new RuleExpressions(
-                    new Atom("check1"), 
-                    new []
-                    {
-                        new Atom("must_be_present", new Variable("0")),
-                        new Atom("must_be_present", new Variable("0"))
-                    }, 
-                    Enumerable.Empty<biscuit_net.Proto.ExpressionV2>()
-                ));
-            }
-            else if(line.StartsWith("check if read(0), write(1), resource(2), operation(3), right(4), time(5), role(6), owner(7), tenant(8), namespace(9), user(10), team(11), service(12), admin(13), email(14), group(15), member(16), ip_address(17), client(18), client_ip(19), domain(20), path(21), version(22), cluster(23), node(24), hostname(25), nonce(26), query(27)"))
-            {
-                var tokens = line.Split(", ");
-                tokens[0] = tokens[0].Remove(0, "check if ".Length);
-
-                var atoms = new List<Atom>();
-                foreach(var token in tokens)
-                {
-                    var match = intTermRegex.Match(token.Trim(';'));
-                    var name = match.Groups[1];
-                    var intValueString = match.Groups[2];
-                    
-                    Assert.True(int.TryParse(intValueString.Value, out var intValue));
-                    atoms.Add(new Atom(name.Value, new Integer(intValue)));
-                }
-
-                yield return (null, new RuleExpressions(
-                    new Atom("check1"), 
-                    atoms,
-                    Enumerable.Empty<biscuit_net.Proto.ExpressionV2>()
-                ));
-            }
-            else if(line.StartsWith("check if ns::fact_123(\"hello é\t😁\");"))
-            {
-                yield return (null, new RuleExpressions(
-                    new Atom("check1"), 
-                    new []
-                    {
-                        new Atom("ns::fact_123", new String("hello é\t😁"))
-                    }, 
-                    Enumerable.Empty<biscuit_net.Proto.ExpressionV2>()
-                ));
+                var parser = new parser.Parser();
+                yield return (null, parser.ParseRule(line));
             }
 
-
-            
             else throw new NotSupportedException(line);
         }
     }

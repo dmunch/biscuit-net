@@ -1,6 +1,6 @@
 using VeryNaiveDatalog;
 
-public sealed record Set(List<Constant> Values) : Constant;
+public sealed record Set(List<Term> Values) : Constant;
 
 public sealed record Bytes(byte[] Value) : Constant
 {

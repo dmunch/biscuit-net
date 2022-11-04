@@ -1,15 +1,8 @@
-﻿using biscuit_net.Proto;
-using ProtoBuf;
+﻿using ProtoBuf;
 using VeryNaiveDatalog;
+using parser;
 
 namespace biscuit_net;
-
-
-public record RuleExpressions(
-        Atom Head, 
-        IEnumerable<Atom> Body, 
-        IEnumerable<ExpressionV2> Expressions) 
-    : Rule(Head, Body);
 
 //TODO Assuming the int is a RuleId - specification and examples are unclear here
 public record InvalidBlockRule(int RuleId/*, RuleExpressions Rule*/);

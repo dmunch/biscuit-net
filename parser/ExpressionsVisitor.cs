@@ -6,7 +6,7 @@ public class ExpressionsVisitor : ExpressionsBaseVisitor<List<Op>>
 {
     TermVisitor _termVisitor = new TermVisitor();
     
-     public override List<Op> VisitExpressionParentheses([NotNull] ExpressionsParser.ExpressionParenthesesContext context) 
+    public override List<Op> VisitExpressionParentheses([NotNull] ExpressionsParser.ExpressionParenthesesContext context) 
     {
         return base.Visit(context.expression());
     }
@@ -29,9 +29,9 @@ public class ExpressionsVisitor : ExpressionsBaseVisitor<List<Op>>
 
         var operands = new List<Op>();
         operands.AddRange(base.Visit(context.expression()));
-        operands.Add(_termVisitor.Visit(methodParams[0]));
+        operands.Add(new Op(_termVisitor.Visit(methodParams[0])));
         
-        operands.Add(ToBinaryOp(context.METHOD_NAME().GetText()));
+        operands.Add(ToBinaryOp(context.METHOD_INVOCATION().GetText().TrimStart('.')));
 
         return operands;
     }
@@ -79,7 +79,7 @@ public class ExpressionsVisitor : ExpressionsBaseVisitor<List<Op>>
 
     public override List<Op> VisitExpressionTerm([NotNull] ExpressionsParser.ExpressionTermContext context) 
     {
-        var op = _termVisitor.Visit(context.fact_term());
-        return new List<Op> { op };
+        var term = _termVisitor.Visit(context.fact_term());
+        return new List<Op> { new Op(term) };
     }
 }

@@ -61,6 +61,16 @@ public interface IExpressionsListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitRule_body_element([NotNull] ExpressionsParser.Rule_body_elementContext context);
 	/// <summary>
+	/// Enter a parse tree produced by <see cref="ExpressionsParser.predicate"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterPredicate([NotNull] ExpressionsParser.PredicateContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="ExpressionsParser.predicate"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitPredicate([NotNull] ExpressionsParser.PredicateContext context);
+	/// <summary>
 	/// Enter a parse tree produced by the <c>expressionAdd</c>
 	/// labeled alternative in <see cref="ExpressionsParser.expression"/>.
 	/// </summary>
