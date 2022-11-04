@@ -19,10 +19,8 @@ public class ParserTests
     [InlineData("check if 1 + 2 * 3 - 4 / 2 == 5;")]    
     [InlineData("check if \"hello world\".starts_with(\"hello\") && \"hello world\".ends_with(\"world\");")]    
     [InlineData("check if \"aaabde\".matches(\"a*c?.e\");")]
-    [InlineData("check if \"aaabde\".contains(\"abd\");")]
-    /*
+    [InlineData("check if \"aaabde\".contains(\"abd\");")]    
     [InlineData("check if \"aaabde\" == \"aaa\" + \"b\" + \"de\";")]
-    */
     [InlineData("check if \"abcD12\" == \"abcD12\";")]
     [InlineData("check if 2019-12-04T09:46:41Z < 2020-12-04T09:46:41Z;")]
     [InlineData("check if 2020-12-04T09:46:41Z > 2019-12-04T09:46:41Z;")]
