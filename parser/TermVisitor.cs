@@ -30,4 +30,19 @@ public class TermVisitor : ExpressionsBaseVisitor<Op>
             }
         };
     }
+
+    public override Op VisitDateFactTerm([NotNull] ExpressionsParser.DateFactTermContext context) 
+    { 
+        var text = context.DATE().GetText();
+        var dateParsed = DateTime.Parse(text);
+        var dateTAI = Date.ToTAI64(dateParsed);
+        
+        return new Op() 
+        {
+            Value = new TermV2()
+            {
+               Date = dateTAI
+            }
+        };
+    }
 }

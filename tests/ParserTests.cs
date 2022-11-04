@@ -23,6 +23,7 @@ public class ParserTests
     [InlineData("check if \"aaabde\".contains(\"abd\");")]
     [InlineData("check if \"aaabde\" == \"aaa\" + \"b\" + \"de\";")]
     [InlineData("check if \"abcD12\" == \"abcD12\";")]
+     */
     [InlineData("check if 2019-12-04T09:46:41Z < 2020-12-04T09:46:41Z;")]
     [InlineData("check if 2020-12-04T09:46:41Z > 2019-12-04T09:46:41Z;")]
     [InlineData("check if 2019-12-04T09:46:41Z <= 2020-12-04T09:46:41Z;")]
@@ -30,6 +31,7 @@ public class ParserTests
     [InlineData("check if 2020-12-04T09:46:41Z >= 2019-12-04T09:46:41Z;")]
     [InlineData("check if 2020-12-04T09:46:41Z >= 2020-12-04T09:46:41Z;")]
     [InlineData("check if 2020-12-04T09:46:41Z == 2020-12-04T09:46:41Z;")]
+    /*
     [InlineData("check if hex:12ab == hex:12ab;")]
     [InlineData("check if [1, 2].contains(2);")]
     [InlineData("check if [2019-12-04T09:46:41Z, 2020-12-04T09:46:41Z].contains(2020-12-04T09:46:41Z);")]
