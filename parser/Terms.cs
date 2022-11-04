@@ -1,10 +1,6 @@
-using System.Numerics;
 using VeryNaiveDatalog;
 
-public sealed record Set(List<Constant> Values) : Constant
-{
-
-}
+public sealed record Set(List<Constant> Values) : Constant;
 
 public sealed record Bytes(byte[] Value) : Constant
 {
@@ -38,24 +34,23 @@ public sealed record Boolean(bool Value) : Constant
     public static bool operator false(Boolean value) => value.Value;
 }
 
-public abstract record Comparable<T>(T Value) : Constant, 
-    IComparisonOperators<Comparable<T>, Comparable<T>, bool>
-    where T: IComparisonOperators<T, T, bool>
+public sealed record Integer(long Value) : Constant
 {
-    public static bool operator <(Comparable<T> one, Comparable<T> two) => one.Value < two.Value;
-    public static bool operator >(Comparable<T> one, Comparable<T> two) => one.Value > two.Value;
-    public static bool operator <=(Comparable<T> one, Comparable<T> two) => one.Value <= two.Value;
-    public static bool operator >=(Comparable<T> one, Comparable<T> two) => one.Value >= two.Value;
+    public static bool operator <(Integer one, Integer two) => one.Value < two.Value;
+    public static bool operator >(Integer one, Integer two) => one.Value > two.Value;
+    public static bool operator <=(Integer one, Integer two) => one.Value <= two.Value;
+    public static bool operator >=(Integer one, Integer two) => one.Value >= two.Value;
 }
 
-public sealed record Integer(long value) : Comparable<long>(value)
-{
-}
-
-public sealed record Date(ulong value) : Comparable<ulong>(value)
+public sealed record Date(ulong Value) : Constant
 {
     public override string ToString() => DateTime.ToLongDateString();
     public DateTime DateTime => FromTAI64(Value);
+
+    public static bool operator <(Date one, Date two) => one.Value < two.Value;
+    public static bool operator >(Date one, Date two) => one.Value > two.Value;
+    public static bool operator <=(Date one, Date two) => one.Value <= two.Value;
+    public static bool operator >=(Date one, Date two) => one.Value >= two.Value;
 
     public static DateTime FromTAI64(ulong timestamp)
     {

@@ -4,7 +4,6 @@
     <RootNamespace>biscuit_net</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <LangVersion>preview</LangVersion>
   </PropertyGroup>
     
   <!--
