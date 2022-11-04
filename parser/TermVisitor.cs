@@ -30,6 +30,13 @@ public class TermVisitor : ExpressionsBaseVisitor<Op>
         return new Op(new String(text.Trim('"')));
     }
 
+    public override Op VisitBytesFactTerm([NotNull] ExpressionsParser.BytesFactTermContext context) 
+    { 
+        var text = context.BYTES().GetText();
+        var bytes = Convert.FromHexString(text.Substring("hex:".Length));
+        return new Op(new Bytes(bytes));
+    }
+
     public override Op VisitSetFactTerm([NotNull] ExpressionsParser.SetFactTermContext context) 
     { 
         if(context.set().fact_term() == null)

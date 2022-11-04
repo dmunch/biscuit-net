@@ -6,6 +6,22 @@ public sealed record Set(List<Constant> Values) : Constant
 
 }
 
+public sealed record Bytes(byte[] Value) : Constant
+{
+    public bool Equals(Bytes? other)
+    {
+        if(other == null)
+        {
+            return false;
+        }
+
+        return Value.SequenceEqual(other.Value);
+    }
+
+    public override int GetHashCode() => Value.GetHashCode();
+
+}
+
 public sealed record String(string Value) : Constant
 {
     public override string ToString() => Value;
