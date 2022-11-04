@@ -4,7 +4,8 @@ using parser;
 namespace tests;
 public class ParserTests
 {
-    [Theory]    
+    [Theory]
+    
     [InlineData("check if !false;")]
     [InlineData("check if !false && true;")]
     [InlineData("check if false or true;")]
@@ -31,10 +32,12 @@ public class ParserTests
     [InlineData("check if 2020-12-04T09:46:41Z == 2020-12-04T09:46:41Z;")]
     /*
     [InlineData("check if hex:12ab == hex:12ab;")]
-    [InlineData("check if [1, 2].contains(2);")]
+    */
+    [InlineData("check if [1, 2].contains(2);")]    
     [InlineData("check if [2019-12-04T09:46:41Z, 2020-12-04T09:46:41Z].contains(2020-12-04T09:46:41Z);")]
     [InlineData("check if [false, true].contains(true);")]
     [InlineData("check if [\"abc\", \"def\"].contains(\"abc\");")]
+    /*
     [InlineData("check if [hex:12ab, hex:34de].contains(hex:34de);")]
     */
     public void Should_Parse(string expression)

@@ -119,40 +119,12 @@ public interface IExpressionsVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitTerm([NotNull] ExpressionsParser.TermContext context);
 	/// <summary>
-	/// Visit a parse tree produced by the <c>booleanFactTerm</c>
+	/// Visit a parse tree produced by the <c>setTerm</c>
 	/// labeled alternative in <see cref="ExpressionsParser.fact_term"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitBooleanFactTerm([NotNull] ExpressionsParser.BooleanFactTermContext context);
-	/// <summary>
-	/// Visit a parse tree produced by the <c>stringFactTerm</c>
-	/// labeled alternative in <see cref="ExpressionsParser.fact_term"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitStringFactTerm([NotNull] ExpressionsParser.StringFactTermContext context);
-	/// <summary>
-	/// Visit a parse tree produced by the <c>numberFactTerm</c>
-	/// labeled alternative in <see cref="ExpressionsParser.fact_term"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitNumberFactTerm([NotNull] ExpressionsParser.NumberFactTermContext context);
-	/// <summary>
-	/// Visit a parse tree produced by the <c>bytesFactTerm</c>
-	/// labeled alternative in <see cref="ExpressionsParser.fact_term"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitBytesFactTerm([NotNull] ExpressionsParser.BytesFactTermContext context);
-	/// <summary>
-	/// Visit a parse tree produced by the <c>dateFactTerm</c>
-	/// labeled alternative in <see cref="ExpressionsParser.fact_term"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitDateFactTerm([NotNull] ExpressionsParser.DateFactTermContext context);
+	Result VisitSetTerm([NotNull] ExpressionsParser.SetTermContext context);
 	/// <summary>
 	/// Visit a parse tree produced by the <c>setFactTerm</c>
 	/// labeled alternative in <see cref="ExpressionsParser.fact_term"/>.
@@ -161,40 +133,40 @@ public interface IExpressionsVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitSetFactTerm([NotNull] ExpressionsParser.SetFactTermContext context);
 	/// <summary>
-	/// Visit a parse tree produced by the <c>booleanSetTerm</c>
+	/// Visit a parse tree produced by the <c>booleanFactTerm</c>
 	/// labeled alternative in <see cref="ExpressionsParser.set_term"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitBooleanSetTerm([NotNull] ExpressionsParser.BooleanSetTermContext context);
+	Result VisitBooleanFactTerm([NotNull] ExpressionsParser.BooleanFactTermContext context);
 	/// <summary>
-	/// Visit a parse tree produced by the <c>stringSetTerm</c>
+	/// Visit a parse tree produced by the <c>stringFactTerm</c>
 	/// labeled alternative in <see cref="ExpressionsParser.set_term"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitStringSetTerm([NotNull] ExpressionsParser.StringSetTermContext context);
+	Result VisitStringFactTerm([NotNull] ExpressionsParser.StringFactTermContext context);
 	/// <summary>
-	/// Visit a parse tree produced by the <c>numberSetTerm</c>
+	/// Visit a parse tree produced by the <c>numberFactTerm</c>
 	/// labeled alternative in <see cref="ExpressionsParser.set_term"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitNumberSetTerm([NotNull] ExpressionsParser.NumberSetTermContext context);
+	Result VisitNumberFactTerm([NotNull] ExpressionsParser.NumberFactTermContext context);
 	/// <summary>
-	/// Visit a parse tree produced by the <c>bytesSetTerm</c>
+	/// Visit a parse tree produced by the <c>bytesFactTerm</c>
 	/// labeled alternative in <see cref="ExpressionsParser.set_term"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitBytesSetTerm([NotNull] ExpressionsParser.BytesSetTermContext context);
+	Result VisitBytesFactTerm([NotNull] ExpressionsParser.BytesFactTermContext context);
 	/// <summary>
-	/// Visit a parse tree produced by the <c>dateSetTerm</c>
+	/// Visit a parse tree produced by the <c>dateFactTerm</c>
 	/// labeled alternative in <see cref="ExpressionsParser.set_term"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitDateSetTerm([NotNull] ExpressionsParser.DateSetTermContext context);
+	Result VisitDateFactTerm([NotNull] ExpressionsParser.DateFactTermContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="ExpressionsParser.set"/>.
 	/// </summary>

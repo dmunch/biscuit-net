@@ -179,65 +179,17 @@ public interface IExpressionsListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitTerm([NotNull] ExpressionsParser.TermContext context);
 	/// <summary>
-	/// Enter a parse tree produced by the <c>booleanFactTerm</c>
+	/// Enter a parse tree produced by the <c>setTerm</c>
 	/// labeled alternative in <see cref="ExpressionsParser.fact_term"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void EnterBooleanFactTerm([NotNull] ExpressionsParser.BooleanFactTermContext context);
+	void EnterSetTerm([NotNull] ExpressionsParser.SetTermContext context);
 	/// <summary>
-	/// Exit a parse tree produced by the <c>booleanFactTerm</c>
+	/// Exit a parse tree produced by the <c>setTerm</c>
 	/// labeled alternative in <see cref="ExpressionsParser.fact_term"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void ExitBooleanFactTerm([NotNull] ExpressionsParser.BooleanFactTermContext context);
-	/// <summary>
-	/// Enter a parse tree produced by the <c>stringFactTerm</c>
-	/// labeled alternative in <see cref="ExpressionsParser.fact_term"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterStringFactTerm([NotNull] ExpressionsParser.StringFactTermContext context);
-	/// <summary>
-	/// Exit a parse tree produced by the <c>stringFactTerm</c>
-	/// labeled alternative in <see cref="ExpressionsParser.fact_term"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitStringFactTerm([NotNull] ExpressionsParser.StringFactTermContext context);
-	/// <summary>
-	/// Enter a parse tree produced by the <c>numberFactTerm</c>
-	/// labeled alternative in <see cref="ExpressionsParser.fact_term"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterNumberFactTerm([NotNull] ExpressionsParser.NumberFactTermContext context);
-	/// <summary>
-	/// Exit a parse tree produced by the <c>numberFactTerm</c>
-	/// labeled alternative in <see cref="ExpressionsParser.fact_term"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitNumberFactTerm([NotNull] ExpressionsParser.NumberFactTermContext context);
-	/// <summary>
-	/// Enter a parse tree produced by the <c>bytesFactTerm</c>
-	/// labeled alternative in <see cref="ExpressionsParser.fact_term"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterBytesFactTerm([NotNull] ExpressionsParser.BytesFactTermContext context);
-	/// <summary>
-	/// Exit a parse tree produced by the <c>bytesFactTerm</c>
-	/// labeled alternative in <see cref="ExpressionsParser.fact_term"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitBytesFactTerm([NotNull] ExpressionsParser.BytesFactTermContext context);
-	/// <summary>
-	/// Enter a parse tree produced by the <c>dateFactTerm</c>
-	/// labeled alternative in <see cref="ExpressionsParser.fact_term"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterDateFactTerm([NotNull] ExpressionsParser.DateFactTermContext context);
-	/// <summary>
-	/// Exit a parse tree produced by the <c>dateFactTerm</c>
-	/// labeled alternative in <see cref="ExpressionsParser.fact_term"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitDateFactTerm([NotNull] ExpressionsParser.DateFactTermContext context);
+	void ExitSetTerm([NotNull] ExpressionsParser.SetTermContext context);
 	/// <summary>
 	/// Enter a parse tree produced by the <c>setFactTerm</c>
 	/// labeled alternative in <see cref="ExpressionsParser.fact_term"/>.
@@ -251,65 +203,65 @@ public interface IExpressionsListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitSetFactTerm([NotNull] ExpressionsParser.SetFactTermContext context);
 	/// <summary>
-	/// Enter a parse tree produced by the <c>booleanSetTerm</c>
+	/// Enter a parse tree produced by the <c>booleanFactTerm</c>
 	/// labeled alternative in <see cref="ExpressionsParser.set_term"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void EnterBooleanSetTerm([NotNull] ExpressionsParser.BooleanSetTermContext context);
+	void EnterBooleanFactTerm([NotNull] ExpressionsParser.BooleanFactTermContext context);
 	/// <summary>
-	/// Exit a parse tree produced by the <c>booleanSetTerm</c>
+	/// Exit a parse tree produced by the <c>booleanFactTerm</c>
 	/// labeled alternative in <see cref="ExpressionsParser.set_term"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void ExitBooleanSetTerm([NotNull] ExpressionsParser.BooleanSetTermContext context);
+	void ExitBooleanFactTerm([NotNull] ExpressionsParser.BooleanFactTermContext context);
 	/// <summary>
-	/// Enter a parse tree produced by the <c>stringSetTerm</c>
+	/// Enter a parse tree produced by the <c>stringFactTerm</c>
 	/// labeled alternative in <see cref="ExpressionsParser.set_term"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void EnterStringSetTerm([NotNull] ExpressionsParser.StringSetTermContext context);
+	void EnterStringFactTerm([NotNull] ExpressionsParser.StringFactTermContext context);
 	/// <summary>
-	/// Exit a parse tree produced by the <c>stringSetTerm</c>
+	/// Exit a parse tree produced by the <c>stringFactTerm</c>
 	/// labeled alternative in <see cref="ExpressionsParser.set_term"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void ExitStringSetTerm([NotNull] ExpressionsParser.StringSetTermContext context);
+	void ExitStringFactTerm([NotNull] ExpressionsParser.StringFactTermContext context);
 	/// <summary>
-	/// Enter a parse tree produced by the <c>numberSetTerm</c>
+	/// Enter a parse tree produced by the <c>numberFactTerm</c>
 	/// labeled alternative in <see cref="ExpressionsParser.set_term"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void EnterNumberSetTerm([NotNull] ExpressionsParser.NumberSetTermContext context);
+	void EnterNumberFactTerm([NotNull] ExpressionsParser.NumberFactTermContext context);
 	/// <summary>
-	/// Exit a parse tree produced by the <c>numberSetTerm</c>
+	/// Exit a parse tree produced by the <c>numberFactTerm</c>
 	/// labeled alternative in <see cref="ExpressionsParser.set_term"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void ExitNumberSetTerm([NotNull] ExpressionsParser.NumberSetTermContext context);
+	void ExitNumberFactTerm([NotNull] ExpressionsParser.NumberFactTermContext context);
 	/// <summary>
-	/// Enter a parse tree produced by the <c>bytesSetTerm</c>
+	/// Enter a parse tree produced by the <c>bytesFactTerm</c>
 	/// labeled alternative in <see cref="ExpressionsParser.set_term"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void EnterBytesSetTerm([NotNull] ExpressionsParser.BytesSetTermContext context);
+	void EnterBytesFactTerm([NotNull] ExpressionsParser.BytesFactTermContext context);
 	/// <summary>
-	/// Exit a parse tree produced by the <c>bytesSetTerm</c>
+	/// Exit a parse tree produced by the <c>bytesFactTerm</c>
 	/// labeled alternative in <see cref="ExpressionsParser.set_term"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void ExitBytesSetTerm([NotNull] ExpressionsParser.BytesSetTermContext context);
+	void ExitBytesFactTerm([NotNull] ExpressionsParser.BytesFactTermContext context);
 	/// <summary>
-	/// Enter a parse tree produced by the <c>dateSetTerm</c>
+	/// Enter a parse tree produced by the <c>dateFactTerm</c>
 	/// labeled alternative in <see cref="ExpressionsParser.set_term"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void EnterDateSetTerm([NotNull] ExpressionsParser.DateSetTermContext context);
+	void EnterDateFactTerm([NotNull] ExpressionsParser.DateFactTermContext context);
 	/// <summary>
-	/// Exit a parse tree produced by the <c>dateSetTerm</c>
+	/// Exit a parse tree produced by the <c>dateFactTerm</c>
 	/// labeled alternative in <see cref="ExpressionsParser.set_term"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void ExitDateSetTerm([NotNull] ExpressionsParser.DateSetTermContext context);
+	void ExitDateFactTerm([NotNull] ExpressionsParser.DateFactTermContext context);
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="ExpressionsParser.set"/>.
 	/// </summary>

@@ -29,4 +29,21 @@ public class TermVisitor : ExpressionsBaseVisitor<Op>
         var text = context.STRING().GetText();
         return new Op(new String(text.Trim('"')));
     }
+
+    public override Op VisitSetFactTerm([NotNull] ExpressionsParser.SetFactTermContext context) 
+    { 
+        if(context.set().fact_term() == null)
+        {
+            //empty list
+            return new Op(new Set(new List<VeryNaiveDatalog.Constant>()));    
+        }
+
+        var firstTerm = base.Visit(context.set().fact_term()).Value as VeryNaiveDatalog.Constant;
+        var nextTerms = context.set().set_term().Select(st => base.Visit(st).Value as VeryNaiveDatalog.Constant).ToList();
+
+        var terms = new List<VeryNaiveDatalog.Constant>();
+        terms.Add(firstTerm);
+        terms.AddRange(nextTerms);
+        return new Op(new Set(terms));
+    }
 }

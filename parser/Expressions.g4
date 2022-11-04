@@ -19,17 +19,13 @@ expression
     ;
 
 term: fact_term | VARIABLE;
-fact_term: BOOLEAN #booleanFactTerm
+fact_term: set_term #setTerm
+    | set #setFactTerm;
+set_term: BOOLEAN #booleanFactTerm
     | STRING #stringFactTerm
     | NUMBER #numberFactTerm
     | BYTES #bytesFactTerm
-    | DATE #dateFactTerm
-    | set #setFactTerm;
-set_term: BOOLEAN #booleanSetTerm
-    | STRING #stringSetTerm
-    | NUMBER #numberSetTerm
-    | BYTES #bytesSetTerm
-    | DATE #dateSetTerm;
+    | DATE #dateFactTerm;
 
 VARIABLE: '$'[a-zA-Z_:0-9]+; //TODO
 
