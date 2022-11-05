@@ -1,5 +1,6 @@
 using VeryNaiveDatalog;
 using parser;
+using System.Diagnostics.CodeAnalysis;
 
 namespace biscuit_net;
 
@@ -7,10 +8,19 @@ public record World(List<Atom> Atoms, List<string> Symbols, List<Check> Checks);
 public record FailedBlockCheck(int BlockId, int CheckId/*, RuleExpressions Rule*/);
 public record FailedAuthorizerCheck(int CheckId/*, RuleExpressions Rule*/);
 
-public record Error(
-    FailedBlockCheck Block, 
-    FailedAuthorizerCheck Authorizer, 
-    InvalidBlockRule InvalidBlockRule);
+//TODO Assuming the int is a RuleId - specification and examples are unclear here
+public record InvalidBlockRule(int RuleId/*, RuleExpressions Rule*/);
+
+public record Error
+{
+    public Error(FailedBlockCheck block) => Block = block;
+    public Error(FailedAuthorizerCheck authorizer) => Authorizer = authorizer;
+    public Error(InvalidBlockRule invalidBlockRule) => InvalidBlockRule = invalidBlockRule;
+
+    FailedBlockCheck? Block { get; } = null;
+    FailedAuthorizerCheck? Authorizer { get; } = null;
+    InvalidBlockRule? InvalidBlockRule { get; } = null;
+}
 
 public class Authorizer
 {
@@ -27,11 +37,11 @@ public class Authorizer
         _authorizerChecks.Add(check);
     }
 
-    public bool TryAuthorize(Biscuit b, out Error err)
+    public bool TryAuthorize(Biscuit b, [NotNullWhen(false)] out Error? err)
     {
-        if(!b.CheckBoundVariables(out var invalidBlockRule))
+        if(!CheckBoundVariables(b, out var invalidBlockRule))
         {
-            err = new Error(null, null, invalidBlockRule);
+            err = new Error(invalidBlockRule);
             return false;
         }
         
@@ -57,20 +67,20 @@ public class Authorizer
         return true;
     }
 
-    bool TryCheckBlock(World world, Block block, IEnumerable<Atom> blockAtoms, int blockId, out Error err)
+    bool TryCheckBlock(World world, Block block, IEnumerable<Atom> blockAtoms, int blockId, [NotNullWhen(false)] out Error? err)
     {
         var (blockCheck, failedCheckId, failedRule) = Check(blockAtoms, block.Checks, world);
         
         if(!blockCheck) 
         {
-            err = new Error(new FailedBlockCheck(blockId, failedCheckId/*, failedRule*/), null, null);
+            err = new Error(new FailedBlockCheck(blockId, failedCheckId/*, failedRule*/));
             return false;
         }
 
         var (blockAuthorizerCheck, failedAuthorizerCheckId, failedAuthorizerRule) = Check(blockAtoms, world.Checks, world);
         if(!blockAuthorizerCheck) 
         {
-            err = new Error(null, new FailedAuthorizerCheck(failedAuthorizerCheckId/*, failedAuthorizerRule*/), null);
+            err = new Error(new FailedAuthorizerCheck(failedAuthorizerCheckId/*, failedAuthorizerRule*/));
             return false;
         }
 
@@ -123,5 +133,44 @@ public class Authorizer
             checkId++;
         }
         return (true, -1, null);
+    }
+
+    static bool CheckBoundVariables(Biscuit b, [NotNullWhen(false)] out InvalidBlockRule? invalidBlockRule)
+    {
+        if(!CheckBoundVariables(b.Authority, out invalidBlockRule))
+        {
+            return false;
+        }
+
+        foreach(var block in b.Blocks)
+        {
+            if(!CheckBoundVariables(block, out invalidBlockRule))
+            {
+                return false;
+            }
+        }
+
+        invalidBlockRule = null;
+        return true;
+    }
+
+    static bool CheckBoundVariables(Block block, [NotNullWhen(false)] out InvalidBlockRule? invalidBlockRule)
+    {
+        int ruleId = 0;
+        foreach(var rule in block.Rules)
+        {
+            var headVariables = rule.Head.Terms.OfType<Variable>();
+            var bodyVariables = rule.Body.SelectMany(b => b.Terms).OfType<Variable>().ToHashSet();
+            
+            if(!headVariables.All(hv => bodyVariables.Contains(hv)))
+            {
+                invalidBlockRule = new InvalidBlockRule(ruleId);
+                return false;
+            }
+            ruleId++;
+        }
+
+        invalidBlockRule = null;
+        return true;
     }
 }

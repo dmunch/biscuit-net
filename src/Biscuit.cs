@@ -3,11 +3,9 @@ using VeryNaiveDatalog;
 using parser;
 using System.Buffers.Binary;
 using NSec.Cryptography;
+using System.Diagnostics.CodeAnalysis;
 
 namespace biscuit_net;
-
-//TODO Assuming the int is a RuleId - specification and examples are unclear here
-public record InvalidBlockRule(int RuleId/*, RuleExpressions Rule*/);
 
 public record FailedFormat(Signature? Signature, int? InvalidSignatureSize);
 public record Signature(string InvalidSignature);
@@ -52,7 +50,7 @@ public class Block
 
 static class BlockSignatureVerification
 {
-    public static bool VerifySignature(this Proto.SignedBlock signedBlock, SignatureValidator validator, out int? invalidSignatureSize)
+    public static bool VerifySignature(this Proto.SignedBlock signedBlock, SignatureValidator validator, [NotNullWhen(false)] out int? invalidSignatureSize)
     {
         if(signedBlock.Signature.Length != 64)
         {
@@ -104,7 +102,7 @@ public class Biscuit
         }
     }
 
-    public static bool TryDeserialize(ReadOnlySpan<byte> bytes, SignatureValidator validator, out Biscuit? biscuit, out FailedFormat? err)
+    public static bool TryDeserialize(ReadOnlySpan<byte> bytes, SignatureValidator validator, [NotNullWhen(true)] out Biscuit? biscuit, [NotNullWhen(false)] out FailedFormat? err)
     {        
         var biscuitProto = Serializer.Deserialize<Proto.Biscuit>((ReadOnlySpan<byte>)bytes);
 
@@ -126,7 +124,7 @@ public class Biscuit
     }
 
     
-    static bool VerifySignatures(SignatureValidator validator, Proto.Biscuit biscuitProto, out int? invalidSignatureSize)
+    static bool VerifySignatures(SignatureValidator validator, Proto.Biscuit biscuitProto, [NotNullWhen(false)] out int? invalidSignatureSize)
     {
         if(!biscuitProto.Authority.VerifySignature(validator, out invalidSignatureSize))
         {
@@ -143,45 +141,6 @@ public class Biscuit
             nextValidator = new SignatureValidator(block.nextKey.Key);
         }
 
-        return true;
-    }
-
-    public bool CheckBoundVariables(out InvalidBlockRule invalidBlockRule)
-    {
-        if(!CheckBoundVariables(Authority, out invalidBlockRule))
-        {
-            return false;
-        }
-
-        foreach(var block in Blocks)
-        {
-            if(!CheckBoundVariables(block, out invalidBlockRule))
-            {
-                return false;
-            }
-        }
-
-        invalidBlockRule = null;
-        return true;
-    }
-
-    bool CheckBoundVariables(Block block, out InvalidBlockRule invalidBlockRule)
-    {
-        int ruleId = 0;
-        foreach(var rule in block.Rules)
-        {
-            var headVariables = rule.Head.Terms.OfType<Variable>();
-            var bodyVariables = rule.Body.SelectMany(b => b.Terms).OfType<Variable>().ToHashSet();
-            
-            if(!headVariables.All(hv => bodyVariables.Contains(hv)))
-            {
-                invalidBlockRule = new InvalidBlockRule(ruleId);
-                return false;
-            }
-            ruleId++;
-        }
-
-        invalidBlockRule = null;
         return true;
     }
 }
