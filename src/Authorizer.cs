@@ -6,13 +6,17 @@ namespace biscuit_net;
 public record World(List<Atom> Atoms, List<string> Symbols, List<Check> Checks);
 public record FailedBlockCheck(int BlockId, int CheckId/*, RuleExpressions Rule*/);
 public record FailedAuthorizerCheck(int CheckId/*, RuleExpressions Rule*/);
-public record Error(FailedBlockCheck Block, FailedAuthorizerCheck Authorizer, InvalidBlockRule InvalidBlockRule);
+
+public record Error(
+    FailedBlockCheck Block, 
+    FailedAuthorizerCheck Authorizer, 
+    InvalidBlockRule InvalidBlockRule);
 
 public class Authorizer
 {
     List<Atom> _authorizerAtoms = new List<Atom>();
     List<Check> _authorizerChecks = new List<Check>();
-
+    
     public void AddAtom(Atom atom)
     {
         _authorizerAtoms.Add(atom);

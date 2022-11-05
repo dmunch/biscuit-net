@@ -8,6 +8,8 @@ public class AuthorizerTests
 {
     [Theory]
     //[BiscuitCases("test1_basic.bc")] //OK
+    //[BiscuitCases("test2_different_root_key.bc")] //OK
+    //[BiscuitCases("test3_invalid_signature_format.bc")] //OK
     //[BiscuitCases("test7_scoped_rules.bc")] //OK
     //[BiscuitCases("test8_scoped_checks.bc")] //OK
     //[BiscuitCases("test9_expired_token.bc")] //OK - why? TODO needs expressions
@@ -22,10 +24,16 @@ public class AuthorizerTests
     //[BiscuitCases("test19_generating_ambient_from_variables.bc")] //OK
     //[BiscuitCases("test22_default_symbols.bc")] //TODO contains int term
     //[BiscuitCases("test23_execution_scope.bc")] //TODO contains int term
-    [BiscuitCases(BiscuitCases.CaseType.Success | BiscuitCases.CaseType.Error | BiscuitCases.CaseType.FailedLogic)]
+    [BiscuitCases()]
     public void Test(BiscuitCase biscuitCase)
     {
-        var biscuit = Biscuit.Deserialize(biscuitCase.Token);
+        var validator = new SignatureValidator(biscuitCase.RootPublicKey);
+        if(!Biscuit.TryDeserialize(biscuitCase.Token, validator, out var biscuit, out var formatErr))
+        {
+            Assert.False(biscuitCase.Success);
+            Assert.Equal(biscuitCase.Validation.FormatError, formatErr);
+            return;
+        }
         
         var authorizer = new Authorizer();
 

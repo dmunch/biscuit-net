@@ -16,4 +16,7 @@
     <ProjectReference Include="..\proto\proto.csproj" />
     <ProjectReference Include="..\parser\parser.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="NSec.Cryptography" Version="22.4.0" />
+  </ItemGroup>
 </Project>

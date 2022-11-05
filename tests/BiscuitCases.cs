@@ -6,14 +6,14 @@ namespace tests;
 using biscuit_net;
 using Json.Samples;
 
-public record Asserts(string AuthorizerCode, Error Error);
-public record BiscuitCase(string Filename, string Title, Asserts Validation)
+public record Asserts(string AuthorizerCode, Error Error, FailedFormat FormatError);
+public record BiscuitCase(string Filename, string Title, string RootPublicKey, string RootPrivateKey, Asserts Validation)
 {
-    public bool Success => Validation.Error == null;
+    public bool Success => Validation.Error == null && Validation.FormatError == null;
     public byte[] Token => System.IO.File.ReadAllBytes($"samples-v2/{Filename}");
     public override string ToString()
     {
-        return $"{Filename}: {Title} [{(Success? "Success" : "Error")}][{(!Success ? Validation.Error: null)}]";
+        return $"{Filename}: {Title} [{(Success? "Success" : "Error")}]";
     }
 }
 
@@ -21,30 +21,14 @@ public class BiscuitCases : DataAttribute
 {
     private readonly string? _fileName;
     private static Json.Samples.Sample _samples;
-    private CaseType _caseType;
-
+    
     public BiscuitCases(string fileName) : this()
     {
         _fileName = fileName;
     }
 
-    [Flags]
-    public enum CaseType 
-    {
-        All = 0,
-        Success = 1,
-        Error = 2,
-        Format = 4,
-        FailedLogic = 8
-    }
-
     public BiscuitCases()
     {
-    }
-
-    public BiscuitCases(CaseType caseType)
-    {
-        _caseType = caseType;
     }
     
     static BiscuitCases()
@@ -55,55 +39,29 @@ public class BiscuitCases : DataAttribute
 
     public override IEnumerable<object[]> GetData(MethodInfo testMethod)
     {
-        var errorFilters = new List<Func<File1, bool>>();
-        var successFilters = new List<Func<File1, bool>>();
-        if(_caseType.HasFlag(CaseType.Error))
-        {
-            errorFilters.Add(f => f.Result?.Err != null);
-        }
-        if(_caseType.HasFlag(CaseType.FailedLogic))
-        {
-            errorFilters.Add(f => f.Result?.Err?.FailedLogic != null);
-        }
-        if(_caseType.HasFlag(CaseType.Format))
-        {
-            errorFilters.Add(f => f.Result?.Err?.Format != null);
-        }
-        if(_caseType.HasFlag(CaseType.Success))
-        {
-            successFilters.Add(f => f.Result?.Ok != null);
-        }
-
-
         var testCases = _samples.Testcases;
         if(_fileName != null) 
         {
            testCases = _samples.Testcases.Where(tc => tc.Filename == _fileName).ToList();
         }
 
-        var errorCases = testCases
-            .SelectMany(tc => MapBiscuitCases(tc, errorFilters))
+        return testCases
+            .SelectMany(tc => MapBiscuitCases(tc))
+            .OrderBy(c => int.Parse(c.Filename.Split('_')[0].Substring("test".Length)))
+            .Select(biscuitCase => new object [] {biscuitCase})
             .ToArray();
-
-        var successCases = testCases
-            .SelectMany(tc => MapBiscuitCases(tc, successFilters))
-            .ToArray();
-
-        return errorCases
-            .Union(successCases)
-            .Distinct()
-            .OrderBy(c => c.Filename)
-            .Select(biscuitCase => new object [] {biscuitCase});
     }
 
-    public IEnumerable<BiscuitCase> MapBiscuitCases(Testcase testCase, IEnumerable<Func<File1, bool>> filters)
+    public IEnumerable<BiscuitCase> MapBiscuitCases(Testcase testCase)
     {
+        
         return testCase.Validations
-            .Where(kvp => filters.All(f => f(kvp.Value)))
             .Select(validation => new BiscuitCase(
                 Filename: testCase.Filename,
                 Title: $"{testCase.Title}: {validation.Key}",
-                Validation: MapValidation(validation.Value)
+                Validation: MapValidation(validation.Value),
+                RootPrivateKey: _samples.Root_private_key,
+                RootPublicKey: _samples.Root_public_key
             )).ToArray();
     }
 
@@ -112,6 +70,7 @@ public class BiscuitCases : DataAttribute
         FailedAuthorizerCheck authorizerCheck = null;
         FailedBlockCheck blockCheck = null;
         InvalidBlockRule invalidBlockRule = null;
+        FailedFormat failedFormat = null;
 
         if(file.Result?.Err?.FailedLogic?.Unauthorized != null)
         {
@@ -134,10 +93,20 @@ public class BiscuitCases : DataAttribute
             invalidBlockRule = new InvalidBlockRule((int)ruleId/*, rule*/);
         }
 
-        var error = authorizerCheck != null || blockCheck != null || invalidBlockRule != null 
+
+        if(file.Result?.Err?.Format != null)
+        {
+            var iss = file.Result?.Err?.Format.InvalidSignatureSize;
+            var invalidSignature = file.Result?.Err?.Format?.Signature?.InvalidSignature;
+            var signature = invalidSignature != null ? new biscuit_net.Signature(invalidSignature) : null;
+
+            failedFormat = new FailedFormat(signature, iss);
+        }
+
+        var error = authorizerCheck != null || blockCheck != null || invalidBlockRule != null
                     ? new Error(blockCheck, authorizerCheck, invalidBlockRule)
                     : null;
 
-        return new Asserts(file.Authorizer_code, error);
+        return new Asserts(file.Authorizer_code, error, failedFormat);
     }
 }
