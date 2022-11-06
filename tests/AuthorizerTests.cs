@@ -35,7 +35,7 @@ public class AuthorizerTests
             Assert.Equal(biscuitCase.Validation.FormatError, formatErr);
             return;
         }
-        
+
         var authorizer = new Authorizer();
 
         foreach(var (authorizerAtom, authorizerCheckRule) in Parse(biscuitCase.Validation.AuthorizerCode))
@@ -59,6 +59,19 @@ public class AuthorizerTests
         
         Assert.Equal(biscuitCase.Validation.Error, err);
     }
+
+    [Theory]
+    [BiscuitCases()]
+    public void Test_Revocation_Ids(BiscuitCase biscuitCase)
+    {
+        var validator = new SignatureValidator(biscuitCase.RootPublicKey);
+        if(!Biscuit.TryDeserialize(biscuitCase.Token, validator, out var biscuit, out var formatErr))
+        {
+            return;
+        }
+        Assert.Equal(biscuitCase.Validation.RevocationIds, biscuit.RevocationIds);
+    }
+
 
     IEnumerable<(Atom?, RuleExpressions?)> Parse(string code)
     {

@@ -3,6 +3,12 @@ namespace biscuit_net;
 public class SymbolTable
 {
     List<string> _symbols;
+    
+    public SymbolTable()
+    {
+        _symbols = new List<string>();
+    }
+
     public SymbolTable(IEnumerable<string> initialSymbols)
     {
         _symbols = initialSymbols.ToList();

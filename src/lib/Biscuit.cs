@@ -25,11 +25,19 @@ public class Biscuit
     {
         foreach(var block in _biscuit.Blocks)
         {
-            var blockBytes = (ReadOnlySpan<byte>) block.Block;
-            var blockProto = Serializer.Deserialize<Proto.Block>(blockBytes);
-            
-            _symbols.AddSymbols(blockProto.Symbols);
-            yield return Block.FromProto(blockProto, _symbols);
+            yield return Block.FromProto(block, _symbols);
+        }
+    }
+
+    public IEnumerable<string> RevocationIds 
+    {
+        get
+        {
+            yield return Authority.RevocationId;
+            foreach(var block in Blocks)
+            {
+                yield return block.RevocationId;
+            }
         }
     }
 
@@ -42,9 +50,8 @@ public class Biscuit
             biscuit = null; return false; 
         }
 
-        var authorityProto = Serializer.Deserialize<Proto.Block>((ReadOnlySpan<byte>)biscuitProto.Authority.Block);
-        var symbols = new SymbolTable(authorityProto.Symbols);
-        var authority = Block.FromProto(authorityProto, symbols);
+        var symbols = new SymbolTable();
+        var authority = Block.FromProto(biscuitProto.Authority, symbols);
 
         biscuit = new Biscuit(biscuitProto, authority, symbols);
 
@@ -57,20 +64,27 @@ public class Block
     public IEnumerable<Atom> Atoms { get; protected set; }
     public IEnumerable<RuleExpressions> Rules { get; protected set; }
     public IEnumerable<Check> Checks { get; protected set; }
+    public string RevocationId { get; protected set; }
 
-    Block(IEnumerable<Atom> atoms, IEnumerable<RuleExpressions> rules, IEnumerable<Check> checks) 
+    Block(IEnumerable<Atom> atoms, IEnumerable<RuleExpressions> rules, IEnumerable<Check> checks, string revocationId) 
     {
         Atoms = atoms;
         Rules = rules;
         Checks = checks;
+        RevocationId = revocationId;
     }
 
-    public static Block FromProto(Proto.Block block, SymbolTable symbols)
+    public static Block FromProto(Proto.SignedBlock signedBlock, SymbolTable symbols)
     {
+        var block = Serializer.Deserialize<Proto.Block>( (ReadOnlySpan<byte>) signedBlock.Block);
+        
+        symbols.AddSymbols(block.Symbols);
+
         return new Block(
             block.FactsV2s.ToAtoms(symbols),
             block.RulesV2s.ToRules(symbols),
-            block.ChecksV2s.ToChecks(symbols)
+            block.ChecksV2s.ToChecks(symbols),
+            Convert.ToHexString(signedBlock.Signature).ToLowerInvariant()
         );
     }
 }

@@ -6,7 +6,7 @@ namespace tests;
 using biscuit_net;
 using Json.Samples;
 
-public record Asserts(string AuthorizerCode, Error? Error, FailedFormat? FormatError);
+public record Asserts(string AuthorizerCode, Error? Error, FailedFormat? FormatError, IList<string> RevocationIds);
 public record BiscuitCase(string Filename, string Title, string RootPublicKey, string RootPrivateKey, Asserts Validation)
 {
     public bool Success => Validation.Error == null && Validation.FormatError == null;
@@ -104,7 +104,7 @@ public class BiscuitCases : DataAttribute
 
             failedFormat = new FailedFormat(signature, iss);
         }
-
-        return new Asserts(file.Authorizer_code, error, failedFormat);
+        
+        return new Asserts(file.Authorizer_code, error, failedFormat, file.Revocation_ids);
     }
 }
