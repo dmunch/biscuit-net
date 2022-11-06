@@ -4,7 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace biscuit_net;
 
-public record World(List<Atom> Atoms, List<string> Symbols, List<Check> Checks);
+public record World(List<Atom> Atoms, List<Check> Checks);
 public record FailedBlockCheck(int BlockId, int CheckId/*, RuleExpressions Rule*/);
 public record FailedAuthorizerCheck(int CheckId/*, RuleExpressions Rule*/);
 
@@ -45,7 +45,7 @@ public class Authorizer
             return false;
         }
         
-        var world = new World(_authorizerAtoms.ToList(), b.Symbols, _authorizerChecks);
+        var world = new World(_authorizerAtoms.ToList(), _authorizerChecks);
         world.Atoms.AddRange(b.Authority.Atoms);
 
         var authorityExecutionAtoms = EvaluateBlockRules(world, b.Authority, world.Atoms);
@@ -90,7 +90,7 @@ public class Authorizer
 
     IEnumerable<Atom> EvaluateBlockRules(World world, Block block, IEnumerable<Atom> authorityAtoms)
     {
-        var rulesAtoms = world.Atoms.Evaluate(block.Rules, world.Symbols);
+        var rulesAtoms = world.Atoms.Evaluate(block.Rules);
 
         var blockScopedAtoms = authorityAtoms.ToList();
         blockScopedAtoms.AddRange(rulesAtoms);
@@ -107,7 +107,7 @@ public class Authorizer
             var ruleResult = false; 
             foreach(var rule in check.Rules)
             {
-                var eval = blockAtoms.Evaluate(rule, world.Symbols, out var expressionResult);
+                var eval = blockAtoms.Evaluate(rule, out var expressionResult);
 
                 var checkScopedAtoms = blockAtoms.ToList();
                 checkScopedAtoms.AddRange(eval);

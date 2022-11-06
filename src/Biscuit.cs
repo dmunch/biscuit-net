@@ -36,15 +36,20 @@ public class Block
     public IEnumerable<RuleExpressions> Rules { get; protected set; }
     public IEnumerable<Check> Checks { get; protected set; }
 
-    public List<string> Symbols { get; private set; }
-
-    public Block(Proto.Block block, List<string> symbols)
+    Block(IEnumerable<Atom> atoms, IEnumerable<RuleExpressions> rules, IEnumerable<Check> checks) 
     {
-        Atoms = block.FactsV2s.ToAtoms(symbols);
-        Rules = block.RulesV2s.ToRules(symbols);
-        Checks = block.ChecksV2s.ToChecks(symbols);
+        Atoms = atoms;
+        Rules = rules;
+        Checks = checks;
+    }
 
-        Symbols = symbols;
+    public static Block FromProto(Proto.Block block, SymbolTable symbols)
+    {
+        return new Block(
+            block.FactsV2s.ToAtoms(symbols),
+            block.RulesV2s.ToRules(symbols),
+            block.ChecksV2s.ToChecks(symbols)
+        );
     }
 }
 
@@ -74,31 +79,29 @@ static class BlockSignatureVerification
 
 public class Biscuit
 {
-    Proto.Biscuit _biscuit;
     public Block Authority { get; private set; }
-
-    public List<string> Symbols { get; protected set; }= new List<string>();
+    public IEnumerable<Block> Blocks { get; protected set; }
+    Proto.Biscuit _biscuit;
+    SymbolTable _symbols;
     
-    Biscuit(Proto.Biscuit biscuit, Block authority)
+    Biscuit(Proto.Biscuit biscuit, Block authority, SymbolTable symbols)
     {
         _biscuit = biscuit;
         Authority = authority;
+        _symbols = symbols;
 
-        Symbols.AddRange(authority.Symbols.ToList());
-        Blocks = LoadBlocks();
+        Blocks = BlockEnumerable();
     }
-    public IEnumerable<Block> Blocks { get; protected set; }
-
-    IEnumerable<Block> LoadBlocks() 
+    
+    IEnumerable<Block> BlockEnumerable() 
     {
         foreach(var block in _biscuit.Blocks)
         {
             var blockBytes = (ReadOnlySpan<byte>) block.Block;
             var blockProto = Serializer.Deserialize<Proto.Block>(blockBytes);
             
-            Symbols.AddRange(blockProto.Symbols);
-
-            yield return new Block(blockProto, Symbols);
+            _symbols.AddSymbols(blockProto.Symbols);
+            yield return Block.FromProto(blockProto, _symbols);
         }
     }
 
@@ -116,9 +119,11 @@ public class Biscuit
         }
 
         var authorityProto = Serializer.Deserialize<Proto.Block>((ReadOnlySpan<byte>)biscuitProto.Authority.Block);
-        var authority = new Block(authorityProto, authorityProto.Symbols);
+        var symbols = new SymbolTable(authorityProto.Symbols);
+        var authority = Block.FromProto(authorityProto, symbols);
 
-        biscuit = new Biscuit(biscuitProto, authority);
+        biscuit = new Biscuit(biscuitProto, authority, symbols);
+
         err = null;
         return true;
     }

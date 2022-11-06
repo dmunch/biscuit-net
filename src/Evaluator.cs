@@ -8,34 +8,34 @@ namespace biscuit_net;
 public static class Evaluator
 {
     // Just a lifting of Rule.Apply to an IEnumerable<Rule>.
-    public static IEnumerable<Atom> Apply(this IEnumerable<RuleExpressions> rules, IEnumerable<Atom> kb, List<string> symbols) 
-        =>  rules.SelectMany(r =>  r.Apply(kb, symbols, out var innerExpressionResult)).ToHashSet();
+    public static IEnumerable<Atom> Apply(this IEnumerable<RuleExpressions> rules, IEnumerable<Atom> kb)
+        =>  rules.SelectMany(r =>  r.Apply(kb, out var innerExpressionResult)).ToHashSet();
     
-    public static IEnumerable<Atom> Evaluate(this IEnumerable<Atom> kb, IEnumerable<RuleExpressions> rules, List<string> symbols)
+    public static IEnumerable<Atom> Evaluate(this IEnumerable<Atom> kb, IEnumerable<RuleExpressions> rules)
     {
-        var nextKb = rules.Apply(kb, symbols);
+        var nextKb = rules.Apply(kb);
         if (nextKb.Except(kb).Any())
         {
             var union = kb.Union(nextKb);
-            return union.Evaluate(rules, symbols);
+            return union.Evaluate(rules);
         }
 
         return nextKb;
     }
 
-    public static IEnumerable<Atom> Evaluate(this IEnumerable<Atom> kb, RuleExpressions rule, List<string> symbols, out bool expressionResult)
+    public static IEnumerable<Atom> Evaluate(this IEnumerable<Atom> kb, RuleExpressions rule, out bool expressionResult)
     {
-        var nextKb = rule.Apply(kb, symbols, out expressionResult);
+        var nextKb = rule.Apply(kb, out expressionResult);
         if (nextKb.Except(kb).Any())
         {
             var union = kb.Union(nextKb);
-            return union.Evaluate(rule, symbols, out expressionResult);
+            return union.Evaluate(rule, out expressionResult);
         }
 
         return nextKb;
     }
 
-    public static IEnumerable<Atom> Apply(this RuleExpressions rule, IEnumerable<Atom> kb, List<string> symbols, out bool expressionResult)
+    public static IEnumerable<Atom> Apply(this RuleExpressions rule, IEnumerable<Atom> kb, out bool expressionResult)
     {
         // The initial collection of bindings from which to build upon
         var seed = new[] {new Substitution()}.AsEnumerable();
