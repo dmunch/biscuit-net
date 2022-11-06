@@ -1,9 +1,10 @@
 using System.Text.RegularExpressions;
 using VeryNaiveDatalog;
 
-namespace parser;
+namespace biscuit_net.Expressions;
+using Datalog;
 
-public static class ExpressionEvaluator
+public static class Evaluator
 {
     public static bool Evaluate(List<Op> ops, Func<Variable, Term> variableResolver)
     {

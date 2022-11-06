@@ -11,9 +11,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <!--<ProjectReference Include="..\src\biscuit-net.csproj" />-->
-    <ProjectReference Include="..\..\VeryNaiveDatalog\VeryNaiveDatalog\VeryNaiveDatalog.csproj" />
+    <ProjectReference Include="..\..\..\VeryNaiveDatalog\VeryNaiveDatalog\VeryNaiveDatalog.csproj" />
     <ProjectReference Include="..\proto\proto.csproj" />
+    <ProjectReference Include="..\lib\lib.csproj" />
   </ItemGroup>
 
 </Project>

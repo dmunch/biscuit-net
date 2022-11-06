@@ -1,9 +1,7 @@
 using VeryNaiveDatalog;
 
-namespace parser;
-
-
-public record Expression(List<Op> Ops);
+namespace biscuit_net.Datalog;
+using Expressions;
 
 public record RuleExpressions(
         Atom Head, 

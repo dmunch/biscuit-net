@@ -1,8 +1,6 @@
-using biscuit_net.Proto;
-using parser;
 using VeryNaiveDatalog;
 
-namespace biscuit_net;
+namespace biscuit_net.Datalog;
 
 /// This code is copied form VeryNaiveDatalog to allow easy adjustments
 public static class Evaluator
@@ -54,7 +52,7 @@ public static class Evaluator
         }
 
         expressionResult = rule.Expressions.All(ex =>
-            ExpressionEvaluator.Evaluate(ex.Ops, v => v.Apply(s))
+            Expressions.Evaluator.Evaluate(ex.Ops, v => v.Apply(s))
         );
 
         if(expressionResult)

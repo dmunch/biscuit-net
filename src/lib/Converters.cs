@@ -2,8 +2,7 @@ using VeryNaiveDatalog;
 
 namespace biscuit_net;
 using Proto;
-using parser;
-
+using Datalog;
 
 public static class Converters
 {
@@ -65,19 +64,19 @@ public static class Converters
         });
     }
 
-    static public IEnumerable<parser.Expression> ToParserExpr(IEnumerable<Proto.ExpressionV2> exprs, SymbolTable symbols)
-        => exprs.Select(expr => new parser.Expression(ToParserOp(expr.Ops, symbols).ToList()));
+    static public IEnumerable<Expressions.Expression> ToParserExpr(IEnumerable<Proto.ExpressionV2> exprs, SymbolTable symbols)
+        => exprs.Select(expr => new Expressions.Expression(ToParserOp(expr.Ops, symbols).ToList()));
 
-    static public IEnumerable<parser.Op> ToParserOp(IEnumerable<Proto.Op> ops, SymbolTable symbols)
+    static public IEnumerable<Expressions.Op> ToParserOp(IEnumerable<Proto.Op> ops, SymbolTable symbols)
         => ops.Select(op => ToParserOp(op, symbols));
 
-    static public parser.Op ToParserOp(Proto.Op op, SymbolTable symbols)
+    static public Expressions.Op ToParserOp(Proto.Op op, SymbolTable symbols)
      => op.ContentCase switch
         {
-            Proto.Op.ContentOneofCase.None => new parser.Op(),
-            Proto.Op.ContentOneofCase.Value => new parser.Op(Converters.ToAtom(op.Value, symbols)),
-            Proto.Op.ContentOneofCase.Binary => new parser.Op(new parser.OpBinary((parser.OpBinary.Kind)op.Binary.kind)),
-            Proto.Op.ContentOneofCase.Unary =>  new parser.Op(new parser.OpUnary((parser.OpUnary.Kind)op.Unary.kind)),
+            Proto.Op.ContentOneofCase.None => new Expressions.Op(),
+            Proto.Op.ContentOneofCase.Value => new Expressions.Op(Converters.ToAtom(op.Value, symbols)),
+            Proto.Op.ContentOneofCase.Binary => new Expressions.Op(new Expressions.OpBinary((Expressions.OpBinary.Kind)op.Binary.kind)),
+            Proto.Op.ContentOneofCase.Unary =>  new Expressions.Op(new Expressions.OpUnary((Expressions.OpUnary.Kind)op.Unary.kind)),
             _ => throw new NotImplementedException()
         };
 }

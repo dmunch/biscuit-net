@@ -1,11 +1,11 @@
 ﻿using ProtoBuf;
 using VeryNaiveDatalog;
-using parser;
 using System.Buffers.Binary;
 using NSec.Cryptography;
 using System.Diagnostics.CodeAnalysis;
 
 namespace biscuit_net;
+using Datalog;
 
 public record FailedFormat(Signature? Signature, int? InvalidSignatureSize);
 public record Signature(string InvalidSignature);

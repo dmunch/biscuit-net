@@ -1,6 +1,8 @@
 using VeryNaiveDatalog;
 
-namespace parser;
+namespace biscuit_net.Expressions;
+
+public record Expression(List<Op> Ops);
 
 public record struct Op
 {

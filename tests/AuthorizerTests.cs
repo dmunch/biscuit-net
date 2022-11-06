@@ -1,7 +1,8 @@
 using VeryNaiveDatalog;
-using biscuit_net;
 using System.Text.RegularExpressions;
-using parser;
+using biscuit_net;
+using biscuit_net.Parser;
+using biscuit_net.Datalog;
 
 namespace tests;
 public class AuthorizerTests
@@ -82,7 +83,7 @@ public class AuthorizerTests
                 var name = stringMatch.Groups[1].Value;
                 var value = stringMatch.Groups[2].Value;
 
-                yield return (new Atom(name, new String(value)), null);
+                yield return (new Atom(name, new biscuit_net.Datalog.String(value)), null);
             }
             else if(dateMatch.Success) 
             {
@@ -95,7 +96,7 @@ public class AuthorizerTests
             }
             else if(line.StartsWith("check if"))
             {
-                var parser = new parser.Parser();
+                var parser = new Parser();
                 yield return (null, parser.ParseRule(line));
             }
 

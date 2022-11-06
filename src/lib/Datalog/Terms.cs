@@ -1,5 +1,7 @@
 using VeryNaiveDatalog;
 
+namespace biscuit_net.Datalog;
+
 public sealed record Set(List<Term> Values) : Constant;
 
 public sealed record Bytes(byte[] Value) : Constant

@@ -1,6 +1,7 @@
-namespace parser;
+namespace biscuit_net.Parser;
 
 using Antlr4.Runtime.Misc;
+using biscuit_net.Expressions;
 
 public class ExpressionsVisitor : ExpressionsBaseVisitor<List<Op>>
 {

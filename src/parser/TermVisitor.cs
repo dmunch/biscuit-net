@@ -1,4 +1,5 @@
-namespace parser;
+namespace biscuit_net.Parser;
+using Datalog;
 
 using Antlr4.Runtime.Misc;
 using VeryNaiveDatalog;

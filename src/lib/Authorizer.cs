@@ -1,8 +1,8 @@
 using VeryNaiveDatalog;
-using parser;
 using System.Diagnostics.CodeAnalysis;
 
 namespace biscuit_net;
+using Datalog;
 
 public record World(List<Atom> Atoms, List<Check> Checks);
 public record FailedBlockCheck(int BlockId, int CheckId/*, RuleExpressions Rule*/);

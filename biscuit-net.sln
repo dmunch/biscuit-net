@@ -3,11 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "biscuit-net", "src\biscuit-net.csproj", "{2341D2BA-3F7E-4229-9E7F-C5B6696345B6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lib", "src\lib\lib.csproj", "{2341D2BA-3F7E-4229-9E7F-C5B6696345B6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tests", "tests\tests.csproj", "{05FAD56D-D2FA-412A-81A6-682D0B11AD36}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "proto", "proto\proto.csproj", "{6B8429A9-2111-4AD7-9D81-C405526378FF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "proto", "src\proto\proto.csproj", "{6B8429A9-2111-4AD7-9D81-C405526378FF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{280FE993-62FA-4EA9-969A-159A5A62B9B2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "parser", "src\parser\parser.csproj", "{1D8A715D-4DF0-4C1C-9AAE-6E154D82E8DC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -30,5 +34,12 @@ Global
 		{6B8429A9-2111-4AD7-9D81-C405526378FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6B8429A9-2111-4AD7-9D81-C405526378FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6B8429A9-2111-4AD7-9D81-C405526378FF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1D8A715D-4DF0-4C1C-9AAE-6E154D82E8DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D8A715D-4DF0-4C1C-9AAE-6E154D82E8DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D8A715D-4DF0-4C1C-9AAE-6E154D82E8DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1D8A715D-4DF0-4C1C-9AAE-6E154D82E8DC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{1D8A715D-4DF0-4C1C-9AAE-6E154D82E8DC} = {280FE993-62FA-4EA9-969A-159A5A62B9B2}
 	EndGlobalSection
 EndGlobal

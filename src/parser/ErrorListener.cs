@@ -1,4 +1,4 @@
-namespace parser;
+namespace biscuit_net.Parser;
 
 using Antlr4.Runtime;
 
