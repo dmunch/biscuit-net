@@ -2,7 +2,11 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace biscuit_net.Datalog;
 
-public record Check(IEnumerable<RuleExpressions> Rules);
+public record Check(IEnumerable<RuleExpressions> Rules)
+{
+    public Check(params RuleExpressions[] rules) : this(rules.AsEnumerable()) {}
+}
+
 public record World(List<Atom> Atoms, List<Check> Checks);
 
 public static class Checks
