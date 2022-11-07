@@ -11,7 +11,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\VeryNaiveDatalog\VeryNaiveDatalog\VeryNaiveDatalog.csproj" />
     <ProjectReference Include="..\proto\proto.csproj" />
     <ProjectReference Include="..\lib\lib.csproj" />
   </ItemGroup>

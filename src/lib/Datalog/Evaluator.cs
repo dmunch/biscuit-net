@@ -1,5 +1,3 @@
-using VeryNaiveDatalog;
-
 namespace biscuit_net.Datalog;
 
 /// This code is copied form VeryNaiveDatalog to allow easy adjustments

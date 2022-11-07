@@ -1,7 +1,5 @@
-using biscuit_net;
 using System.Text.RegularExpressions;
 
-using VeryNaiveDatalog;
 using biscuit_net.Expressions;
 using biscuit_net.Parser;
 using biscuit_net.Datalog;

@@ -1,6 +1,5 @@
-using VeryNaiveDatalog;
-
 namespace biscuit_net.Expressions;
+using Datalog;
 
 public record Expression(List<Op> Ops);
 

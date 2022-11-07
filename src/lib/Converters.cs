@@ -1,5 +1,3 @@
-using VeryNaiveDatalog;
-
 namespace biscuit_net;
 using Proto;
 using Datalog;

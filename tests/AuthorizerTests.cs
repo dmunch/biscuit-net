@@ -1,4 +1,3 @@
-using VeryNaiveDatalog;
 using System.Text.RegularExpressions;
 using biscuit_net;
 using biscuit_net.Parser;

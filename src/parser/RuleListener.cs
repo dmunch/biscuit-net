@@ -1,10 +1,8 @@
-namespace biscuit_net.Parser;
-
 using Antlr4.Runtime.Misc;
-using VeryNaiveDatalog;
 
-using biscuit_net.Datalog;
-using biscuit_net.Expressions;
+namespace biscuit_net.Parser;
+using Datalog;
+using Expressions;
 
 public class RuleListener : ExpressionsBaseListener
 {

@@ -2,7 +2,6 @@ namespace biscuit_net.Parser;
 using Datalog;
 
 using Antlr4.Runtime.Misc;
-using VeryNaiveDatalog;
 
 public class TermVisitor : ExpressionsBaseVisitor<Term>
 {
@@ -44,13 +43,13 @@ public class TermVisitor : ExpressionsBaseVisitor<Term>
         if(context.set().fact_term() == null)
         {
             //empty list
-            return new Set(new List<VeryNaiveDatalog.Term>());
+            return new Set(new List<Term>());
         }
 
-        var firstTerm = base.Visit(context.set().fact_term()) as VeryNaiveDatalog.Constant;
-        var nextTerms = context.set().set_term().Select(st => base.Visit(st) as VeryNaiveDatalog.Constant).ToList();
+        var firstTerm = base.Visit(context.set().fact_term()) as Constant;
+        var nextTerms = context.set().set_term().Select(st => base.Visit(st) as Constant).ToList();
 
-        var terms = new List<VeryNaiveDatalog.Term>();
+        var terms = new List<Term>();
         terms.Add(firstTerm);
         terms.AddRange(nextTerms);
         return new Set(terms);

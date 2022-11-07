@@ -1,5 +1,4 @@
 using System.Text.RegularExpressions;
-using VeryNaiveDatalog;
 
 namespace biscuit_net.Expressions;
 using Datalog;

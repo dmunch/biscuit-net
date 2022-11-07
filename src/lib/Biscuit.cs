@@ -1,5 +1,4 @@
 ﻿using ProtoBuf;
-using VeryNaiveDatalog;
 using System.Diagnostics.CodeAnalysis;
 
 namespace biscuit_net;

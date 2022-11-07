@@ -6,15 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
     
-  <!--
   <ItemGroup>
-    <PackageReference Include="protobuf-net" Version="3.1.22" />    
-  </ItemGroup>
--->
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\VeryNaiveDatalog\VeryNaiveDatalog\VeryNaiveDatalog.csproj" />
     <ProjectReference Include="..\proto\proto.csproj" />
-    <!--<ProjectReference Include="..\parser\parser.csproj" />-->
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="NSec.Cryptography" Version="22.4.0" />
