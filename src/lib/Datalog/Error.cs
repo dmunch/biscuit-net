@@ -1,4 +1,4 @@
-namespace biscuit_net;
+namespace biscuit_net.Datalog;
 
 public record Error
 {

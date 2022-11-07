@@ -4,6 +4,7 @@ using Xunit.Sdk;
 namespace tests;
 
 using biscuit_net;
+using biscuit_net.Datalog;
 using Json.Samples;
 
 public record Asserts(string AuthorizerCode, Error? Error, FailedFormat? FormatError, IList<string> RevocationIds);

@@ -7,7 +7,7 @@ public record World(List<Atom> Atoms, List<Check> Checks);
 
 public static class Checks
 {
-    public static bool TryCheckBlock(World world, Block block, IEnumerable<Atom> blockAtoms, int blockId, [NotNullWhen(false)] out Error? err)
+    public static bool TryCheckBlock(World world, IBlock block, IEnumerable<Atom> blockAtoms, int blockId, [NotNullWhen(false)] out Error? err)
     {
         if(!TryCheck(blockAtoms, block.Checks, world, out var failedCheckId, out var failedCheck))
         {
@@ -25,7 +25,7 @@ public static class Checks
         return true;
     }
 
-    public static IEnumerable<Atom> EvaluateBlockRules(World world, Block block, IEnumerable<Atom> authorityAtoms)
+    public static IEnumerable<Atom> EvaluateBlockRules(World world, IBlock block, IEnumerable<Atom> authorityAtoms)
     {
         var rulesAtoms = world.Atoms.Evaluate(block.Rules);
 
@@ -77,7 +77,7 @@ public static class Checks
         return true;
     }
 
-    public static bool TryCheckBoundVariables(Block block, [NotNullWhen(false)] out int? invalidRuleId)
+    public static bool TryCheckBoundVariables(IBlock block, [NotNullWhen(false)] out int? invalidRuleId)
     {
         int ruleId = 0;
         foreach(var rule in block.Rules)
@@ -94,6 +94,27 @@ public static class Checks
         }
 
         invalidRuleId = null;
+        return true;
+    }
+
+    public static bool CheckBoundVariables(IBiscuit b, [NotNullWhen(false)] out InvalidBlockRule? invalidBlockRule)
+    {
+        if(!Checks.TryCheckBoundVariables(b.Authority, out var invalidRuleId))
+        {
+            invalidBlockRule = new InvalidBlockRule(invalidRuleId.Value);
+            return false;
+        }
+
+        foreach(var block in b.Blocks)
+        {
+            if(!Checks.TryCheckBoundVariables(block, out var invalidBlockRuleId))
+            {
+                invalidBlockRule = new InvalidBlockRule(invalidBlockRuleId.Value);
+                return false;
+            }
+        }
+
+        invalidBlockRule = null;
         return true;
     }
 }
