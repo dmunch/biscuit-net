@@ -9,18 +9,15 @@ public static class Checks
 {
     public static bool TryCheckBlock(World world, Block block, IEnumerable<Atom> blockAtoms, int blockId, [NotNullWhen(false)] out Error? err)
     {
-        var (blockCheck, failedCheckId, failedRule) = Check(blockAtoms, block.Checks, world);
-        
-        if(!blockCheck) 
+        if(!TryCheck(blockAtoms, block.Checks, world, out var failedCheckId, out var failedCheck))
         {
-            err = new Error(new FailedBlockCheck(blockId, failedCheckId/*, failedRule*/));
+            err = new Error(new FailedBlockCheck(blockId, failedCheckId.Value/*, failedRule*/));
             return false;
         }
 
-        var (blockAuthorizerCheck, failedAuthorizerCheckId, failedAuthorizerRule) = Check(blockAtoms, world.Checks, world);
-        if(!blockAuthorizerCheck) 
+        if(!TryCheck(blockAtoms, world.Checks, world, out var failedAuthorizerCheckId, out var failedAuthorizerCheck))
         {
-            err = new Error(new FailedAuthorizerCheck(failedAuthorizerCheckId/*, failedAuthorizerRule*/));
+            err = new Error(new FailedAuthorizerCheck(failedAuthorizerCheckId.Value/*, failedAuthorizerRule*/));
             return false;
         }
 
@@ -38,7 +35,7 @@ public static class Checks
         return blockScopedAtoms;
     }
 
-    static (bool, int, Check?) Check(IEnumerable<Atom> blockAtoms, IEnumerable<Check> checks, World world)
+    static bool TryCheck(IEnumerable<Atom> blockAtoms, IEnumerable<Check> checks, World world, [NotNullWhen(false)] out int? failedCheckId, [NotNullWhen(false)] out Check? failedCheck)
     {
         var result = true; 
         var checkId = 0;
@@ -68,14 +65,19 @@ public static class Checks
             {
                 //check failed? we return false, alongside
                 //the check index and the actual rule used for the check
-                return (false, checkId, check);
+                failedCheckId = checkId;
+                failedCheck = check;
+                return false;
             }
             checkId++;
         }
-        return (true, -1, null);
+
+        failedCheckId = null;
+        failedCheck = null;
+        return true;
     }
 
-    public static bool CheckBoundVariables(Block block, [NotNullWhen(false)] out int? invalidRuleId)
+    public static bool TryCheckBoundVariables(Block block, [NotNullWhen(false)] out int? invalidRuleId)
     {
         int ruleId = 0;
         foreach(var rule in block.Rules)

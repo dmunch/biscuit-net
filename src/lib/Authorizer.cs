@@ -50,7 +50,7 @@ public class Authorizer
 
     static bool CheckBoundVariables(Biscuit b, [NotNullWhen(false)] out InvalidBlockRule? invalidBlockRule)
     {
-        if(!Checks.CheckBoundVariables(b.Authority, out var invalidRuleId))
+        if(!Checks.TryCheckBoundVariables(b.Authority, out var invalidRuleId))
         {
             invalidBlockRule = new InvalidBlockRule(invalidRuleId.Value);
             return false;
@@ -58,7 +58,7 @@ public class Authorizer
 
         foreach(var block in b.Blocks)
         {
-            if(!Checks.CheckBoundVariables(block, out var invalidBlockRuleId))
+            if(!Checks.TryCheckBoundVariables(block, out var invalidBlockRuleId))
             {
                 invalidBlockRule = new InvalidBlockRule(invalidBlockRuleId.Value);
                 return false;
