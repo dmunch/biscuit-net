@@ -27,9 +27,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\lib\lib.csproj" />
-    <ProjectReference Include="..\..\VeryNaiveDatalog\VeryNaiveDatalog\VeryNaiveDatalog.csproj" />
-    <ProjectReference Include="..\src\parser\parser.csproj" />
+    <ProjectReference Include="..\..\src\lib\lib.csproj" />
+    <ProjectReference Include="..\..\src\parser\parser.csproj" />
   </ItemGroup>
   <ItemGroup>
     <AdditionalFiles Include="samples-v2/samples.json" />
