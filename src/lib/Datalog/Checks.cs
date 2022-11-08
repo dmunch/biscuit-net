@@ -13,13 +13,13 @@ public static class Checks
 {
     public static bool TryCheckBlock(World world, IBlock block, HashSet<Atom> blockAtoms, int blockId, [NotNullWhen(false)] out Error? err)
     {
-        if(!TryCheck(blockAtoms, block.Checks, world, out var failedCheckId, out var failedCheck))
+        if(!TryCheck(blockAtoms, block.Checks, out var failedCheckId, out var failedCheck))
         {
             err = new Error(new FailedBlockCheck(blockId, failedCheckId.Value/*, failedRule*/));
             return false;
         }
 
-        if(!TryCheck(blockAtoms, world.Checks, world, out var failedAuthorizerCheckId, out var failedAuthorizerCheck))
+        if(!TryCheck(blockAtoms, world.Checks, out var failedAuthorizerCheckId, out var failedAuthorizerCheck))
         {
             err = new Error(new FailedAuthorizerCheck(failedAuthorizerCheckId.Value/*, failedAuthorizerRule*/));
             return false;
@@ -37,7 +37,7 @@ public static class Checks
         return rulesAtoms;
     }
 
-    static bool TryCheck(HashSet<Atom> blockAtoms, IEnumerable<Check> checks, World world, [NotNullWhen(false)] out int? failedCheckId, [NotNullWhen(false)] out Check? failedCheck)
+    static bool TryCheck(HashSet<Atom> blockAtoms, IEnumerable<Check> checks, [NotNullWhen(false)] out int? failedCheckId, [NotNullWhen(false)] out Check? failedCheck)
     {
         var result = true; 
         var checkId = 0;
@@ -47,10 +47,8 @@ public static class Checks
             foreach(var rule in check.Rules)
             {
                 var eval = blockAtoms.Evaluate(rule, out var expressionResult);
-
-                var checkScopedAtoms = blockAtoms.ToList();
-                checkScopedAtoms.AddRange(eval);
-                var subs = rule.Head.UnifyWith(checkScopedAtoms, new Substitution());
+                eval.UnionWith(blockAtoms);
+                var subs = rule.Head.UnifyWith(eval, new Substitution());
 
                 if(rule.Body.Any())
                 {

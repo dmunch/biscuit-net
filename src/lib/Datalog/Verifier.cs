@@ -21,7 +21,6 @@ public static class Verifier
         var blockId = 1;
         foreach(var block in b.Blocks)
         {
-            world.Atoms.UnionWith(block.Atoms);
             var blockExecutionAtoms = Checks.EvaluateBlockRules(world, block, authorityExecutionAtoms);
             if(!Checks.TryCheckBlock(world, block, blockExecutionAtoms, blockId, out err))
                 return false;
