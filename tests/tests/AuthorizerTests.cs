@@ -37,15 +37,14 @@ public class AuthorizerTests
 
         var authorizer = new Authorizer();
 
-        foreach(var (authorizerAtom, authorizerCheckRule) in Parse(biscuitCase.Validation.AuthorizerCode))
+        foreach(var parseResult in Parse(biscuitCase.Validation.AuthorizerCode))
         {
-            if(authorizerAtom != null)
+            switch(parseResult)
             {
-                authorizer.AddAtom(authorizerAtom);
-            }
-            if(authorizerCheckRule != null)
-            {
-                authorizer.AddCheck(new Check(new []{authorizerCheckRule}));
+                case (var authorizerAtom, null, null): authorizer.AddAtom(authorizerAtom); break;
+                case (null, var authorizerCheckRule, null): authorizer.AddCheck(new Check(new []{authorizerCheckRule})); break;
+                case (null, null, var policy): break;
+                default: throw new Exception();
             }
         }
         
@@ -72,7 +71,7 @@ public class AuthorizerTests
     }
 
 
-    IEnumerable<(Atom?, RuleExpressions?)> Parse(string code)
+    IEnumerable<(Atom?, RuleExpressions?, string?)> Parse(string code)
     {
         string stringTermPattern = @"^([a-zA-Z_]+)\(""([a-zA-Z.0-9]+)""\);$";
         string intTermPattern = @"^([a-zA-Z_]+)\((\d+)\)$";
@@ -95,7 +94,7 @@ public class AuthorizerTests
                 var name = stringMatch.Groups[1].Value;
                 var value = stringMatch.Groups[2].Value;
 
-                yield return (new Atom(name, new biscuit_net.Datalog.String(value)), null);
+                yield return (new Atom(name, new biscuit_net.Datalog.String(value)), null, null);
             }
             else if(dateMatch.Success) 
             {
@@ -104,12 +103,17 @@ public class AuthorizerTests
 
                 var dateParsed = DateTime.Parse(date);
                 var dateTAI = Date.ToTAI64(dateParsed);
-                yield return (new Atom(name, new Date(dateTAI)), null);
+                yield return (new Atom(name, new Date(dateTAI)), null, null);
             }
             else if(line.StartsWith("check if"))
             {
                 var parser = new Parser();
-                yield return (null, parser.ParseRule(line));
+                yield return (null, parser.ParseRule(line), null);
+            }
+            else if(line.StartsWith("allow if true"))
+            {
+                var parser = new Parser();
+                yield return (null, null, "allow if true");
             }
 
             else throw new NotSupportedException(line);

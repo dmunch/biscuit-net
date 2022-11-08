@@ -5,13 +5,12 @@ namespace tests;
 
 using biscuit_net;
 using biscuit_net.Datalog;
-using Json.Samples;
 
 public record Asserts(string AuthorizerCode, Error? Error, FailedFormat? FormatError, IList<string> RevocationIds);
 public record BiscuitCase(string Filename, string Title, string RootPublicKey, string RootPrivateKey, Asserts Validation)
 {
     public bool Success => Validation.Error == null && Validation.FormatError == null;
-    public byte[] Token => System.IO.File.ReadAllBytes($"samples-v2/{Filename}");
+    public byte[] Token => System.IO.File.ReadAllBytes($"samples/{Filename}");
     public override string ToString()
     {
         return $"{Filename}: {Title} [{(Success? "Success" : "Error")}]";
@@ -21,7 +20,7 @@ public record BiscuitCase(string Filename, string Title, string RootPublicKey, s
 public class BiscuitCases : DataAttribute
 {
     private readonly string? _fileName;
-    private static Json.Samples.Sample? _samples;
+    private static QuickType.Samples? _samples;
     
     public BiscuitCases(string fileName)
     {
@@ -34,8 +33,8 @@ public class BiscuitCases : DataAttribute
     
     static BiscuitCases()
     {
-        var samplesJson =  System.IO.File.ReadAllText("samples-v2/samples.json");
-        _samples = Newtonsoft.Json.JsonConvert.DeserializeObject<Json.Samples.Sample>(samplesJson);
+        var samplesJson =  System.IO.File.ReadAllText("samples/samples.json");
+        _samples = Newtonsoft.Json.JsonConvert.DeserializeObject<QuickType.Samples>(samplesJson);
     }
 
     public override IEnumerable<object[]> GetData(MethodInfo testMethod)
@@ -48,7 +47,7 @@ public class BiscuitCases : DataAttribute
         var testCases = _samples.Testcases;
         if(_fileName != null) 
         {
-           testCases = _samples.Testcases.Where(tc => tc.Filename == _fileName).ToList();
+           testCases = _samples.Testcases.Where(tc => tc.Filename == _fileName).ToArray();
         }
 
         return testCases
@@ -58,19 +57,19 @@ public class BiscuitCases : DataAttribute
             .ToArray();
     }
 
-    public IEnumerable<BiscuitCase> MapBiscuitCases(Json.Samples.Sample samples, Testcase testCase)
+    public IEnumerable<BiscuitCase> MapBiscuitCases(QuickType.Samples samples, QuickType.Testcase testCase)
     {
         return testCase.Validations
             .Select(validation => new BiscuitCase(
                 Filename: testCase.Filename,
                 Title: $"{testCase.Title}: {validation.Key}",
                 Validation: MapValidation(validation.Value),
-                RootPrivateKey: samples.Root_private_key,
-                RootPublicKey: samples.Root_public_key
+                RootPrivateKey: samples.RootPrivateKey,
+                RootPublicKey: samples.RootPublicKey
             )).ToArray();
     }
 
-    Asserts MapValidation(File1 file)
+    Asserts MapValidation(QuickType.File file)
     {
         FailedFormat? failedFormat = null;
         Error? error = null;
@@ -84,14 +83,14 @@ public class BiscuitCases : DataAttribute
             if(authorizer != null)
                 error = new Error(new FailedAuthorizerCheck(authorizer.CheckId/*, null*/));
             else if(block != null)
-                error = new Error(new FailedBlockCheck(block.Block_id, block.Check_id/*, null*/));
+                error = new Error(new FailedBlockCheck(block.BlockId, block.CheckId/*, null*/));
         }
 
         if(file.Result?.Err?.FailedLogic?.InvalidBlockRule != null)
         {
             var ibr = file.Result.Err.FailedLogic.InvalidBlockRule;
-            var ruleId = (long)  ibr[0]; //assuming this is ruleId - not clear in the specs
-            var rule = (string) ibr[1];
+            var ruleId = ibr[0].Integer; //assuming this is ruleId - not clear in the specs
+            var rule = ibr[1].String;
             
             error = new Error(new InvalidBlockRule((int)ruleId/*, rule*/));
         }
@@ -103,9 +102,9 @@ public class BiscuitCases : DataAttribute
             var invalidSignature = file.Result?.Err?.Format?.Signature?.InvalidSignature;
             var signature = invalidSignature != null ? new biscuit_net.Signature(invalidSignature) : null;
 
-            failedFormat = new FailedFormat(signature, iss);
+            failedFormat = new FailedFormat(signature, (int?)iss);
         }
         
-        return new Asserts(file.Authorizer_code, error, failedFormat, file.Revocation_ids);
+        return new Asserts(file.AuthorizerCode, error, failedFormat, file.RevocationIds);
     }
 }
