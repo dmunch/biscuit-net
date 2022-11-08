@@ -89,7 +89,7 @@ public class VerifierTests
     {
         bool Verify(string user, string resource, string operation)
         {
-            var world = new World(new List<A>() {
+            var world = new World(new HashSet<A>() {
             new A("resource", resource),
             new A("user_id", user),
             new A("operation", operation)

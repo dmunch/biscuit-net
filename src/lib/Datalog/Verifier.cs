@@ -12,7 +12,7 @@ public static class Verifier
             return false;
         }
         
-        world.Atoms.AddRange(b.Authority.Atoms);
+        world.Atoms.UnionWith(b.Authority.Atoms);
 
         var authorityExecutionAtoms = Checks.EvaluateBlockRules(world, b.Authority, world.Atoms);
         if(!Checks.TryCheckBlock(world, b.Authority, authorityExecutionAtoms, 0, out err))
@@ -21,7 +21,7 @@ public static class Verifier
         var blockId = 1;
         foreach(var block in b.Blocks)
         {
-            world.Atoms.AddRange(block.Atoms);
+            world.Atoms.UnionWith(block.Atoms);
             var blockExecutionAtoms = Checks.EvaluateBlockRules(world, block, authorityExecutionAtoms);
             if(!Checks.TryCheckBlock(world, block, blockExecutionAtoms, blockId, out err))
                 return false;

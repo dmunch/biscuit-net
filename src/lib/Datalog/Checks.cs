@@ -7,11 +7,11 @@ public record Check(IEnumerable<RuleExpressions> Rules)
     public Check(params RuleExpressions[] rules) : this(rules.AsEnumerable()) {}
 }
 
-public record World(List<Atom> Atoms, List<Check> Checks);
+public record World(HashSet<Atom> Atoms, List<Check> Checks);
 
 public static class Checks
 {
-    public static bool TryCheckBlock(World world, IBlock block, IEnumerable<Atom> blockAtoms, int blockId, [NotNullWhen(false)] out Error? err)
+    public static bool TryCheckBlock(World world, IBlock block, HashSet<Atom> blockAtoms, int blockId, [NotNullWhen(false)] out Error? err)
     {
         if(!TryCheck(blockAtoms, block.Checks, world, out var failedCheckId, out var failedCheck))
         {
@@ -29,17 +29,15 @@ public static class Checks
         return true;
     }
 
-    public static IEnumerable<Atom> EvaluateBlockRules(World world, IBlock block, IEnumerable<Atom> authorityAtoms)
+    public static HashSet<Atom> EvaluateBlockRules(World world, IBlock block, HashSet<Atom> authorityAtoms)
     {
         var rulesAtoms = world.Atoms.Evaluate(block.Rules);
+        rulesAtoms.UnionWith(authorityAtoms);
 
-        var blockScopedAtoms = authorityAtoms.ToList();
-        blockScopedAtoms.AddRange(rulesAtoms);
-
-        return blockScopedAtoms;
+        return rulesAtoms;
     }
 
-    static bool TryCheck(IEnumerable<Atom> blockAtoms, IEnumerable<Check> checks, World world, [NotNullWhen(false)] out int? failedCheckId, [NotNullWhen(false)] out Check? failedCheck)
+    static bool TryCheck(HashSet<Atom> blockAtoms, IEnumerable<Check> checks, World world, [NotNullWhen(false)] out int? failedCheckId, [NotNullWhen(false)] out Check? failedCheck)
     {
         var result = true; 
         var checkId = 0;

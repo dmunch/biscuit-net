@@ -4,34 +4,45 @@ namespace biscuit_net.Datalog;
 public static class Evaluator
 {
     // Just a lifting of Rule.Apply to an IEnumerable<Rule>.
-    public static IEnumerable<Atom> Apply(this IEnumerable<RuleExpressions> rules, IEnumerable<Atom> kb)
-        =>  rules.SelectMany(r =>  r.Apply(kb, out var innerExpressionResult)).ToHashSet();
+    public static HashSet<Atom> Apply(this IEnumerable<RuleExpressions> rules, HashSet<Atom> kb)
+    {
+        var seed = new HashSet<Atom>();
+
+        foreach(var r in rules)
+        {
+            var atoms = r.Apply(kb, out var innerExpressionResult);
+            seed.UnionWith(atoms);
+        }
+        return seed;
+    }
     
-    public static IEnumerable<Atom> Evaluate(this IEnumerable<Atom> kb, IEnumerable<RuleExpressions> rules)
+    public static HashSet<Atom> Evaluate(this HashSet<Atom> kb, IEnumerable<RuleExpressions> rules)
     {
         var nextKb = rules.Apply(kb);
-        if (nextKb.Except(kb).Any())
+        
+        if (nextKb.IsProperSupersetOf(kb))
         {
-            var union = kb.Union(nextKb);
-            return union.Evaluate(rules);
+            nextKb.UnionWith(kb);
+            return nextKb.Evaluate(rules);
         }
 
         return nextKb;
     }
 
-    public static IEnumerable<Atom> Evaluate(this IEnumerable<Atom> kb, RuleExpressions rule, out bool expressionResult)
+    public static HashSet<Atom> Evaluate(this HashSet<Atom> kb, RuleExpressions rule, out bool expressionResult)
     {
         var nextKb = rule.Apply(kb, out expressionResult);
-        if (nextKb.Except(kb).Any())
+        
+        if (nextKb.IsProperSupersetOf(kb))
         {
-            var union = kb.Union(nextKb);
-            return union.Evaluate(rule, out expressionResult);
+            nextKb.UnionWith(kb);
+            return nextKb.Evaluate(rule, out expressionResult);
         }
-
+        
         return nextKb;
     }
 
-    public static IEnumerable<Atom> Apply(this RuleExpressions rule, IEnumerable<Atom> kb, out bool expressionResult)
+    public static HashSet<Atom> Apply(this RuleExpressions rule, HashSet<Atom> kb, out bool expressionResult)
     {
         // The initial collection of bindings from which to build upon
         var seed = new[] {new Substitution()}.AsEnumerable();
@@ -56,8 +67,8 @@ public static class Evaluator
         if(expressionResult)
             // Apply the bindings accumulated in the rule's body (the premises) to the rule's head (the conclusion),
             // thus obtaining the new atoms.
-            return matches.Select(rule.Head.Apply);
+            return matches.Select(rule.Head.Apply).ToHashSet();
         else
-            return Enumerable.Empty<Atom>();
+            return new HashSet<Atom>();
     }
 }
