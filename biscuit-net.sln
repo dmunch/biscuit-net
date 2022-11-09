@@ -5,7 +5,7 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lib", "src\lib\lib.csproj", "{2341D2BA-3F7E-4229-9E7F-C5B6696345B6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tests", "tests\tests.csproj", "{05FAD56D-D2FA-412A-81A6-682D0B11AD36}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tests", "tests\tests\tests.csproj", "{05FAD56D-D2FA-412A-81A6-682D0B11AD36}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "proto", "src\proto\proto.csproj", "{6B8429A9-2111-4AD7-9D81-C405526378FF}"
 EndProject
