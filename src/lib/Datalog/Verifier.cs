@@ -15,12 +15,12 @@ public static class Verifier
         world.Atoms.UnionWith(b.Authority.Atoms);
 
         
-        if(b.Authority.Version != 3)
+        if(b.Authority.Version < 3 || b.Authority.Version > 4)
             throw new Exception($"Unsupported Authority Block Version {b.Authority.Version}");
 
         foreach(var block in b.Blocks)
         {
-            if(block.Version != 3)
+            if(block.Version < 3 || block.Version > 4)
                 throw new Exception($"Unsupported Block Version {b.Authority.Version}");
         }
         

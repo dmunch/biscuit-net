@@ -2,9 +2,15 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace biscuit_net.Datalog;
 
-public record Check(IEnumerable<RuleExpressions> Rules)
+public record Check(IEnumerable<RuleExpressions> Rules, Check.CheckKind Kind)
 {
-    public Check(params RuleExpressions[] rules) : this(rules.AsEnumerable()) {}
+    public Check(params RuleExpressions[] rules) : this(rules.AsEnumerable(), CheckKind.One) {}
+
+    public enum CheckKind
+    {
+        One,
+        All
+    }
 }
 
 public record World(HashSet<Atom> Atoms, List<Check> Checks);
@@ -43,24 +49,13 @@ public static class Checks
         var checkId = 0;
         foreach(var check in checks)
         {
-            var ruleResult = false; 
-            foreach(var rule in check.Rules)
+            result &= check.Kind switch 
             {
-                var eval = blockAtoms.Evaluate(rule, out var expressionResult);
-                eval.UnionWith(blockAtoms);
-                var subs = rule.Head.UnifyWith(eval, new Substitution());
-
-                if(rule.Body.Any())
-                {
-                    ruleResult |= subs.Any();
-                }
-                if(rule.Expressions.Any())
-                {
-                    ruleResult |= expressionResult;
-                }
-            }
-
-            result &= ruleResult;
+                Check.CheckKind.One => TryCheckOne(blockAtoms, check.Rules),
+                Check.CheckKind.All => TryCheckAll(blockAtoms, check.Rules),
+                _ => throw new NotSupportedException()
+            };
+            
             if(!result) 
             {
                 //check failed? we return false, alongside
@@ -74,6 +69,53 @@ public static class Checks
 
         failedCheckId = null;
         failedCheck = null;
+        return true;
+    }
+
+    static bool TryCheckOne(HashSet<Atom> blockAtoms, IEnumerable<RuleExpressions> rules)
+    {
+        var ruleResult = false;
+
+        foreach(var rule in rules)
+        {
+            var eval = blockAtoms.Evaluate(rule, out var expressionResult);
+            eval.UnionWith(blockAtoms);
+            var subs = rule.Head.UnifyWith(eval, new Substitution());
+
+            if(rule.Body.Any())
+            {
+                ruleResult |= subs.Any();
+            }
+            if(rule.Expressions.Any())
+            {
+                ruleResult |= expressionResult;
+            }
+        }
+
+        return ruleResult;   
+    }
+
+    static bool TryCheckAll(HashSet<Atom> blockAtoms, IEnumerable<RuleExpressions> rules)
+    {
+        foreach(var rule in rules)
+        {
+            var eval = blockAtoms.Evaluate(rule);
+            eval.UnionWith(blockAtoms);
+            
+            var matches = rule.Body.Match(eval);
+
+            var result = matches.All(match => 
+                rule.Expressions.All(ex => 
+                    Expressions.Evaluator.Evaluate(ex.Ops, v => v.Apply(match))
+                )
+            );
+            
+            if(!result) 
+            {
+                return false;
+            }
+        }
+
         return true;
     }
 

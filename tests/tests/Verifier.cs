@@ -53,7 +53,7 @@ public class VerifierTests
             },
             new Check[] {
             },
-            2
+            3
         );
 
         var biscuit = new Biscuit(authority, Enumerable.Empty<IBlock>());

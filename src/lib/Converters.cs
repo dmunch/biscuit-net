@@ -58,7 +58,14 @@ public static class Converters
 
                     return new RuleExpressions(head, body, ToParserExpr(query.Expressions, symbols));
                 });
-                return new Check(rules);
+                
+                var kind = check.kind switch 
+                {
+                    CheckV2.Kind.One => Check.CheckKind.One,
+                    CheckV2.Kind.All => Check.CheckKind.All,
+                    _ => throw new NotSupportedException($"Check kind {check.kind} not supported")
+                };
+                return new Check(rules, kind);
         });
     }
 

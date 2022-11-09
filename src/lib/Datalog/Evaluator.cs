@@ -1,6 +1,5 @@
 namespace biscuit_net.Datalog;
 
-/// This code is copied form VeryNaiveDatalog to allow easy adjustments
 public static class Evaluator
 {
     // Just a lifting of Rule.Apply to an IEnumerable<Rule>.
@@ -10,7 +9,8 @@ public static class Evaluator
 
         foreach(var r in rules)
         {
-            var atoms = r.Apply(kb, out var innerExpressionResult);
+            //not interested in the expression result, but still need to evaluate it
+            var atoms = r.Apply(kb, out _);
             seed.UnionWith(atoms);
         }
         return seed;
@@ -42,17 +42,44 @@ public static class Evaluator
         return nextKb;
     }
 
-    public static HashSet<Atom> Apply(this RuleExpressions rule, HashSet<Atom> kb, out bool expressionResult)
+    public static HashSet<Atom> Evaluate(this HashSet<Atom> kb, RuleExpressions rule)
+    {
+        var nextKb = rule.Apply(kb);
+    
+        if (nextKb.IsProperSupersetOf(kb))
+        {
+            nextKb.UnionWith(kb);
+            return nextKb.Evaluate(rule);
+        }
+        
+        return nextKb;
+    }
+
+    public static IEnumerable<Substitution> Match(this IEnumerable<Atom> body, HashSet<Atom> kb)
     {
         // The initial collection of bindings from which to build upon
         var seed = new[] {new Substitution()}.AsEnumerable();
             
         // Attempt to match (unify) the rule's body with the collection of atoms.
         // Returns all successful bindings.
-        var matches = rule.Body.Aggregate(seed, (envs, a) => a.UnifyWith(kb, envs));
+        var matches = body.Aggregate(seed, (envs, a) => a.UnifyWith(kb, envs)).ToList();
+        return matches;
+    }
+
+    static HashSet<Atom> Apply(this RuleExpressions rule, HashSet<Atom> kb)
+    {
+        return rule.Body
+            .Match(kb)
+            .Select(rule.Head.Apply)
+            .ToHashSet();
+    }
+
+    static HashSet<Atom> Apply(this RuleExpressions rule, HashSet<Atom> kb, out bool expressionResult)
+    {
+        var matches = rule.Body.Match(kb);
 
         var s = new Substitution();
-        foreach(var m in matches)   
+        foreach(var m in rule.Body.Match(kb))   
         {
             foreach(var kvp in m)
             {
