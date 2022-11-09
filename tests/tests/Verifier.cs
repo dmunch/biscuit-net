@@ -9,7 +9,8 @@ public class VerifierTests
     (
         IEnumerable<Atom> Atoms,
         IEnumerable<RuleExpressions> Rules,
-        IEnumerable<Check> Checks
+        IEnumerable<Check> Checks,
+        uint Version
     )  : IBlock;
 
     record Biscuit(IBlock Authority, IEnumerable<IBlock> Blocks) : IBiscuit;
@@ -51,7 +52,8 @@ public class VerifierTests
                 )
             },
             new Check[] {
-            }
+            },
+            2
         );
 
         var biscuit = new Biscuit(authority, Enumerable.Empty<IBlock>());

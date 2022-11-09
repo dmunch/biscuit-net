@@ -8,13 +8,15 @@ public class VerifiedBlock : IBlock
     public IEnumerable<Atom> Atoms { get; protected set; }
     public IEnumerable<RuleExpressions> Rules { get; protected set; }
     public IEnumerable<Check> Checks { get; protected set; }
+    public uint Version { get; protected set; }
     public string RevocationId { get; protected set; }
 
-    VerifiedBlock(IEnumerable<Atom> atoms, IEnumerable<RuleExpressions> rules, IEnumerable<Check> checks, string revocationId) 
+    VerifiedBlock(IEnumerable<Atom> atoms, IEnumerable<RuleExpressions> rules, IEnumerable<Check> checks, uint version, string revocationId) 
     {
         Atoms = atoms;
         Rules = rules;
         Checks = checks;
+        Version = version;
         RevocationId = revocationId;
     }
 
@@ -28,6 +30,7 @@ public class VerifiedBlock : IBlock
             block.FactsV2s.ToAtoms(symbols),
             block.RulesV2s.ToRules(symbols),
             block.ChecksV2s.ToChecks(symbols),
+            block.Version,
             Convert.ToHexString(signedBlock.Signature).ToLowerInvariant()
         );
     }

@@ -14,6 +14,16 @@ public static class Verifier
         
         world.Atoms.UnionWith(b.Authority.Atoms);
 
+        
+        if(b.Authority.Version != 3)
+            throw new Exception($"Unsupported Authority Block Version {b.Authority.Version}");
+
+        foreach(var block in b.Blocks)
+        {
+            if(block.Version != 3)
+                throw new Exception($"Unsupported Block Version {b.Authority.Version}");
+        }
+        
         var authorityExecutionAtoms = Checks.EvaluateBlockRules(world, b.Authority, world.Atoms);
         if(!Checks.TryCheckBlock(world, b.Authority, authorityExecutionAtoms, 0, out err))
             return false;
