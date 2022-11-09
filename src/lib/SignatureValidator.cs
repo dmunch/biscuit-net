@@ -11,6 +11,8 @@ public class SignatureValidator
 {
     SignatureAlgorithm _algorithm;
     PublicKey _key;
+
+    public byte[] Key { get; private set; }
     
     public SignatureValidator(string publicKeyInHex) : this(Convert.FromHexString(publicKeyInHex))
     {
@@ -19,6 +21,7 @@ public class SignatureValidator
     public SignatureValidator(byte[] publicKey)
     {
         _algorithm = SignatureAlgorithm.Ed25519;
+        Key = publicKey;
         _key = PublicKey.Import(_algorithm, publicKey, KeyBlobFormat.RawPublicKey);
     }
 
@@ -29,6 +32,35 @@ public class SignatureValidator
 
 static class BlockSignatureVerification
 {
+
+    static byte[] MakeBuffer(byte[] block, Proto.PublicKey.Algorithm alg, byte[] key)
+    {
+        var buffer = new byte[block.Length + sizeof(int) + key.Length];
+        var bytes = (Span<byte>) buffer;
+        
+        block.CopyTo(buffer, 0);
+
+        BinaryPrimitives.WriteInt32LittleEndian(bytes.Slice(block.Length, sizeof(int)), (int)alg);
+        key.CopyTo(buffer, block.Length + sizeof(int));
+        
+        return buffer;
+    }
+
+    static byte[] MakeBuffer(byte[] block, byte[] externalSignature, Proto.PublicKey.Algorithm alg, byte[] key)
+    {
+        var buffer = new byte[block.Length + externalSignature.Length + sizeof(int) + key.Length];
+        var bytes = (Span<byte>) buffer;
+        
+        block.CopyTo(buffer, 0);
+        externalSignature.CopyTo(buffer, block.Length);
+
+        var keyPosition = block.Length + externalSignature.Length;
+        BinaryPrimitives.WriteInt32LittleEndian(bytes.Slice(keyPosition, sizeof(int)), (int)alg);
+        key.CopyTo(buffer, keyPosition + sizeof(int));
+        
+        return buffer;
+    }
+
     static bool VerifySignature(this Proto.SignedBlock signedBlock, SignatureValidator validator, [NotNullWhen(false)] out int? invalidSignatureSize)
     {
         if(signedBlock.Signature.Length != 64)
@@ -39,14 +71,22 @@ static class BlockSignatureVerification
         invalidSignatureSize = null;
 
         //IMPROVE: could use an array pool here
-        var buffer = new byte[signedBlock.Block.Length + sizeof(int) + signedBlock.nextKey.Key.Length];
-        var bytes = (Span<byte>) buffer;        
 
-        signedBlock.Block.CopyTo(buffer, 0);
-        BinaryPrimitives.WriteInt32LittleEndian(bytes.Slice(signedBlock.Block.Length, sizeof(int)), (int)signedBlock.nextKey.algorithm);
-        signedBlock.nextKey.Key.CopyTo(buffer, signedBlock.Block.Length + 4);
+        var buffer = signedBlock.externalSignature != null 
+            ? MakeBuffer(signedBlock.Block, signedBlock.externalSignature.Signature, signedBlock.nextKey.algorithm, signedBlock.nextKey.Key)
+            : MakeBuffer(signedBlock.Block,signedBlock.nextKey.algorithm, signedBlock.nextKey.Key);
 
-        return validator.Verify(buffer, signedBlock.Signature);
+        if(signedBlock.externalSignature == null)
+        {
+            return validator.Verify(buffer, signedBlock.Signature);
+        }
+        
+        var externalBuffer = MakeBuffer(signedBlock.Block, Proto.PublicKey.Algorithm.Ed25519, validator.Key);
+        var externalValidator = new SignatureValidator(signedBlock.externalSignature.publicKey.Key);
+
+        return    validator.Verify(buffer, signedBlock.Signature)
+               && externalValidator.Verify(externalBuffer, signedBlock.externalSignature.Signature);
+
     }
 
     static bool VerifySignatures(this Proto.Biscuit biscuitProto, SignatureValidator validator, [NotNullWhen(false)] out int? invalidSignatureSize)
