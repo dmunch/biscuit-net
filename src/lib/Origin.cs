@@ -1,5 +1,6 @@
 
-namespace biscuit_net.Datalog;
+namespace biscuit_net;
+using Datalog;
 
 public class Origin : SortedSet<uint>
 {

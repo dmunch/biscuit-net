@@ -1,4 +1,5 @@
-namespace biscuit_net.Datalog;
+namespace biscuit_net;
+using Datalog;
 
 public interface IBlock
 {

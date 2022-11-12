@@ -1,6 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 
-namespace biscuit_net.Datalog;
+namespace biscuit_net;
+using Datalog;
 
 public record Check(IEnumerable<RuleConstrained> Rules, Check.CheckKind Kind)
 {
