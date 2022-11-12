@@ -50,7 +50,7 @@ namespace QuickType
 
     public partial class Block
     {
-        [J("block_id")] public int BlockId { get; set; }
+        [J("block_id")] public uint BlockId { get; set; }
         [J("check_id")] public int CheckId { get; set; }
         [J("rule")]     public string Rule { get; set; } 
     }

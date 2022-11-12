@@ -20,7 +20,14 @@ public class Authorizer
 
     public bool TryAuthorize(VerifiedBiscuit b, [NotNullWhen(false)] out Error? err)
     {
-        var world = new World(_authorizerAtoms.ToHashSet(), _authorizerChecks);
+        //var world = new World(_authorizerAtoms.ToHashSet(), _authorizerChecks);
+
+        var atomSet = new AtomSet();
+        var ruleSet = new RuleSet();
+        var world = new World(atomSet, ruleSet, _authorizerChecks);
+
+        atomSet.Add(Origin.Authorizer, _authorizerAtoms.ToHashSet());
+        //ruleSet.Add(new Origin(0), _aut)
         return Verifier.TryVerify(b, world, out err);
     }
 }

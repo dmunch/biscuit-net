@@ -3,7 +3,7 @@ namespace biscuit_net.Datalog;
 public static class Evaluator
 {
     // Just a lifting of Rule.Apply to an IEnumerable<Rule>.
-    public static HashSet<Atom> Apply(this IEnumerable<RuleExpressions> rules, HashSet<Atom> kb)
+    public static HashSet<Atom> Apply(this IEnumerable<RuleExpressions> rules, IEnumerable<Atom> kb)
     {
         var seed = new HashSet<Atom>();
 
@@ -16,7 +16,7 @@ public static class Evaluator
         return seed;
     }
     
-    public static HashSet<Atom> Evaluate(this HashSet<Atom> kb, IEnumerable<RuleExpressions> rules)
+    public static HashSet<Atom> Evaluate(this IEnumerable<Atom> kb, IEnumerable<RuleExpressions> rules)
     {
         var nextKb = rules.Apply(kb);
         
@@ -29,7 +29,7 @@ public static class Evaluator
         return nextKb;
     }
 
-    public static HashSet<Atom> Evaluate(this HashSet<Atom> kb, RuleExpressions rule, out bool expressionResult)
+    public static HashSet<Atom> Evaluate(this IEnumerable<Atom> kb, RuleExpressions rule, out bool expressionResult)
     {
         var nextKb = rule.Apply(kb, out expressionResult);
         
@@ -42,7 +42,7 @@ public static class Evaluator
         return nextKb;
     }
 
-    public static HashSet<Atom> Evaluate(this HashSet<Atom> kb, RuleExpressions rule)
+    public static HashSet<Atom> Evaluate(this IEnumerable<Atom> kb, RuleExpressions rule)
     {
         var nextKb = rule.Apply(kb);
     
@@ -55,7 +55,7 @@ public static class Evaluator
         return nextKb;
     }
 
-    public static IEnumerable<Substitution> Match(this IEnumerable<Atom> body, HashSet<Atom> kb)
+    public static IEnumerable<Substitution> Match(this IEnumerable<Atom> body, IEnumerable<Atom> kb)
     {
         // The initial collection of bindings from which to build upon
         var seed = new[] {new Substitution()}.AsEnumerable();
@@ -66,7 +66,7 @@ public static class Evaluator
         return matches;
     }
 
-    static HashSet<Atom> Apply(this RuleExpressions rule, HashSet<Atom> kb)
+    static HashSet<Atom> Apply(this RuleExpressions rule, IEnumerable<Atom> kb)
     {
         return rule.Body
             .Match(kb)
@@ -74,12 +74,12 @@ public static class Evaluator
             .ToHashSet();
     }
 
-    static HashSet<Atom> Apply(this RuleExpressions rule, HashSet<Atom> kb, out bool expressionResult)
+    static HashSet<Atom> Apply(this RuleExpressions rule, IEnumerable<Atom> kb, out bool expressionResult)
     {
         var matches = rule.Body.Match(kb);
 
         var s = new Substitution();
-        foreach(var m in rule.Body.Match(kb))   
+        foreach(var m in matches)
         {
             foreach(var kvp in m)
             {

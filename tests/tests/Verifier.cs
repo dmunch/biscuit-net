@@ -60,19 +60,26 @@ public class VerifierTests
 
         bool Verify(string user, string resource, string operation)
         {
-            var world = new World(new HashSet<A>() {
-            new A("resource", resource),
-            new A("user_id", user),
-            new A("operation", operation)
-            }, new List<Check>(){
-                new Check(
-                    new R(
-                        new A("check1"), 
-                        new A("resource", "$0"),
-                        new A("operation", "$1"),
-                        new A("right", "$0", "$1")
+            var atomSet = new AtomSet();
+            atomSet.Add(Origin.Authorizer, new HashSet<A>() {
+                new A("resource", resource),
+                new A("user_id", user),
+                new A("operation", operation)
+            });
+            
+            var ruleSet = new RuleSet();
+            var world = new World( 
+                atomSet,
+                ruleSet,
+                new List<Check>(){
+                    new Check(
+                        new R(
+                            new A("check1"), 
+                            new A("resource", "$0"),
+                            new A("operation", "$1"),
+                            new A("right", "$0", "$1")
+                        )
                     )
-                )
             });
             return Verifier.TryVerify(biscuit, world, out var error);
 

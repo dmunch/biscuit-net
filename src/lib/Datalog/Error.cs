@@ -11,7 +11,7 @@ public record Error
     InvalidBlockRule? InvalidBlockRule { get; } = null;
 }
 
-public record FailedBlockCheck(int BlockId, int CheckId/*, RuleExpressions Rule*/);
+public record FailedBlockCheck(uint BlockId, int CheckId/*, RuleExpressions Rule*/);
 public record FailedAuthorizerCheck(int CheckId/*, RuleExpressions Rule*/);
 //TODO Assuming the int is a RuleId - specification and examples are unclear here
 public record InvalidBlockRule(int RuleId/*, RuleExpressions Rule*/);

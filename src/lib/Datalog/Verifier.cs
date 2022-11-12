@@ -12,9 +12,6 @@ public static class Verifier
             return false;
         }
         
-        world.Atoms.UnionWith(b.Authority.Atoms);
-
-        
         if(b.Authority.Version < 3 || b.Authority.Version > 4)
             throw new Exception($"Unsupported Authority Block Version {b.Authority.Version}");
 
@@ -23,16 +20,26 @@ public static class Verifier
             if(block.Version < 3 || block.Version > 4)
                 throw new Exception($"Unsupported Block Version {b.Authority.Version}");
         }
+
+        world.Atoms.Add(Origin.Authority, b.Authority.Atoms.ToHashSet());
         
-        var authorityExecutionAtoms = Checks.EvaluateBlockRules(world, b.Authority, world.Atoms);
-        if(!Checks.TryCheckBlock(world, b.Authority, authorityExecutionAtoms, 0, out err))
+        var authorityTrustedOrigin = new TrustedOrigin(Origin.Authority, Origin.Authorizer);
+        var authorityExecutionAtoms = world.Atoms.Filter(authorityTrustedOrigin).Evaluate(b.Authority.Rules);
+        world.Atoms.Merge(Origin.Authority, authorityExecutionAtoms);
+        
+        if(!Checks.TryCheckBlock(world, b.Authority, world.Atoms.Filter(authorityTrustedOrigin), 0, out err))
             return false;
 
-        var blockId = 1;
+        uint blockId = 1;
         foreach(var block in b.Blocks)
         {
-            var blockExecutionAtoms = Checks.EvaluateBlockRules(world, block, authorityExecutionAtoms);
-            if(!Checks.TryCheckBlock(world, block, blockExecutionAtoms, blockId, out err))
+            world.Atoms.Add(new Origin(blockId), block.Atoms.ToHashSet());
+
+            var blockTrustedOrigin = new TrustedOrigin(Origin.Authority, (Origin)blockId, Origin.Authorizer);
+            var blockExecutionAtoms = world.Atoms.Filter(blockTrustedOrigin).Evaluate(block.Rules);
+            world.Atoms.Merge(new Origin(blockId), blockExecutionAtoms);
+
+            if(!Checks.TryCheckBlock(world, block, world.Atoms.Filter(blockTrustedOrigin).Evaluate(block.Rules), blockId, out err))
                 return false;
 
             blockId++;

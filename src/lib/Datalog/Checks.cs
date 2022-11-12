@@ -13,11 +13,11 @@ public record Check(IEnumerable<RuleExpressions> Rules, Check.CheckKind Kind)
     }
 }
 
-public record World(HashSet<Atom> Atoms, List<Check> Checks);
+public record World(AtomSet Atoms, RuleSet Rules, List<Check> Checks);
 
 public static class Checks
 {
-    public static bool TryCheckBlock(World world, IBlock block, HashSet<Atom> blockAtoms, int blockId, [NotNullWhen(false)] out Error? err)
+    public static bool TryCheckBlock(World world, IBlock block, IEnumerable<Atom> blockAtoms, uint blockId, [NotNullWhen(false)] out Error? err)
     {
         if(!TryCheck(blockAtoms, block.Checks, out var failedCheckId, out var failedCheck))
         {
@@ -35,15 +35,7 @@ public static class Checks
         return true;
     }
 
-    public static HashSet<Atom> EvaluateBlockRules(World world, IBlock block, HashSet<Atom> authorityAtoms)
-    {
-        var rulesAtoms = world.Atoms.Evaluate(block.Rules);
-        rulesAtoms.UnionWith(authorityAtoms);
-
-        return rulesAtoms;
-    }
-
-    static bool TryCheck(HashSet<Atom> blockAtoms, IEnumerable<Check> checks, [NotNullWhen(false)] out int? failedCheckId, [NotNullWhen(false)] out Check? failedCheck)
+    static bool TryCheck(IEnumerable<Atom> blockAtoms, IEnumerable<Check> checks, [NotNullWhen(false)] out int? failedCheckId, [NotNullWhen(false)] out Check? failedCheck)
     {
         var result = true; 
         var checkId = 0;
@@ -72,7 +64,7 @@ public static class Checks
         return true;
     }
 
-    static bool TryCheckOne(HashSet<Atom> blockAtoms, IEnumerable<RuleExpressions> rules)
+    static bool TryCheckOne(IEnumerable<Atom> blockAtoms, IEnumerable<RuleExpressions> rules)
     {
         var ruleResult = false;
 
@@ -95,7 +87,7 @@ public static class Checks
         return ruleResult;   
     }
 
-    static bool TryCheckAll(HashSet<Atom> blockAtoms, IEnumerable<RuleExpressions> rules)
+    static bool TryCheckAll(IEnumerable<Atom> blockAtoms, IEnumerable<RuleExpressions> rules)
     {
         foreach(var rule in rules)
         {

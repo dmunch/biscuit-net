@@ -56,7 +56,6 @@ public static class Unification
         }
     }
 
-    public static IEnumerable<Substitution> UnifyWith(this Atom atom, IEnumerable<Atom> kb,
-        IEnumerable<Substitution> envs) =>
+    public static IEnumerable<Substitution> UnifyWith(this Atom atom, IEnumerable<Atom> kb, IEnumerable<Substitution> envs) =>
         envs.SelectMany(env => atom.UnifyWith(kb, env));
 }
