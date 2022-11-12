@@ -24,7 +24,9 @@ public class AuthorizerTests
     //[BiscuitCases("test19_generating_ambient_from_variables.bc")] //OK
     //[BiscuitCases("test22_default_symbols.bc")] //TODO contains int term
     //[BiscuitCases("test23_execution_scope.bc")] //TODO contains int term
-    [BiscuitCases()]
+    [BiscuitCases("test24_third_party.bc")] //TODO 
+    //[BiscuitCases("test25_check_all.bc")] //TODO
+    //[BiscuitCases()]
     public void Test(BiscuitCase biscuitCase)
     {
         var validator = new SignatureValidator(biscuitCase.RootPublicKey);
@@ -41,7 +43,7 @@ public class AuthorizerTests
         {
             switch(parseResult)
             {
-                case (var authorizerAtom, null, null): authorizer.AddAtom(authorizerAtom); break;
+                case (var authorizerFact, null, null): authorizer.AddFact(authorizerFact); break;
                 case (null, var authorizerCheckRule, null): authorizer.AddCheck(new Check(new []{authorizerCheckRule})); break;
                 case (null, null, var policy): break;
                 default: throw new Exception();
@@ -71,7 +73,7 @@ public class AuthorizerTests
     }
 
 
-    IEnumerable<(Atom?, RuleExpressions?, string?)> Parse(string code)
+    IEnumerable<(Fact?, RuleExpressions?, string?)> Parse(string code)
     {
         string stringTermPattern = @"^([a-zA-Z_]+)\(""([a-zA-Z.0-9]+)""\);$";
         string intTermPattern = @"^([a-zA-Z_]+)\((\d+)\)$";
@@ -94,7 +96,7 @@ public class AuthorizerTests
                 var name = stringMatch.Groups[1].Value;
                 var value = stringMatch.Groups[2].Value;
 
-                yield return (new Atom(name, new biscuit_net.Datalog.String(value)), null, null);
+                yield return (new Fact(name, new biscuit_net.Datalog.String(value)), null, null);
             }
             else if(dateMatch.Success) 
             {
@@ -103,7 +105,7 @@ public class AuthorizerTests
 
                 var dateParsed = DateTime.Parse(date);
                 var dateTAI = Date.ToTAI64(dateParsed);
-                yield return (new Atom(name, new Date(dateTAI)), null, null);
+                yield return (new Fact(name, new Date(dateTAI)), null, null);
             }
             else if(line.StartsWith("check if"))
             {

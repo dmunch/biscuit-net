@@ -5,12 +5,12 @@ using Datalog;
 
 public class Authorizer
 {
-    List<Atom> _authorizerAtoms = new List<Atom>();
+    List<Fact> _authorizerFacts = new List<Fact>();
     List<Check> _authorizerChecks = new List<Check>();
     
-    public void AddAtom(Atom atom)
+    public void AddFact(Fact fact)
     {
-        _authorizerAtoms.Add(atom);
+        _authorizerFacts.Add(fact);
     }
 
     public void AddCheck(Check check)
@@ -20,13 +20,13 @@ public class Authorizer
 
     public bool TryAuthorize(VerifiedBiscuit b, [NotNullWhen(false)] out Error? err)
     {
-        //var world = new World(_authorizerAtoms.ToHashSet(), _authorizerChecks);
+        //var world = new World(_authorizerFacts.ToHashSet(), _authorizerChecks);
 
-        var atomSet = new AtomSet();
+        var FactSet = new FactSet();
         var ruleSet = new RuleSet();
-        var world = new World(atomSet, ruleSet, _authorizerChecks);
+        var world = new World(FactSet, ruleSet, _authorizerChecks);
 
-        atomSet.Add(Origin.Authorizer, _authorizerAtoms.ToHashSet());
+        FactSet.Add(Origin.Authorizer, _authorizerFacts.ToHashSet());
         //ruleSet.Add(new Origin(0), _aut)
         return Verifier.TryVerify(b, world, out err);
     }

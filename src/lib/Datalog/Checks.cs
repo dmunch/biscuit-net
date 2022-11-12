@@ -13,19 +13,19 @@ public record Check(IEnumerable<RuleExpressions> Rules, Check.CheckKind Kind)
     }
 }
 
-public record World(AtomSet Atoms, RuleSet Rules, List<Check> Checks);
+public record World(FactSet Facts, RuleSet Rules, List<Check> Checks);
 
 public static class Checks
 {
-    public static bool TryCheckBlock(World world, IBlock block, IEnumerable<Atom> blockAtoms, uint blockId, [NotNullWhen(false)] out Error? err)
+    public static bool TryCheckBlock(World world, IBlock block, IEnumerable<Fact> blockFacts, uint blockId, [NotNullWhen(false)] out Error? err)
     {
-        if(!TryCheck(blockAtoms, block.Checks, out var failedCheckId, out var failedCheck))
+        if(!TryCheck(blockFacts, block.Checks, out var failedCheckId, out var failedCheck))
         {
             err = new Error(new FailedBlockCheck(blockId, failedCheckId.Value/*, failedRule*/));
             return false;
         }
 
-        if(!TryCheck(blockAtoms, world.Checks, out var failedAuthorizerCheckId, out var failedAuthorizerCheck))
+        if(!TryCheck(blockFacts, world.Checks, out var failedAuthorizerCheckId, out var failedAuthorizerCheck))
         {
             err = new Error(new FailedAuthorizerCheck(failedAuthorizerCheckId.Value/*, failedAuthorizerRule*/));
             return false;
@@ -35,7 +35,7 @@ public static class Checks
         return true;
     }
 
-    static bool TryCheck(IEnumerable<Atom> blockAtoms, IEnumerable<Check> checks, [NotNullWhen(false)] out int? failedCheckId, [NotNullWhen(false)] out Check? failedCheck)
+    static bool TryCheck(IEnumerable<Fact> blockFacts, IEnumerable<Check> checks, [NotNullWhen(false)] out int? failedCheckId, [NotNullWhen(false)] out Check? failedCheck)
     {
         var result = true; 
         var checkId = 0;
@@ -43,8 +43,8 @@ public static class Checks
         {
             result &= check.Kind switch 
             {
-                Check.CheckKind.One => TryCheckOne(blockAtoms, check.Rules),
-                Check.CheckKind.All => TryCheckAll(blockAtoms, check.Rules),
+                Check.CheckKind.One => TryCheckOne(blockFacts, check.Rules),
+                Check.CheckKind.All => TryCheckAll(blockFacts, check.Rules),
                 _ => throw new NotSupportedException()
             };
             
@@ -64,14 +64,14 @@ public static class Checks
         return true;
     }
 
-    static bool TryCheckOne(IEnumerable<Atom> blockAtoms, IEnumerable<RuleExpressions> rules)
+    static bool TryCheckOne(IEnumerable<Fact> blockFacts, IEnumerable<RuleExpressions> rules)
     {
         var ruleResult = false;
 
         foreach(var rule in rules)
         {
-            var eval = blockAtoms.Evaluate(rule, out var expressionResult);
-            eval.UnionWith(blockAtoms);
+            var eval = blockFacts.Evaluate(rule, out var expressionResult);
+            eval.UnionWith(blockFacts);
             var subs = rule.Head.UnifyWith(eval, new Substitution());
 
             if(rule.Body.Any())
@@ -87,12 +87,12 @@ public static class Checks
         return ruleResult;   
     }
 
-    static bool TryCheckAll(IEnumerable<Atom> blockAtoms, IEnumerable<RuleExpressions> rules)
+    static bool TryCheckAll(IEnumerable<Fact> blockFacts, IEnumerable<RuleExpressions> rules)
     {
         foreach(var rule in rules)
         {
-            var eval = blockAtoms.Evaluate(rule);
-            eval.UnionWith(blockAtoms);
+            var eval = blockFacts.Evaluate(rule);
+            eval.UnionWith(blockFacts);
             
             var matches = rule.Body.Match(eval);
 

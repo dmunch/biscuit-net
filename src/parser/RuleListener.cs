@@ -9,14 +9,14 @@ public class RuleListener : ExpressionsBaseListener
     TermVisitor _termVisitor = new TermVisitor();
     ExpressionsVisitor _expressionsVisitor = new ExpressionsVisitor();
 
-    List<Atom> _atoms = new List<Atom>();
+    List<Fact> _facts = new List<Fact>();
     List<Expression> _expressions = new List<Expression>();
 
     public RuleExpressions GetRuleExpressions()
     {
         return new RuleExpressions(
-            new Atom("check1"), 
-            _atoms,
+            new Fact("check1"), 
+            _facts,
             _expressions
         );
     }
@@ -26,9 +26,9 @@ public class RuleListener : ExpressionsBaseListener
         var terms = context.term();
         var name = context.NAME().GetText();
 
-        var atoms = terms.Select(t => _termVisitor.Visit(t)).ToList();
+        var Facts = terms.Select(t => _termVisitor.Visit(t)).ToList();
 
-        _atoms.Add(new Atom(name, atoms));
+        _facts.Add(new Fact(name, Facts));
     }
 
     public override void ExitRule_body_element([NotNull] ExpressionsParser.Rule_body_elementContext context) 

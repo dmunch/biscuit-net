@@ -53,12 +53,12 @@ public class ParserTests
         var rule = parser.ParseRule("check if right($0, $1), resource($0), operation($1)");
 
         Assert.Equal(new RuleExpressions(
-            new Atom("check1"), 
-            new List<Atom>
+            new Fact("check1"), 
+            new List<Fact>
             {
-                new Atom("right", new Variable("0"), new Variable("1")),
-                new Atom("resource", new Variable("0")),
-                new Atom("operation", new Variable("1")),
+                new Fact("right", new Variable("0"), new Variable("1")),
+                new Fact("resource", new Variable("0")),
+                new Fact("operation", new Variable("1")),
             }, 
             new List<Expression>()
         ), rule);
@@ -71,11 +71,11 @@ public class ParserTests
         var rule = parser.ParseRule("check if must_be_present($0) or must_be_present($0)");
 
         Assert.Equal(new RuleExpressions(
-            new Atom("check1"), 
+            new Fact("check1"), 
             new []
             {
-                new Atom("must_be_present", new Variable("0")),
-                new Atom("must_be_present", new Variable("0"))
+                new Fact("must_be_present", new Variable("0")),
+                new Fact("must_be_present", new Variable("0"))
             }, 
             Enumerable.Empty<Expression>()
         ), rule);
@@ -94,7 +94,7 @@ public class ParserTests
         string intTermPattern = @"^([a-zA-Z_]+)\((\d+)\)$";
         var intTermRegex = new Regex(intTermPattern);
 
-        var atoms = new List<Atom>();
+        var facts = new List<Fact>();
         foreach(var token in tokens)
         {
             var match = intTermRegex.Match(token.Trim(';'));
@@ -102,12 +102,12 @@ public class ParserTests
             var intValueString = match.Groups[2];
             
             Assert.True(int.TryParse(intValueString.Value, out var intValue));
-            atoms.Add(new Atom(name.Value, new Integer(intValue)));
+            facts.Add(new Fact(name.Value, new Integer(intValue)));
         }
         
         Assert.Equal(new RuleExpressions(
-            new Atom("check1"), 
-            atoms,
+            new Fact("check1"), 
+            facts,
             Enumerable.Empty<Expression>()
         ), rule);
     }
@@ -120,10 +120,10 @@ public class ParserTests
 
         
         Assert.Equal(new RuleExpressions(
-            new Atom("check1"), 
+            new Fact("check1"), 
             new []
             {
-                new Atom("ns::fact_123", new biscuit_net.Datalog.String("hello é\t😁"))
+                new Fact("ns::fact_123", new biscuit_net.Datalog.String("hello é\t😁"))
             }, 
             Enumerable.Empty<Expression>()
         ), rule);

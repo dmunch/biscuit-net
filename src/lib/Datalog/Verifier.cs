@@ -21,25 +21,25 @@ public static class Verifier
                 throw new Exception($"Unsupported Block Version {b.Authority.Version}");
         }
 
-        world.Atoms.Add(Origin.Authority, b.Authority.Atoms.ToHashSet());
-        
+        world.Facts.Add(Origin.Authority, b.Authority.Facts.ToHashSet());
+
         var authorityTrustedOrigin = new TrustedOrigin(Origin.Authority, Origin.Authorizer);
-        var authorityExecutionAtoms = world.Atoms.Filter(authorityTrustedOrigin).Evaluate(b.Authority.Rules);
-        world.Atoms.Merge(Origin.Authority, authorityExecutionAtoms);
+        var authorityExecutionFacts = world.Facts.Filter(authorityTrustedOrigin).Evaluate(b.Authority.Rules);
+        world.Facts.Merge(Origin.Authority, authorityExecutionFacts);
         
-        if(!Checks.TryCheckBlock(world, b.Authority, world.Atoms.Filter(authorityTrustedOrigin), 0, out err))
+        if(!Checks.TryCheckBlock(world, b.Authority, world.Facts.Filter(authorityTrustedOrigin), 0, out err))
             return false;
 
         uint blockId = 1;
         foreach(var block in b.Blocks)
         {
-            world.Atoms.Add(new Origin(blockId), block.Atoms.ToHashSet());
+            world.Facts.Add(new Origin(blockId), block.Facts.ToHashSet());
 
             var blockTrustedOrigin = new TrustedOrigin(Origin.Authority, (Origin)blockId, Origin.Authorizer);
-            var blockExecutionAtoms = world.Atoms.Filter(blockTrustedOrigin).Evaluate(block.Rules);
-            world.Atoms.Merge(new Origin(blockId), blockExecutionAtoms);
+            var blockExecutionFacts = world.Facts.Filter(blockTrustedOrigin).Evaluate(block.Rules);
+            world.Facts.Merge(new Origin(blockId), blockExecutionFacts);
 
-            if(!Checks.TryCheckBlock(world, block, world.Atoms.Filter(blockTrustedOrigin).Evaluate(block.Rules), blockId, out err))
+            if(!Checks.TryCheckBlock(world, block, world.Facts.Filter(blockTrustedOrigin).Evaluate(block.Rules), blockId, out err))
                 return false;
 
             blockId++;

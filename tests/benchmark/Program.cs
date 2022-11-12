@@ -1,7 +1,7 @@
 ﻿using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Running;
 using biscuit_net.Datalog;
-using A = biscuit_net.Datalog.Atom;
+using A = biscuit_net.Datalog.Fact;
 using R = biscuit_net.Datalog.RuleExpressions;
 
 
@@ -27,7 +27,7 @@ public class VerifierTests
 {
     record Block
     (
-        IEnumerable<Atom> Atoms,
+        IEnumerable<Fact> Facts,
         IEnumerable<RuleExpressions> Rules,
         IEnumerable<Check> Checks
     )  : IBlock;
@@ -40,9 +40,9 @@ public class VerifierTests
     {
         var authority = new Block(
             Utils.Concatenate(
-                Enumerable.Range(0, 1000).Select(i => new Atom("owner", "alice", $"file{i}")),
-                Enumerable.Range(1001, 2000).Select(i => new Atom("reader", "alice", $"file{i}")),
-                Enumerable.Range(0, 100).Select(i => new Atom("reader", "bob", $"file{i}"))
+                Enumerable.Range(0, 1000).Select(i => new Fact("owner", "alice", $"file{i}")),
+                Enumerable.Range(1001, 2000).Select(i => new Fact("reader", "alice", $"file{i}")),
+                Enumerable.Range(0, 100).Select(i => new Fact("reader", "bob", $"file{i}"))
             ),
             /*
             new [] {

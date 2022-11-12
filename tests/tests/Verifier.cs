@@ -1,5 +1,5 @@
 using biscuit_net.Datalog;
-using A = biscuit_net.Datalog.Atom;
+using F = biscuit_net.Datalog.Fact;
 using R = biscuit_net.Datalog.RuleExpressions;
 
 namespace tests;
@@ -7,7 +7,7 @@ public class VerifierTests
 {
     record Block
     (
-        IEnumerable<Atom> Atoms,
+        IEnumerable<Fact> Facts,
         IEnumerable<RuleExpressions> Rules,
         IEnumerable<Check> Checks,
         uint Version
@@ -20,35 +20,35 @@ public class VerifierTests
     {
         var authority = new Block(
             new [] {
-                new A("owner", "alice", "file1"),
-                new A("owner", "alice", "file2"),
-                new A("reader", "alice", "file3"),
-                new A("reader", "bob", "file4"),
+                new F("owner", "alice", "file1"),
+                new F("owner", "alice", "file2"),
+                new F("reader", "alice", "file3"),
+                new F("reader", "bob", "file4"),
             },
             new [] {
                 new R(
-                    new A("right", "$1", "read"),
-                    new A("user_id", "$0"),
-                    new A("resource", "$1"),
-                    new A("reader", "$0", "$1")
+                    new F("right", "$1", "read"),
+                    new F("user_id", "$0"),
+                    new F("resource", "$1"),
+                    new F("reader", "$0", "$1")
                 ),
                 new R(
-                    new A("right", "$1", "read"), 
-                    new A("user_id", "$0"), 
-                    new A("resource", "$1"), 
-                    new A("owner", "$0", "$1")
+                    new F("right", "$1", "read"), 
+                    new F("user_id", "$0"), 
+                    new F("resource", "$1"), 
+                    new F("owner", "$0", "$1")
                 ),
                 new R(
-                    new A("right", "$1", "read"), 
-                    new A("user_id", "$0"), 
-                    new A("resource", "$1"), 
-                    new A("owner", "$0", "$1")
+                    new F("right", "$1", "read"), 
+                    new F("user_id", "$0"), 
+                    new F("resource", "$1"), 
+                    new F("owner", "$0", "$1")
                 ),
                 new R(
-                    new A("right", "$1", "write"), 
-                    new A("user_id", "$0"), 
-                    new A("resource", "$1"), 
-                    new A("owner", "$0", "$1")
+                    new F("right", "$1", "write"), 
+                    new F("user_id", "$0"), 
+                    new F("resource", "$1"), 
+                    new F("owner", "$0", "$1")
                 )
             },
             new Check[] {
@@ -60,24 +60,24 @@ public class VerifierTests
 
         bool Verify(string user, string resource, string operation)
         {
-            var atomSet = new AtomSet();
-            atomSet.Add(Origin.Authorizer, new HashSet<A>() {
-                new A("resource", resource),
-                new A("user_id", user),
-                new A("operation", operation)
+            var factSet = new FactSet();
+            factSet.Add(Origin.Authorizer, new HashSet<F>() {
+                new F("resource", resource),
+                new F("user_id", user),
+                new F("operation", operation)
             });
             
             var ruleSet = new RuleSet();
             var world = new World( 
-                atomSet,
+                factSet,
                 ruleSet,
                 new List<Check>(){
                     new Check(
                         new R(
-                            new A("check1"), 
-                            new A("resource", "$0"),
-                            new A("operation", "$1"),
-                            new A("right", "$0", "$1")
+                            new F("check1"), 
+                            new F("resource", "$0"),
+                            new F("operation", "$1"),
+                            new F("right", "$0", "$1")
                         )
                     )
             });

@@ -5,15 +5,15 @@ using Datalog;
 
 public class VerifiedBlock : IBlock
 {
-    public IEnumerable<Atom> Atoms { get; protected set; }
+    public IEnumerable<Fact> Facts { get; protected set; }
     public IEnumerable<RuleExpressions> Rules { get; protected set; }
     public IEnumerable<Check> Checks { get; protected set; }
     public uint Version { get; protected set; }
     public string RevocationId { get; protected set; }
 
-    VerifiedBlock(IEnumerable<Atom> atoms, IEnumerable<RuleExpressions> rules, IEnumerable<Check> checks, uint version, string revocationId) 
+    VerifiedBlock(IEnumerable<Fact> facts, IEnumerable<RuleExpressions> rules, IEnumerable<Check> checks, uint version, string revocationId) 
     {
-        Atoms = atoms;
+        Facts = facts;
         Rules = rules;
         Checks = checks;
         Version = version;
@@ -27,7 +27,7 @@ public class VerifiedBlock : IBlock
         symbols.AddSymbols(block.Symbols);
 
         return new VerifiedBlock(
-            block.FactsV2s.ToAtoms(symbols),
+            block.FactsV2s.ToFacts(symbols),
             block.RulesV2s.ToRules(symbols),
             block.ChecksV2s.ToChecks(symbols),
             block.Version,

@@ -4,20 +4,20 @@ using Datalog;
 
 public static class Converters
 {
-    static public IEnumerable<Atom> ToAtoms(this IEnumerable<FactV2> facts, SymbolTable symbols)
+    static public IEnumerable<Fact> ToFacts(this IEnumerable<FactV2> facts, SymbolTable symbols)
     {
-        return facts.Select(fact => ToAtom(fact.Predicate, symbols)).ToList();
+        return facts.Select(fact => ToFact(fact.Predicate, symbols)).ToList();
     }
 
-    static public Atom ToAtom(PredicateV2 predicate, SymbolTable symbols)
+    static public Fact ToFact(PredicateV2 predicate, SymbolTable symbols)
     {       
         var terms = predicate.Terms.Select(t => {
-            return ToAtom(t, symbols);
+            return ToFact(t, symbols);
         });
-        return new Atom(symbols.Lookup(predicate.Name), terms);
+        return new Fact(symbols.Lookup(predicate.Name), terms);
     }
 
-    static public Term ToAtom(TermV2 term, SymbolTable symbols)
+    static public Term ToFact(TermV2 term, SymbolTable symbols)
     {
         return term.ContentCase switch 
         {
@@ -34,7 +34,7 @@ public static class Converters
             TermV2.ContentOneofCase.Bytes => 
                 new Bytes(term.Bytes),
             TermV2.ContentOneofCase.Set => 
-                new Set(term.Set.Sets.Select(item => ToAtom(item, symbols)).ToList()),
+                new Set(term.Set.Sets.Select(item => ToFact(item, symbols)).ToList()),
             _ => throw new NotImplementedException($"{term.ContentCase}")
         };
     }
@@ -42,8 +42,8 @@ public static class Converters
     static public IEnumerable<RuleExpressions> ToRules(this IEnumerable<RuleV2> rules, SymbolTable symbols)
     {
         return rules.Select(rule =>  {
-            var head = ToAtom(rule.Head, symbols);
-            var body = rule.Bodies.Select(body => ToAtom(body, symbols));
+            var head = ToFact(rule.Head, symbols);
+            var body = rule.Bodies.Select(body => ToFact(body, symbols));
             
             return new RuleExpressions(head, body, ToParserExpr(rule.Expressions, symbols));
         }).ToList();
@@ -53,8 +53,8 @@ public static class Converters
     {
         return checks.Select(check => {
                 var rules = check.Queries.Select(query => {
-                    var head = ToAtom(query.Head, symbols);
-                    var body = query.Bodies.Select(body => ToAtom(body, symbols));
+                    var head = ToFact(query.Head, symbols);
+                    var body = query.Bodies.Select(body => ToFact(body, symbols));
 
                     return new RuleExpressions(head, body, ToParserExpr(query.Expressions, symbols));
                 });
@@ -79,7 +79,7 @@ public static class Converters
      => op.ContentCase switch
         {
             Proto.Op.ContentOneofCase.None => new Expressions.Op(),
-            Proto.Op.ContentOneofCase.Value => new Expressions.Op(Converters.ToAtom(op.Value, symbols)),
+            Proto.Op.ContentOneofCase.Value => new Expressions.Op(Converters.ToFact(op.Value, symbols)),
             Proto.Op.ContentOneofCase.Binary => new Expressions.Op(new Expressions.OpBinary((Expressions.OpBinary.Kind)op.Binary.kind)),
             Proto.Op.ContentOneofCase.Unary =>  new Expressions.Op(new Expressions.OpUnary((Expressions.OpUnary.Kind)op.Unary.kind)),
             _ => throw new NotImplementedException()

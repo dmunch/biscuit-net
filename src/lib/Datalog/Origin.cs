@@ -33,13 +33,13 @@ public class TrustedOrigin : Origin
     }
 }
 
-public class AtomSet : OriginSet<HashSet<Atom>, Atom>
+public class FactSet : OriginSet<HashSet<Fact>, Fact>
 {   
-    public AtomSet() 
+    public FactSet() 
     {
     }
 
-    public AtomSet(Origin origin, HashSet<Atom> intialValue) : base(origin, intialValue)
+    public FactSet(Origin origin, HashSet<Fact> intialValue) : base(origin, intialValue)
     {
     }
 }

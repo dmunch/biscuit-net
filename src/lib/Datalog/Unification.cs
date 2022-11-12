@@ -21,7 +21,7 @@ public static class Unification
             _ => false
         };
         
-    private static bool TryUnify(Atom a1, Atom a2, Substitution env)
+    private static bool TryUnify(Fact a1, Fact a2, Substitution env)
     {
         // If their predicate names or arities are different we can't make them equal.
         if (a1.Arity != a2.Arity || a1.Name != a2.Name)
@@ -41,11 +41,11 @@ public static class Unification
         return true;
     }
 
-    // Attempt to unify an atom against a collection of atoms under a given environment.
+    // Attempt to unify an Fact against a collection of Facts under a given environment.
     // Returning empty means no unification was possible.
-    public static IEnumerable<Substitution> UnifyWith(this Atom atom, IEnumerable<Atom> kb, Substitution env)
+    public static IEnumerable<Substitution> UnifyWith(this Fact fact, IEnumerable<Fact> kb, Substitution env)
     {
-        var a1 = atom.Apply(env);
+        var a1 = fact.Apply(env);
         foreach (var a2 in kb)
         {
             var workEnv = new Substitution(env);
@@ -56,6 +56,6 @@ public static class Unification
         }
     }
 
-    public static IEnumerable<Substitution> UnifyWith(this Atom atom, IEnumerable<Atom> kb, IEnumerable<Substitution> envs) =>
-        envs.SelectMany(env => atom.UnifyWith(kb, env));
+    public static IEnumerable<Substitution> UnifyWith(this Fact fact, IEnumerable<Fact> kb, IEnumerable<Substitution> envs) =>
+        envs.SelectMany(env => fact.UnifyWith(kb, env));
 }
