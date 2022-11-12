@@ -60,28 +60,28 @@ public class VerifierTests
 
         bool Verify(string user, string resource, string operation)
         {
+            var authorizerBlock = new AuthorizerBlock();
+            authorizerBlock.Add(new F("resource", resource));
+            authorizerBlock.Add(new F("user_id", user));
+            authorizerBlock.Add(new F("operation", operation));
+
+            authorizerBlock.Add(new Check(
+                new R(
+                    new F("check1"), 
+                    new F("resource", "$0"),
+                    new F("operation", "$1"),
+                    new F("right", "$0", "$1")
+                )
+            )
+            );
+
             var factSet = new FactSet();
-            factSet.Add(Origin.Authorizer, new HashSet<F>() {
-                new F("resource", resource),
-                new F("user_id", user),
-                new F("operation", operation)
-            });
-            
             var ruleSet = new RuleSet();
             var world = new World( 
                 factSet,
-                ruleSet,
-                new List<Check>(){
-                    new Check(
-                        new R(
-                            new F("check1"), 
-                            new F("resource", "$0"),
-                            new F("operation", "$1"),
-                            new F("right", "$0", "$1")
-                        )
-                    )
-            });
-            return Verifier.TryVerify(biscuit, world, out var error);
+                ruleSet
+            );
+            return Verifier.TryVerify(biscuit, world, authorizerBlock, out var error);
 
         }
         Assert.True(Verify("alice", "file1", "write"));

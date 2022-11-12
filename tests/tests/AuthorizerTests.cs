@@ -43,8 +43,8 @@ public class AuthorizerTests
         {
             switch(parseResult)
             {
-                case (var authorizerFact, null, null): authorizer.AddFact(authorizerFact); break;
-                case (null, var authorizerCheckRule, null): authorizer.AddCheck(new Check(new []{authorizerCheckRule})); break;
+                case (var authorizerFact, null, null): authorizer.Add(authorizerFact); break;
+                case (null, var authorizerCheckRule, null): authorizer.Add(new Check(new []{authorizerCheckRule})); break;
                 case (null, null, var policy): break;
                 default: throw new Exception();
             }

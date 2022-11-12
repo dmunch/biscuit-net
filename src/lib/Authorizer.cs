@@ -3,31 +3,37 @@ using System.Diagnostics.CodeAnalysis;
 namespace biscuit_net;
 using Datalog;
 
+public class AuthorizerBlock : IBlock
+{
+    List<Fact> _facts = new List<Fact>();
+    List<RuleConstrained> _rules = new List<RuleConstrained>();
+    List<Check> _checks = new List<Check>();
+    
+
+    public IEnumerable<Fact> Facts { get => _facts; }
+    public IEnumerable<IRuleConstrained> Rules { get => _rules; }
+    public IEnumerable<Check> Checks { get => _checks; }
+    public uint Version { get => 4; }
+
+    public void Add(Fact fact) => _facts.Add(fact);
+    public void Add(RuleConstrained rule) => _rules.Add(rule);
+    public void Add(Check check) => _checks.Add(check);
+}
+
 public class Authorizer
 {
-    List<Fact> _authorizerFacts = new List<Fact>();
-    List<Check> _authorizerChecks = new List<Check>();
+    AuthorizerBlock _authorizerBlock = new AuthorizerBlock();
+
+    public void Add(Fact fact) => _authorizerBlock.Add(fact);
+    public void Add(RuleConstrained rule) => _authorizerBlock.Add(rule);
+    public void Add(Check check) => _authorizerBlock.Add(check);
     
-    public void AddFact(Fact fact)
-    {
-        _authorizerFacts.Add(fact);
-    }
-
-    public void AddCheck(Check check)
-    {
-        _authorizerChecks.Add(check);
-    }
-
     public bool TryAuthorize(VerifiedBiscuit b, [NotNullWhen(false)] out Error? err)
     {
-        //var world = new World(_authorizerFacts.ToHashSet(), _authorizerChecks);
-
-        var FactSet = new FactSet();
+        var factSet = new FactSet();
         var ruleSet = new RuleSet();
-        var world = new World(FactSet, ruleSet, _authorizerChecks);
+        var world = new World(factSet, ruleSet/*, _authorizerChecks*/);
 
-        FactSet.Add(Origin.Authorizer, _authorizerFacts.ToHashSet());
-        //ruleSet.Add(new Origin(0), _aut)
-        return Verifier.TryVerify(b, world, out err);
+        return Verifier.TryVerify(b, world, _authorizerBlock, out err);
     }
 }

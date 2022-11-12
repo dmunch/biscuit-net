@@ -14,29 +14,11 @@ public record Check(IEnumerable<RuleConstrained> Rules, Check.CheckKind Kind)
     }
 }
 
-public record World(FactSet Facts, RuleSet Rules, List<Check> Checks);
+public record World(FactSet Facts, RuleSet Rules);
 
 public static class Checks
 {
-    public static bool TryCheckBlock(World world, IBlock block, IEnumerable<Fact> blockFacts, uint blockId, [NotNullWhen(false)] out Error? err)
-    {
-        if(!TryCheck(blockFacts, block.Checks, out var failedCheckId, out var failedCheck))
-        {
-            err = new Error(new FailedBlockCheck(blockId, failedCheckId.Value/*, failedRule*/));
-            return false;
-        }
-
-        if(!TryCheck(blockFacts, world.Checks, out var failedAuthorizerCheckId, out var failedAuthorizerCheck))
-        {
-            err = new Error(new FailedAuthorizerCheck(failedAuthorizerCheckId.Value/*, failedAuthorizerRule*/));
-            return false;
-        }
-
-        err = null;
-        return true;
-    }
-
-    static bool TryCheck(IEnumerable<Fact> blockFacts, IEnumerable<Check> checks, [NotNullWhen(false)] out int? failedCheckId, [NotNullWhen(false)] out Check? failedCheck)
+    public static bool TryCheck(IEnumerable<Fact> blockFacts, IEnumerable<Check> checks, [NotNullWhen(false)] out int? failedCheckId, [NotNullWhen(false)] out Check? failedCheck)
     {
         var result = true; 
         var checkId = 0;
