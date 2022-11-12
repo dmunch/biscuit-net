@@ -1,6 +1,6 @@
 using biscuit_net.Datalog;
 using F = biscuit_net.Datalog.Fact;
-using R = biscuit_net.Datalog.RuleExpressions;
+using R = biscuit_net.RuleConstrained;
 
 namespace tests;
 public class VerifierTests
@@ -8,7 +8,7 @@ public class VerifierTests
     record Block
     (
         IEnumerable<Fact> Facts,
-        IEnumerable<RuleExpressions> Rules,
+        IEnumerable<IRuleConstrained> Rules,
         IEnumerable<Check> Checks,
         uint Version
     )  : IBlock;

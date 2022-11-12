@@ -12,12 +12,13 @@ namespace biscuit_net.Datalog;
 /// parent(Homer,Lisa) -- a fact expressing that Homer is Lisa's parent
 /// ancestor(x,z):-ancestor(x,y),parent(y,z) -- a rule for deducing ancestors from parents
 /// </summary>
-public record Rule(Fact Head, IEnumerable<Fact> Body)
+public interface IRule
 {
-    public Rule(Fact head, params Fact[] body) : this(head, body.AsEnumerable()) {}
+    Fact Head { get; }
+    IEnumerable<Fact> Body { get; }
+}
 
-    public virtual bool Equals(Rule? other) => Head == other?.Head && Body.SequenceEqual(other.Body);
-    
-    public override int GetHashCode() => HashCode.Combine(Head, Body.Aggregate(0, HashCode.Combine));
-
+public interface IRuleConstrained : IRule
+{
+    IEnumerable<Expressions.Expression> Constraints { get; }
 }

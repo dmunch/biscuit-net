@@ -1,5 +1,6 @@
 using System.Text.RegularExpressions;
 
+using biscuit_net;
 using biscuit_net.Expressions;
 using biscuit_net.Parser;
 using biscuit_net.Datalog;
@@ -52,7 +53,7 @@ public class ParserTests
         var parser = new Parser();
         var rule = parser.ParseRule("check if right($0, $1), resource($0), operation($1)");
 
-        Assert.Equal(new RuleExpressions(
+        Assert.Equal(new RuleConstrained(
             new Fact("check1"), 
             new List<Fact>
             {
@@ -70,7 +71,7 @@ public class ParserTests
         var parser = new Parser();
         var rule = parser.ParseRule("check if must_be_present($0) or must_be_present($0)");
 
-        Assert.Equal(new RuleExpressions(
+        Assert.Equal(new RuleConstrained(
             new Fact("check1"), 
             new []
             {
@@ -105,7 +106,7 @@ public class ParserTests
             facts.Add(new Fact(name.Value, new Integer(intValue)));
         }
         
-        Assert.Equal(new RuleExpressions(
+        Assert.Equal(new RuleConstrained(
             new Fact("check1"), 
             facts,
             Enumerable.Empty<Expression>()
@@ -119,7 +120,7 @@ public class ParserTests
         var rule = parser.ParseRule("check if ns::fact_123(\"hello é\t😁\");");
 
         
-        Assert.Equal(new RuleExpressions(
+        Assert.Equal(new RuleConstrained(
             new Fact("check1"), 
             new []
             {

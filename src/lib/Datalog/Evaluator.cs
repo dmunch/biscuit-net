@@ -3,7 +3,7 @@ namespace biscuit_net.Datalog;
 public static class Evaluator
 {
     // Just a lifting of Rule.Apply to an IEnumerable<Rule>.
-    public static HashSet<Fact> Apply(this IEnumerable<RuleExpressions> rules, IEnumerable<Fact> kb)
+    public static HashSet<Fact> Apply(this IEnumerable<IRuleConstrained> rules, IEnumerable<Fact> kb)
     {
         var seed = new HashSet<Fact>();
 
@@ -16,7 +16,7 @@ public static class Evaluator
         return seed;
     }
     
-    public static HashSet<Fact> Evaluate(this IEnumerable<Fact> kb, IEnumerable<RuleExpressions> rules)
+    public static HashSet<Fact> Evaluate(this IEnumerable<Fact> kb, IEnumerable<IRuleConstrained> rules)
     {
         var nextKb = rules.Apply(kb);
         
@@ -29,7 +29,7 @@ public static class Evaluator
         return nextKb;
     }
 
-    public static HashSet<Fact> Evaluate(this IEnumerable<Fact> kb, RuleExpressions rule, out bool expressionResult)
+    public static HashSet<Fact> Evaluate(this IEnumerable<Fact> kb, IRuleConstrained rule, out bool expressionResult)
     {
         var nextKb = rule.Apply(kb, out expressionResult);
         
@@ -42,7 +42,7 @@ public static class Evaluator
         return nextKb;
     }
 
-    public static HashSet<Fact> Evaluate(this IEnumerable<Fact> kb, RuleExpressions rule)
+    public static HashSet<Fact> Evaluate(this IEnumerable<Fact> kb, IRule rule)
     {
         var nextKb = rule.Apply(kb);
     
@@ -66,7 +66,7 @@ public static class Evaluator
         return matches;
     }
 
-    static HashSet<Fact> Apply(this RuleExpressions rule, IEnumerable<Fact> kb)
+    static HashSet<Fact> Apply(this IRule rule, IEnumerable<Fact> kb)
     {
         return rule.Body
             .Match(kb)
@@ -74,7 +74,7 @@ public static class Evaluator
             .ToHashSet();
     }
 
-    static HashSet<Fact> Apply(this RuleExpressions rule, IEnumerable<Fact> kb, out bool expressionResult)
+    static HashSet<Fact> Apply(this IRuleConstrained rule, IEnumerable<Fact> kb, out bool expressionResult)
     {
         var matches = rule.Body.Match(kb);
 
@@ -87,7 +87,7 @@ public static class Evaluator
             }
         }
 
-        expressionResult = rule.Expressions.All(ex =>
+        expressionResult = rule.Constraints.All(ex =>
             Expressions.Evaluator.Evaluate(ex.Ops, v => v.Apply(s))
         );
 

@@ -6,12 +6,12 @@ using Datalog;
 public class VerifiedBlock : IBlock
 {
     public IEnumerable<Fact> Facts { get; protected set; }
-    public IEnumerable<RuleExpressions> Rules { get; protected set; }
+    public IEnumerable<IRuleConstrained> Rules { get; protected set; }
     public IEnumerable<Check> Checks { get; protected set; }
     public uint Version { get; protected set; }
     public string RevocationId { get; protected set; }
 
-    VerifiedBlock(IEnumerable<Fact> facts, IEnumerable<RuleExpressions> rules, IEnumerable<Check> checks, uint version, string revocationId) 
+    VerifiedBlock(IEnumerable<Fact> facts, IEnumerable<RuleConstrained> rules, IEnumerable<Check> checks, uint version, string revocationId) 
     {
         Facts = facts;
         Rules = rules;

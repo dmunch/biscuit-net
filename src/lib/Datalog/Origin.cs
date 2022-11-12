@@ -44,13 +44,13 @@ public class FactSet : OriginSet<HashSet<Fact>, Fact>
     }
 }
 
-public class RuleSet : OriginSet<List<(int, RuleExpressions)>, (int, RuleExpressions)>
+public class RuleSet : OriginSet<List<(int, IRuleConstrained)>, (int, IRuleConstrained)>
 {
     public RuleSet() 
     {
     }
 
-    public RuleSet(Origin origin, List<(int, RuleExpressions)> intialValue) : base(origin, intialValue)
+    public RuleSet(Origin origin, List<(int, IRuleConstrained)> intialValue) : base(origin, intialValue)
     {
     }
 }

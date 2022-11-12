@@ -12,9 +12,9 @@ public class RuleListener : ExpressionsBaseListener
     List<Fact> _facts = new List<Fact>();
     List<Expression> _expressions = new List<Expression>();
 
-    public RuleExpressions GetRuleExpressions()
+    public RuleConstrained GetRuleExpressions()
     {
-        return new RuleExpressions(
+        return new RuleConstrained(
             new Fact("check1"), 
             _facts,
             _expressions

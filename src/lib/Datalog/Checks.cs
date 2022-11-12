@@ -2,9 +2,9 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace biscuit_net.Datalog;
 
-public record Check(IEnumerable<RuleExpressions> Rules, Check.CheckKind Kind)
+public record Check(IEnumerable<RuleConstrained> Rules, Check.CheckKind Kind)
 {
-    public Check(params RuleExpressions[] rules) : this(rules.AsEnumerable(), CheckKind.One) {}
+    public Check(params RuleConstrained[] rules) : this(rules.AsEnumerable(), CheckKind.One) {}
 
     public enum CheckKind
     {
@@ -64,7 +64,7 @@ public static class Checks
         return true;
     }
 
-    static bool TryCheckOne(IEnumerable<Fact> blockFacts, IEnumerable<RuleExpressions> rules)
+    static bool TryCheckOne(IEnumerable<Fact> blockFacts, IEnumerable<IRuleConstrained> rules)
     {
         var ruleResult = false;
 
@@ -78,7 +78,7 @@ public static class Checks
             {
                 ruleResult |= subs.Any();
             }
-            if(rule.Expressions.Any())
+            if(rule.Constraints.Any())
             {
                 ruleResult |= expressionResult;
             }
@@ -87,7 +87,7 @@ public static class Checks
         return ruleResult;   
     }
 
-    static bool TryCheckAll(IEnumerable<Fact> blockFacts, IEnumerable<RuleExpressions> rules)
+    static bool TryCheckAll(IEnumerable<Fact> blockFacts, IEnumerable<IRuleConstrained> rules)
     {
         foreach(var rule in rules)
         {
@@ -97,7 +97,7 @@ public static class Checks
             var matches = rule.Body.Match(eval);
 
             var result = matches.All(match => 
-                rule.Expressions.All(ex => 
+                rule.Constraints.All(ex => 
                     Expressions.Evaluator.Evaluate(ex.Ops, v => v.Apply(match))
                 )
             );

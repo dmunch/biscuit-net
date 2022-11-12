@@ -39,13 +39,13 @@ public static class Converters
         };
     }
 
-    static public IEnumerable<RuleExpressions> ToRules(this IEnumerable<RuleV2> rules, SymbolTable symbols)
+    static public IEnumerable<RuleConstrained> ToRules(this IEnumerable<RuleV2> rules, SymbolTable symbols)
     {
         return rules.Select(rule =>  {
             var head = ToFact(rule.Head, symbols);
             var body = rule.Bodies.Select(body => ToFact(body, symbols));
             
-            return new RuleExpressions(head, body, ToParserExpr(rule.Expressions, symbols));
+            return new RuleConstrained(head, body, ToParserExpr(rule.Expressions, symbols));
         }).ToList();
     }
 
@@ -56,7 +56,7 @@ public static class Converters
                     var head = ToFact(query.Head, symbols);
                     var body = query.Bodies.Select(body => ToFact(body, symbols));
 
-                    return new RuleExpressions(head, body, ToParserExpr(query.Expressions, symbols));
+                    return new RuleConstrained(head, body, ToParserExpr(query.Expressions, symbols));
                 });
                 
                 var kind = check.kind switch 

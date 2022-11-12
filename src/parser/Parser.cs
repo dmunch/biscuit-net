@@ -24,7 +24,7 @@ public class Parser
         return ops;
     }
 
-    public RuleExpressions ParseRule(string ruleString)
+    public RuleConstrained ParseRule(string ruleString)
     {
         var charStream = new AntlrInputStream(ruleString);
         var lexer = new ExpressionsLexer(charStream);

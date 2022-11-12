@@ -73,7 +73,7 @@ public class AuthorizerTests
     }
 
 
-    IEnumerable<(Fact?, RuleExpressions?, string?)> Parse(string code)
+    IEnumerable<(Fact?, RuleConstrained?, string?)> Parse(string code)
     {
         string stringTermPattern = @"^([a-zA-Z_]+)\(""([a-zA-Z.0-9]+)""\);$";
         string intTermPattern = @"^([a-zA-Z_]+)\((\d+)\)$";
