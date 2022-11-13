@@ -17,7 +17,8 @@ public class RuleListener : ExpressionsBaseListener
         return new RuleConstrained(
             new Fact("check1"), 
             _facts,
-            _expressions
+            _expressions,
+            Scope.DefaultRuleScope
         );
     }
     

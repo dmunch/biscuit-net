@@ -19,10 +19,11 @@ public record Rule(Fact Head, IEnumerable<Fact> Body) : IRule
 public record RuleConstrained(
         Fact Head, 
         IEnumerable<Fact> Body, 
-        IEnumerable<Expression> Constraints) 
+        IEnumerable<Expression> Constraints,
+        Scope Scope)
     : Rule(Head, Body), IRuleConstrained
     {
-        public RuleConstrained(Fact head, params Fact[] body) : this(head, body.AsEnumerable(), Enumerable.Empty<Expression>()) {}
+        public RuleConstrained(Fact head, params Fact[] body) : this(head, body.AsEnumerable(), Enumerable.Empty<Expression>(), Scope.DefaultRuleScope) {}
         public virtual bool Equals(RuleConstrained? other) => base.Equals(other) && Constraints.SequenceEqual(other.Constraints);
         public override int GetHashCode() => HashCode.Combine(base.GetHashCode(), Constraints.Aggregate(0, HashCode.Combine));
     }

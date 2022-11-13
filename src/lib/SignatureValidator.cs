@@ -10,7 +10,7 @@ public record Signature(string InvalidSignature);
 public class SignatureValidator
 {
     SignatureAlgorithm _algorithm;
-    PublicKey _key;
+    NSec.Cryptography.PublicKey _key;
 
     public byte[] Key { get; private set; }
     
@@ -22,7 +22,7 @@ public class SignatureValidator
     {
         _algorithm = SignatureAlgorithm.Ed25519;
         Key = publicKey;
-        _key = PublicKey.Import(_algorithm, publicKey, KeyBlobFormat.RawPublicKey);
+        _key = NSec.Cryptography.PublicKey.Import(_algorithm, publicKey, KeyBlobFormat.RawPublicKey);
     }
 
     public bool Verify(ReadOnlySpan<byte> data, ReadOnlySpan<byte> signature)

@@ -1,3 +1,4 @@
+using biscuit_net;
 using biscuit_net.Datalog;
 using F = biscuit_net.Datalog.Fact;
 using R = biscuit_net.RuleConstrained;
@@ -10,10 +11,12 @@ public class VerifierTests
         IEnumerable<Fact> Facts,
         IEnumerable<IRuleConstrained> Rules,
         IEnumerable<Check> Checks,
-        uint Version
+        uint Version,
+        Scope Scope,
+        PublicKey? SignedBy
     )  : IBlock;
 
-    record Biscuit(IBlock Authority, IEnumerable<IBlock> Blocks) : IBiscuit;
+    record Biscuit(IBlock Authority, IReadOnlyCollection<IBlock> Blocks) : IBiscuit;
 
     [Fact]
     public void Test()
@@ -53,10 +56,12 @@ public class VerifierTests
             },
             new Check[] {
             },
-            3
+            3,
+            Scope.DefaultBlockScope,
+            null
         );
 
-        var biscuit = new Biscuit(authority, Enumerable.Empty<IBlock>());
+        var biscuit = new Biscuit(authority, Array.Empty<IBlock>());
 
         bool Verify(string user, string resource, string operation)
         {

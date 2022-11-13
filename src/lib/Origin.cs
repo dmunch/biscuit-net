@@ -34,6 +34,82 @@ public class TrustedOrigin : Origin
     }
 }
 
+public class TrustedOrigins
+{
+    Dictionary<PublicKey, uint> _publicKeyBlockIdx = new Dictionary<PublicKey, uint>();
+    Dictionary<uint, TrustedOrigin> _blockIdxTrustedOrigins = new Dictionary<uint, TrustedOrigin>();
+
+    public static TrustedOrigins Build(IBiscuit b)
+    {
+        var trustedOrigins = new TrustedOrigins();
+
+        uint blockId = 1;
+        foreach(var block in b.Blocks)
+        {
+            if(block.SignedBy != null)
+            {
+                trustedOrigins._publicKeyBlockIdx[block.SignedBy] = blockId++;
+            }
+        }
+
+        return trustedOrigins;
+    }
+
+    public TrustedOrigin For(uint blockId, Scope scope)
+    {
+        if(_blockIdxTrustedOrigins.TryGetValue(blockId, out var trustedOrigin))
+        {
+            if(scope.IsEmpty)
+            {
+                //A rule scope can be empty, in that case it returns the default 
+                //block scope
+                return trustedOrigin;
+            } 
+            else
+            {
+                //a non-empty rule-scope overwrites the block scope
+                return InternalFor(blockId, scope);
+            }
+        }
+
+        if(scope.IsEmpty)
+        {
+            throw new ArgumentException("Need non-empty scope when building trusted origin for the first time", nameof(scope)); 
+        }
+
+        
+        trustedOrigin = InternalFor(blockId, scope);
+        _blockIdxTrustedOrigins.Add(blockId, trustedOrigin);
+        return trustedOrigin;
+    }
+
+    TrustedOrigin InternalFor(uint blockId, Scope scope)
+    {
+        var trustedOrigin = scope.Types.Any(type => type == ScopeType.Previous)
+            ? Previous(blockId)
+            : new TrustedOrigin(Origin.Authority, (Origin) blockId, Origin.Authorizer);
+
+        foreach(var key in scope.Keys)
+        {
+            var trustedBlock = _publicKeyBlockIdx[key];
+            trustedOrigin.Add(trustedBlock);
+        }
+
+        return trustedOrigin;
+    }
+
+    static TrustedOrigin Previous(uint blockId)
+    {
+        var trustedOrigin = new TrustedOrigin(Origin.Authority, Origin.Authorizer);
+        for(uint blockIdx = 1; blockIdx <= blockId; blockIdx++)
+        {
+            trustedOrigin.Add(blockIdx);
+        }
+
+        return trustedOrigin;
+    }
+}
+
 public class FactSet : OriginSet<HashSet<Fact>, Fact>
 {   
     public FactSet() 

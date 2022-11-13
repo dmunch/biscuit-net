@@ -61,7 +61,8 @@ public class ParserTests
                 new Fact("resource", new Variable("0")),
                 new Fact("operation", new Variable("1")),
             }, 
-            new List<Expression>()
+            new List<Expression>(),
+            Scope.DefaultBlockScope
         ), rule);
     }
 
@@ -78,7 +79,8 @@ public class ParserTests
                 new Fact("must_be_present", new Variable("0")),
                 new Fact("must_be_present", new Variable("0"))
             }, 
-            Enumerable.Empty<Expression>()
+            Enumerable.Empty<Expression>(),
+            Scope.DefaultBlockScope
         ), rule);
     }
 
@@ -109,7 +111,8 @@ public class ParserTests
         Assert.Equal(new RuleConstrained(
             new Fact("check1"), 
             facts,
-            Enumerable.Empty<Expression>()
+            Enumerable.Empty<Expression>(),
+            Scope.DefaultBlockScope
         ), rule);
     }
 
@@ -126,7 +129,8 @@ public class ParserTests
             {
                 new Fact("ns::fact_123", new biscuit_net.Datalog.String("hello é\t😁"))
             }, 
-            Enumerable.Empty<Expression>()
+            Enumerable.Empty<Expression>(),
+            Scope.DefaultBlockScope
         ), rule);
     }
 }

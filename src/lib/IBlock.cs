@@ -7,4 +7,6 @@ public interface IBlock
     IEnumerable<IRuleConstrained> Rules { get; }
     IEnumerable<Check> Checks { get; }
     uint Version { get; }
+    public Scope Scope { get; }
+    public PublicKey? SignedBy { get; }
 }

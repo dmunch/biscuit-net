@@ -39,24 +39,26 @@ public static class Converters
         };
     }
 
-    static public IEnumerable<RuleConstrained> ToRules(this IEnumerable<RuleV2> rules, SymbolTable symbols)
+    static public IEnumerable<RuleConstrained> ToRules(this IEnumerable<RuleV2> rules, SymbolTable symbols, KeyTable keys)
     {
         return rules.Select(rule =>  {
             var head = ToFact(rule.Head, symbols);
             var body = rule.Bodies.Select(body => ToFact(body, symbols));
-            
-            return new RuleConstrained(head, body, ToParserExpr(rule.Expressions, symbols));
+
+            return new RuleConstrained(head, body, ToParserExpr(rule.Expressions, symbols), ToScope(rule.Scopes, keys));
         }).ToList();
     }
 
-    static public IEnumerable<Check> ToChecks(this IEnumerable<CheckV2> checks, SymbolTable symbols)
+    static public IEnumerable<Check> ToChecks(this IEnumerable<CheckV2> checks, SymbolTable symbols, KeyTable keys)
     {
         return checks.Select(check => {
                 var rules = check.Queries.Select(query => {
                     var head = ToFact(query.Head, symbols);
                     var body = query.Bodies.Select(body => ToFact(body, symbols));
 
-                    return new RuleConstrained(head, body, ToParserExpr(query.Expressions, symbols));
+                    
+
+                    return new RuleConstrained(head, body, ToParserExpr(query.Expressions, symbols), ToScope(query.Scopes, keys));
                 });
                 
                 var kind = check.kind switch 
@@ -67,6 +69,35 @@ public static class Converters
                 };
                 return new Check(rules, kind);
         });
+    }
+
+    static public Scope ToScope(IEnumerable<Proto.Scope> scopes, KeyTable keys)
+    {
+        return new Scope(
+                ToScopeTypes(scopes),
+                ToTrustedPublicKeys(scopes, keys)
+        );
+    }
+
+    static public IEnumerable<PublicKey> ToTrustedPublicKeys(IEnumerable<Proto.Scope> scopes, KeyTable keys)
+    {
+        return scopes
+            .Where(scope => scope.ContentCase == Proto.Scope.ContentOneofCase.publicKey)
+            .Select(scope => keys.Lookup(scope.publicKey))
+            .ToList();
+    }
+
+    static public IEnumerable<ScopeType> ToScopeTypes(IEnumerable<Proto.Scope> scopes)
+    {
+        return scopes
+            .Where(scope => scope.ContentCase == Proto.Scope.ContentOneofCase.scopeType)
+            .Select(scope => (ScopeType) scope.scopeType)
+            .ToList();
+    }
+
+    static public PublicKey ToPublicKey(Proto.PublicKey publicKey)
+    {
+        return new PublicKey((Algorithm)publicKey.algorithm, publicKey.Key);
     }
 
     static public IEnumerable<Expressions.Expression> ToParserExpr(IEnumerable<Proto.ExpressionV2> exprs, SymbolTable symbols)

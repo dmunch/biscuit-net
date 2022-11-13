@@ -2,33 +2,34 @@
 using System.Diagnostics.CodeAnalysis;
 
 namespace biscuit_net;
-using Datalog;
 
 public class VerifiedBiscuit : IBiscuit
 {
     IBlock IBiscuit.Authority { get { return Authority; }}
-    IEnumerable<IBlock> IBiscuit.Blocks { get { return Blocks; }}
+    IReadOnlyCollection<IBlock> IBiscuit.Blocks { get { return Blocks; }}
 
     public VerifiedBlock Authority { get; private set; }
-    public IEnumerable<VerifiedBlock> Blocks { get; protected set; }
+    public IReadOnlyCollection<VerifiedBlock> Blocks { get; protected set; }
     
     Proto.Biscuit _biscuit;
     SymbolTable _symbols;
+    KeyTable _keys;
     
-    VerifiedBiscuit(Proto.Biscuit biscuit, VerifiedBlock authority, SymbolTable symbols)
+    VerifiedBiscuit(Proto.Biscuit biscuit, VerifiedBlock authority, SymbolTable symbols, KeyTable keys)
     {
         _biscuit = biscuit;
         Authority = authority;
         _symbols = symbols;
+        _keys = keys;
 
-        Blocks = BlockEnumerable();
+        Blocks = BlockEnumerable().ToArray();
     }
     
     IEnumerable<VerifiedBlock> BlockEnumerable() 
     {
         foreach(var block in _biscuit.Blocks)
         {
-            yield return VerifiedBlock.FromProto(block, _symbols);
+            yield return VerifiedBlock.FromProto(block, _symbols, _keys);
         }
     }
 
@@ -54,9 +55,10 @@ public class VerifiedBiscuit : IBiscuit
         }
 
         var symbols = new SymbolTable();
-        var authority = VerifiedBlock.FromProto(biscuitProto.Authority, symbols);
+        var keys = new KeyTable();
+        var authority = VerifiedBlock.FromProto(biscuitProto.Authority, symbols, keys);
 
-        biscuit = new VerifiedBiscuit(biscuitProto, authority, symbols);
+        biscuit = new VerifiedBiscuit(biscuitProto, authority, symbols, keys);
 
         err = null; return true;
     }

@@ -13,6 +13,10 @@ public class AuthorizerBlock : IBlock
     public IEnumerable<Fact> Facts { get => _facts; }
     public IEnumerable<IRuleConstrained> Rules { get => _rules; }
     public IEnumerable<Check> Checks { get => _checks; }
+    
+
+    public Scope Scope { get => Scope.DefaultBlockScope; }
+    public PublicKey? SignedBy { get => null; }
     public uint Version { get => 4; }
 
     public void Add(Fact fact) => _facts.Add(fact);
