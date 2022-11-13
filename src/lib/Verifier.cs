@@ -35,7 +35,7 @@ public static class Verifier
         }
 
         
-        var trustedOrigins = TrustedOrigins.Build(b);
+        var trustedOrigins = TrustedOriginSet.Build(b, authorizerBlock);
 
         //run rules
         //run authority rules 
@@ -57,7 +57,7 @@ public static class Verifier
         
         //run checks
         //run authority checks
-        if(!Checks.TryCheck(world.Facts, trustedOrigins, 0, b.Authority.Checks, out var failedCheckId, out var failedCheck))
+        if(!Checks.TryCheck(world.Facts, trustedOrigins, Origins.Authority, b.Authority.Checks, out var failedCheckId, out var failedCheck))
         {
             err = new Error(new FailedBlockCheck(0, failedCheckId.Value/*, failedRule*/));
             return false;
@@ -76,7 +76,7 @@ public static class Verifier
         }
             
         //run authorizer checks
-        if(!Checks.TryCheck(world.Facts, trustedOrigins, uint.MaxValue, authorizerBlock.Checks, out var failedAuthorizerCheckId, out var failedAuthorizerCheck))
+        if(!Checks.TryCheck(world.Facts, trustedOrigins, Origins.Authorizer, authorizerBlock.Checks, out var failedAuthorizerCheckId, out var failedAuthorizerCheck))
         {
             err = new Error(new FailedAuthorizerCheck(failedAuthorizerCheckId.Value/*, failedAuthorizerRule*/));
             return false;

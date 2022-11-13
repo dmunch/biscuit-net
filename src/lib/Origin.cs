@@ -10,92 +10,90 @@ public static class Origins
     public const Origin Authorizer = Origin.MaxValue;
 }
 
-public class TrustedOrigin : SortedSet<Origin> 
+public class TrustedOrigins : SortedSet<Origin> 
 {
-    public TrustedOrigin(Origin idx) : this(new []{ idx })   
-    {
-    }
-
-    public TrustedOrigin(IEnumerable<Origin> set) : base(set)   
-    {
-    }
-
-    public TrustedOrigin(params Origin[] origins) : base(origins)   
-    {
-    }
-
-    public TrustedOrigin(params IEnumerable<Origin>[] sets) : base(sets.SelectMany(s => s))   
+    public TrustedOrigins(params Origin[] origins) : base(origins)   
     {
     }
 }
 
-public class TrustedOrigins
+public class TrustedOriginSet
 {
-    Dictionary<PublicKey, Origin> _publicKeyBlockIdx = new Dictionary<PublicKey, Origin>();
-    Dictionary<Origin, TrustedOrigin> _blockIdxTrustedOrigins = new Dictionary<Origin, TrustedOrigin>();
+    IReadOnlyDictionary<PublicKey, Origin> _publicKeys;
+    IReadOnlyDictionary<Origin, TrustedOrigins> _trustedOrigins;
 
-    public static TrustedOrigins Build(IBiscuit b)
+    TrustedOriginSet(IReadOnlyDictionary<PublicKey, Origin> publicKeys,  IReadOnlyDictionary<Origin, TrustedOrigins> blockTrustedOrigins)
     {
-        var trustedOrigins = new TrustedOrigins();
+        _publicKeys = publicKeys;
+        _trustedOrigins = blockTrustedOrigins;
+    }
+
+    public static TrustedOriginSet Build(IBiscuit b, IBlock authorizerBlock)
+    {
+        var publicKeys = new Dictionary<PublicKey, Origin>();  
+        var trustedOrigins = new Dictionary<Origin, TrustedOrigins>();
 
         uint blockId = 1;
+        //populate public key lookup table
         foreach(var block in b.Blocks)
         {
             if(block.SignedBy != null)
             {
-                trustedOrigins._publicKeyBlockIdx[block.SignedBy] = blockId++;
+                publicKeys[block.SignedBy] = blockId++;
             }
         }
 
-        return trustedOrigins;
+        //populate block scopes 
+        trustedOrigins[Origins.Authority] = For(Origins.Authority, b.Authority.Scope, publicKeys);
+        blockId = 1;
+        foreach(var block in b.Blocks)
+        {
+            trustedOrigins[blockId] = For(blockId, block.Scope, publicKeys);
+            blockId++;
+        }
+        trustedOrigins[Origins.Authorizer] = For(Origins.Authorizer, authorizerBlock.Scope, publicKeys);
+
+        return new TrustedOriginSet(publicKeys, trustedOrigins);
     }
 
-    public TrustedOrigin For(Origin blockId, Scope scope)
+    public TrustedOrigins For(Origin blockId, Scope scope)
     {
-        if(_blockIdxTrustedOrigins.TryGetValue(blockId, out var trustedOrigin))
+        if(!_trustedOrigins.TryGetValue(blockId, out var trustedOrigin))
         {
-            if(scope.IsEmpty)
-            {
-                //A rule scope can be empty, in that case it returns the default 
-                //block scope
-                return trustedOrigin;
-            } 
-            else
-            {
-                //a non-empty rule-scope overwrites the block scope
-                return InternalFor(blockId, scope);
-            }
+            throw new ArgumentException("Unknown blockId", nameof(blockId));
         }
 
         if(scope.IsEmpty)
         {
-            throw new ArgumentException("Need non-empty scope when building trusted origin for the first time", nameof(scope)); 
+            //A rule scope can be empty, in that case it returns the default 
+            //block scope
+            return trustedOrigin;
+        } 
+        else
+        {
+            //a non-empty rule-scope overwrites the block scope
+            return For(blockId, scope, _publicKeys);
         }
-
-        
-        trustedOrigin = InternalFor(blockId, scope);
-        _blockIdxTrustedOrigins.Add(blockId, trustedOrigin);
-        return trustedOrigin;
     }
 
-    TrustedOrigin InternalFor(Origin blockId, Scope scope)
+    static TrustedOrigins For(Origin blockId, Scope scope, IReadOnlyDictionary<PublicKey, Origin> publicKeys)
     {
         var trustedOrigin = scope.Types.Any(type => type == ScopeType.Previous)
             ? Previous(blockId)
-            : new TrustedOrigin(Origins.Authority, blockId, Origins.Authorizer);
+            : new TrustedOrigins(Origins.Authority, blockId, Origins.Authorizer);
 
         foreach(var key in scope.Keys)
         {
-            var trustedBlock = _publicKeyBlockIdx[key];
+            var trustedBlock = publicKeys[key];
             trustedOrigin.Add(trustedBlock);
         }
 
         return trustedOrigin;
     }
 
-    static TrustedOrigin Previous(Origin blockId)
+    static TrustedOrigins Previous(Origin blockId)
     {
-        var trustedOrigin = new TrustedOrigin(Origins.Authority, Origins.Authorizer);
+        var trustedOrigin = new TrustedOrigins(Origins.Authority, Origins.Authorizer);
         for(uint blockIdx = 1; blockIdx <= blockId; blockIdx++)
         {
             trustedOrigin.Add(blockIdx);
@@ -172,7 +170,7 @@ public class OriginSet<T, I> where T : ICollection<I>
         }
     }
 
-    public IEnumerable<I> Filter(TrustedOrigin origin)
+    public IEnumerable<I> Filter(TrustedOrigins origin)
     {
         return _values
             .Where(kvp => origin.Contains(kvp.Key))

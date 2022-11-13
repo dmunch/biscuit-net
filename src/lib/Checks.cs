@@ -18,7 +18,7 @@ public record World(FactSet Facts, RuleSet Rules);
 
 public static class Checks
 {
-    public static bool TryCheck(FactSet factSet, TrustedOrigins trustedOrigins, uint blockId, IEnumerable<Check> checks, [NotNullWhen(false)] out int? failedCheckId, [NotNullWhen(false)] out Check? failedCheck)
+    public static bool TryCheck(FactSet factSet, TrustedOriginSet trustedOrigins, uint blockId, IEnumerable<Check> checks, [NotNullWhen(false)] out int? failedCheckId, [NotNullWhen(false)] out Check? failedCheck)
     {
         var result = true; 
         var checkId = 0;
@@ -47,7 +47,7 @@ public static class Checks
         return true;
     }
 
-    static bool TryCheckOne(FactSet factSet, TrustedOrigins trustedOrigins, uint blockId, IEnumerable<RuleConstrained> rules)
+    static bool TryCheckOne(FactSet factSet, TrustedOriginSet trustedOrigins, uint blockId, IEnumerable<RuleConstrained> rules)
     {
         var ruleResult = false;
 
@@ -72,7 +72,7 @@ public static class Checks
         return ruleResult;   
     }
 
-    static bool TryCheckAll(FactSet factSet, TrustedOrigins trustedOrigins, uint blockId, IEnumerable<RuleConstrained> rules)
+    static bool TryCheckAll(FactSet factSet, TrustedOriginSet trustedOrigins, uint blockId, IEnumerable<RuleConstrained> rules)
     {
         foreach(var rule in rules)
         {
