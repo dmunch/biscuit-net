@@ -1,43 +1,38 @@
 
+global using Origin = System.UInt32;
+
 namespace biscuit_net;
 using Datalog;
 
-public class Origin : SortedSet<uint>
+public static class Origins
 {
-    public static Origin Authority = new Origin(0);
-    public static Origin Authorizer = new Origin(uint.MaxValue);
-
-    public Origin(uint idx) : this(new []{ idx })   
-    {
-    }
-
-    public Origin(IEnumerable<uint> set) : base(set)   
-    {
-    }
-
-    public static implicit operator Origin(uint value) => new Origin(value);
+    public const Origin Authority = 0;
+    public const Origin Authorizer = Origin.MaxValue;
 }
 
-
-public class TrustedOrigin : Origin 
+public class TrustedOrigin : SortedSet<Origin> 
 {
-    public TrustedOrigin(uint idx) : this(new []{ idx })   
+    public TrustedOrigin(Origin idx) : this(new []{ idx })   
     {
     }
 
-    public TrustedOrigin(IEnumerable<uint> set) : base(set)   
+    public TrustedOrigin(IEnumerable<Origin> set) : base(set)   
     {
     }
 
-    public TrustedOrigin(params IEnumerable<uint>[] sets) : base(sets.SelectMany(s => s))   
+    public TrustedOrigin(params Origin[] origins) : base(origins)   
+    {
+    }
+
+    public TrustedOrigin(params IEnumerable<Origin>[] sets) : base(sets.SelectMany(s => s))   
     {
     }
 }
 
 public class TrustedOrigins
 {
-    Dictionary<PublicKey, uint> _publicKeyBlockIdx = new Dictionary<PublicKey, uint>();
-    Dictionary<uint, TrustedOrigin> _blockIdxTrustedOrigins = new Dictionary<uint, TrustedOrigin>();
+    Dictionary<PublicKey, Origin> _publicKeyBlockIdx = new Dictionary<PublicKey, Origin>();
+    Dictionary<Origin, TrustedOrigin> _blockIdxTrustedOrigins = new Dictionary<Origin, TrustedOrigin>();
 
     public static TrustedOrigins Build(IBiscuit b)
     {
@@ -55,7 +50,7 @@ public class TrustedOrigins
         return trustedOrigins;
     }
 
-    public TrustedOrigin For(uint blockId, Scope scope)
+    public TrustedOrigin For(Origin blockId, Scope scope)
     {
         if(_blockIdxTrustedOrigins.TryGetValue(blockId, out var trustedOrigin))
         {
@@ -83,11 +78,11 @@ public class TrustedOrigins
         return trustedOrigin;
     }
 
-    TrustedOrigin InternalFor(uint blockId, Scope scope)
+    TrustedOrigin InternalFor(Origin blockId, Scope scope)
     {
         var trustedOrigin = scope.Types.Any(type => type == ScopeType.Previous)
             ? Previous(blockId)
-            : new TrustedOrigin(Origin.Authority, (Origin) blockId, Origin.Authorizer);
+            : new TrustedOrigin(Origins.Authority, blockId, Origins.Authorizer);
 
         foreach(var key in scope.Keys)
         {
@@ -98,9 +93,9 @@ public class TrustedOrigins
         return trustedOrigin;
     }
 
-    static TrustedOrigin Previous(uint blockId)
+    static TrustedOrigin Previous(Origin blockId)
     {
-        var trustedOrigin = new TrustedOrigin(Origin.Authority, Origin.Authorizer);
+        var trustedOrigin = new TrustedOrigin(Origins.Authority, Origins.Authorizer);
         for(uint blockIdx = 1; blockIdx <= blockId; blockIdx++)
         {
             trustedOrigin.Add(blockIdx);
@@ -113,10 +108,6 @@ public class TrustedOrigins
 public class FactSet : OriginSet<HashSet<Fact>, Fact>
 {   
     public FactSet() 
-    {
-    }
-
-    public FactSet(Origin origin, HashSet<Fact> intialValue) : base(origin, intialValue)
     {
     }
 }
@@ -184,7 +175,7 @@ public class OriginSet<T, I> where T : ICollection<I>
     public IEnumerable<I> Filter(TrustedOrigin origin)
     {
         return _values
-            .Where(kvp => origin.IsProperSupersetOf(kvp.Key))
+            .Where(kvp => origin.Contains(kvp.Key))
             .SelectMany(kvp => kvp.Value);
     }
 }

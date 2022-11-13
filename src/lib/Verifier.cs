@@ -24,13 +24,13 @@ public static class Verifier
 
 
         //add facts
-        world.Facts.Add(Origin.Authorizer, authorizerBlock.Facts.ToHashSet());
-        world.Facts.Add(Origin.Authority, b.Authority.Facts.ToHashSet());
+        world.Facts.Add(Origins.Authorizer, authorizerBlock.Facts.ToHashSet());
+        world.Facts.Add(Origins.Authority, b.Authority.Facts.ToHashSet());
 
         uint blockId = 1;
         foreach(var block in b.Blocks)
         {
-            world.Facts.Add(new Origin(blockId), block.Facts.ToHashSet());
+            world.Facts.Add(blockId, block.Facts.ToHashSet());
             blockId++;
         }
 
@@ -40,14 +40,14 @@ public static class Verifier
         //run rules
         //run authority rules 
         var authorityExecutionFacts = world.Facts.Filter(trustedOrigins.For(0, b.Authority.Scope)).Evaluate(b.Authority.Rules);
-        world.Facts.Merge(Origin.Authority, authorityExecutionFacts);
+        world.Facts.Merge(Origins.Authority, authorityExecutionFacts);
         
         //run block rules 
         blockId = 1;
         foreach(var block in b.Blocks)
         {
             var blockExecutionFacts = world.Facts.Filter(trustedOrigins.For(blockId, block.Scope)).Evaluate(block.Rules);
-            world.Facts.Merge(new Origin(blockId), blockExecutionFacts);
+            world.Facts.Merge(blockId, blockExecutionFacts);
 
             blockId++;
         }
