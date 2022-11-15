@@ -5,14 +5,14 @@ using Datalog;
 
 public static class Verifier
 {
-    public static bool TryVerify(IBiscuit b, World world, IBlock authorizerBlock, [NotNullWhen(false)] out Error? err)
+    public static bool TryVerify(IBiscuit b, World world, AuthorizerBlock authorizerBlock, [NotNullWhen(false)] out Error? err)
     {
         if(!Checks.CheckBoundVariables(b, out var invalidBlockRule))
         {
-            err = new Error(invalidBlockRule);
+            err = new Error(new FailedLogic(invalidBlockRule));
             return false;
         }
-        
+
         if(b.Authority.Version < 3 || b.Authority.Version > 4)
             throw new Exception($"Unsupported Authority Block Version {b.Authority.Version}");
 
@@ -83,7 +83,21 @@ public static class Verifier
         }
 
 
-        err = null;
-        return true;
+        //validate policies 
+        foreach(var policy in authorizerBlock.Policies)
+        {
+            if(Checks.TryCheckOne(world.Facts, trustedOrigins, Origins.Authorizer, policy.Rules))
+            {
+                err = new Error(new FailedLogic(new Unauthorized(policy.Kind)));
+                return policy.Kind switch {
+                    PolicyKind.Allow => true,
+                    PolicyKind.Deny => false,
+                    _ => throw new NotSupportedException("Unsupported policy kind")
+                };
+            }
+        }
+
+        err = new Error(new FailedLogic(new NoMatchingPolicy()));
+        return false;
     }
 }

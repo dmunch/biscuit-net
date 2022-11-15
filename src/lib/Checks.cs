@@ -14,7 +14,12 @@ public record Check(IEnumerable<RuleConstrained> Rules, Check.CheckKind Kind)
     }
 }
 
-public record World(FactSet Facts, RuleSet Rules);
+public record World(FactSet Facts, RuleSet Rules)
+{
+    public World() : this(new FactSet(), new RuleSet())
+    {
+    }
+}
 
 public static class Checks
 {
@@ -47,7 +52,7 @@ public static class Checks
         return true;
     }
 
-    static bool TryCheckOne(FactSet factSet, TrustedOriginSet trustedOrigins, uint blockId, IEnumerable<RuleConstrained> rules)
+    public static bool TryCheckOne(FactSet factSet, TrustedOriginSet trustedOrigins, uint blockId, IEnumerable<RuleConstrained> rules)
     {
         var ruleResult = false;
 

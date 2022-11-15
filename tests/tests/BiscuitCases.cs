@@ -92,7 +92,7 @@ public class BiscuitCases : DataAttribute
             var ruleId = ibr[0].Integer; //assuming this is ruleId - not clear in the specs
             var rule = ibr[1].String;
             
-            error = new Error(new InvalidBlockRule((int)ruleId/*, rule*/));
+            error = new Error(new FailedLogic(new InvalidBlockRule((int)ruleId/*, rule*/)));
         }
 
 

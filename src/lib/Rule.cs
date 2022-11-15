@@ -24,6 +24,7 @@ public record RuleConstrained(
     : Rule(Head, Body), IRuleConstrained
     {
         public RuleConstrained(Fact head, params Fact[] body) : this(head, body.AsEnumerable(), Enumerable.Empty<Expression>(), Scope.DefaultRuleScope) {}
+        public RuleConstrained(Fact head, params Expression[] expressions) : this(head, Enumerable.Empty<Fact>(), expressions, Scope.DefaultRuleScope) {}
         public virtual bool Equals(RuleConstrained? other) => base.Equals(other) && Constraints.SequenceEqual(other.Constraints);
         public override int GetHashCode() => HashCode.Combine(base.GetHashCode(), Constraints.Aggregate(0, HashCode.Combine));
     }

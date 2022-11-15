@@ -65,20 +65,20 @@ public class VerifierTests
 
         bool Verify(string user, string resource, string operation)
         {
-            var authorizerBlock = new AuthorizerBlock();
-            authorizerBlock.Add(new F("resource", resource));
-            authorizerBlock.Add(new F("user_id", user));
-            authorizerBlock.Add(new F("operation", operation));
-
-            authorizerBlock.Add(new Check(
-                new R(
-                    new F("check1"), 
-                    new F("resource", "$0"),
-                    new F("operation", "$1"),
-                    new F("right", "$0", "$1")
+            var authorizerBlock = new AuthorizerBlock()
+                .Add(new F("resource", resource))
+                .Add(new F("user_id", user))
+                .Add(new F("operation", operation))
+                .Add(new Check(
+                        new R(
+                            new F("check1"), 
+                            new F("resource", "$0"),
+                            new F("operation", "$1"),
+                            new F("right", "$0", "$1")
+                        )
+                    )
                 )
-            )
-            );
+                .Add(Policy.AllowPolicy);
 
             var factSet = new FactSet();
             var ruleSet = new RuleSet();
@@ -106,5 +106,101 @@ public class VerifierTests
         Assert.False(Verify("bob", "file3", "read"));
 
         Assert.True(Verify("bob", "file4", "read"));
+    }
+
+    [Fact]
+    public void Test_Deny_And_Allow_Policies()
+    {
+        var authority = new Block(
+            new [] {
+                new F("owner", "alice", "file1"),
+                new F("owner", "alice", "file2"),
+                new F("reader", "alice", "file3"),
+                new F("reader", "bob", "file4"),
+            },
+            new [] {
+                new R(
+                    new F("right", "$1", "read"),
+                    new F("user_id", "$0"),
+                    new F("resource", "$1"),
+                    new F("reader", "$0", "$1")
+                ),
+                new R(
+                    new F("right", "$1", "read"), 
+                    new F("user_id", "$0"), 
+                    new F("resource", "$1"), 
+                    new F("owner", "$0", "$1")
+                ),
+                new R(
+                    new F("right", "$1", "read"), 
+                    new F("user_id", "$0"), 
+                    new F("resource", "$1"), 
+                    new F("owner", "$0", "$1")
+                ),
+                new R(
+                    new F("right", "$1", "write"), 
+                    new F("user_id", "$0"), 
+                    new F("resource", "$1"), 
+                    new F("owner", "$0", "$1")
+                )
+            },
+            new Check[] {
+            },
+            3,
+            Scope.DefaultBlockScope,
+            null
+        );
+
+        var biscuit = new Biscuit(authority, Array.Empty<IBlock>());
+
+        
+        var authorizerBlockAllow = new AuthorizerBlock()
+            .Add(new F("resource", "file1"))
+            .Add(new F("user_id", "alice"))
+            .Add(new F("operation", "write"))
+            .Add(new Policy(PolicyKind.Allow, new [] { 
+                new R(
+                        new F("check1"), 
+                        new F("resource", "$0"),
+                        new F("operation", "$1"),
+                        new F("right", "$0", "$1")
+                    )
+            }));
+
+        var authorizerBlockDeny = new AuthorizerBlock()
+            .Add(new F("resource", "file1"))
+            .Add(new F("user_id", "alice"))
+            .Add(new F("operation", "write"))
+            .Add(new Policy(PolicyKind.Deny, new [] { 
+                new R(
+                        new F("check1"), 
+                        new F("resource", "$0"),
+                        new F("operation", "$1"),
+                        new F("right", "$0", "$1")
+                    )
+            }));
+
+        var authorizerBlockNoMatchingPolicy = new AuthorizerBlock()
+            .Add(new F("resource", "file666"))
+            .Add(new F("user_id", "alice"))
+            .Add(new F("operation", "write"))
+            .Add(new Policy(PolicyKind.Deny, new [] { 
+                new R(
+                        new F("check1"), 
+                        new F("resource", "$0"),
+                        new F("operation", "$1"),
+                        new F("right", "$0", "$1")
+                    )
+            }));
+        
+        var worldAllow = new World();
+        var worldDeny = new World();
+        var worldNoMatchingPolicy = new World();
+
+        Assert.True(Verifier.TryVerify(biscuit, worldAllow, authorizerBlockAllow, out var _));
+        Assert.False(Verifier.TryVerify(biscuit, worldDeny, authorizerBlockDeny, out var _));
+        Assert.False(Verifier.TryVerify(biscuit, worldNoMatchingPolicy, authorizerBlockNoMatchingPolicy, out var errorNoMatchingPolicy));
+
+        Assert.Equal(new Error(new FailedLogic(new NoMatchingPolicy())), errorNoMatchingPolicy);
     }
 }

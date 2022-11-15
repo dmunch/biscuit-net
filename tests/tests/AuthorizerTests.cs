@@ -45,7 +45,7 @@ public class AuthorizerTests
             {
                 case (var authorizerFact, null, null): authorizer.Add(authorizerFact); break;
                 case (null, var authorizerCheckRule, null): authorizer.Add(new Check(new []{authorizerCheckRule})); break;
-                case (null, null, var policy): break;
+                case (null, null, var policy): authorizer.Add(policy); break;
                 default: throw new Exception();
             }
         }
@@ -73,7 +73,7 @@ public class AuthorizerTests
     }
 
 
-    IEnumerable<(Fact?, RuleConstrained?, string?)> Parse(string code)
+    IEnumerable<(Fact?, RuleConstrained?, Policy?)> Parse(string code)
     {
         string stringTermPattern = @"^([a-zA-Z_]+)\(""([a-zA-Z.0-9]+)""\);$";
         string intTermPattern = @"^([a-zA-Z_]+)\((\d+)\)$";
@@ -115,7 +115,7 @@ public class AuthorizerTests
             else if(line.StartsWith("allow if true"))
             {
                 var parser = new Parser();
-                yield return (null, null, "allow if true");
+                yield return (null, null, Policy.AllowPolicy);
             }
 
             else throw new NotSupportedException(line);
