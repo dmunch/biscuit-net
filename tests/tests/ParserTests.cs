@@ -133,4 +133,48 @@ public class ParserTests
             Scope.DefaultBlockScope
         ), rule);
     }
+
+    [Fact]
+    public void Should_Parse_Facts()
+    {
+        var text = "resource(\"file1\"); allow if true;";
+        var parser = new Parser();
+        var block = parser.ParseAuthorizer(text);
+    }
+
+    [Fact]
+    public void Should_Parse_Facts_2()
+    {
+        var text = @"resource(""file1"");
+            operation(""read"");
+            time(2020-12-21T09:23:12Z);
+
+            allow if true;";
+
+        var parser = new Parser();
+        var block = parser.ParseAuthorizer(text);
+    }
+
+
+    [Fact]
+    public void Should_Parse_Checks_And_Policies_With_Public_Keys()
+    {
+        var text = @"check if query(1, 2) trusting ed25519/3c8aeced6363b8a862552fb2b0b4b8b0f8244e8cef3c11c3e55fd553f3a90f59, ed25519/ecfb8ed11fd9e6be133ca4dd8d229d39c7dcb2d659704c39e82fd7acf0d12dee;
+                    deny if query(3);
+                    deny if query(1, 2);
+                    deny if query(0) trusting ed25519/3c8aeced6363b8a862552fb2b0b4b8b0f8244e8cef3c11c3e55fd553f3a90f59;
+                    allow if true;";
+            
+        var parser = new Parser();
+        var block = parser.ParseAuthorizer(text);
+    }
+
+    [Fact]
+    public void Should_Parse_Checks_And_Policies_Without_Public_Keys()
+    {
+        var text = "deny if true; allow if false;";
+            
+        var parser = new Parser();
+        var block = parser.ParseAuthorizer(text);
+    }
 }

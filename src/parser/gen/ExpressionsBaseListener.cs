@@ -36,6 +36,108 @@ using ParserRuleContext = Antlr4.Runtime.ParserRuleContext;
 [System.CLSCompliant(false)]
 public partial class ExpressionsBaseListener : IExpressionsListener {
 	/// <summary>
+	/// Enter a parse tree produced by <see cref="ExpressionsParser.origin_clause"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterOrigin_clause([NotNull] ExpressionsParser.Origin_clauseContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="ExpressionsParser.origin_clause"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitOrigin_clause([NotNull] ExpressionsParser.Origin_clauseContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by the <c>originElementAuthority</c>
+	/// labeled alternative in <see cref="ExpressionsParser.origin_element"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterOriginElementAuthority([NotNull] ExpressionsParser.OriginElementAuthorityContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by the <c>originElementAuthority</c>
+	/// labeled alternative in <see cref="ExpressionsParser.origin_element"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitOriginElementAuthority([NotNull] ExpressionsParser.OriginElementAuthorityContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by the <c>originElementPrevious</c>
+	/// labeled alternative in <see cref="ExpressionsParser.origin_element"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterOriginElementPrevious([NotNull] ExpressionsParser.OriginElementPreviousContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by the <c>originElementPrevious</c>
+	/// labeled alternative in <see cref="ExpressionsParser.origin_element"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitOriginElementPrevious([NotNull] ExpressionsParser.OriginElementPreviousContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by the <c>originElementPublicKey</c>
+	/// labeled alternative in <see cref="ExpressionsParser.origin_element"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterOriginElementPublicKey([NotNull] ExpressionsParser.OriginElementPublicKeyContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by the <c>originElementPublicKey</c>
+	/// labeled alternative in <see cref="ExpressionsParser.origin_element"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitOriginElementPublicKey([NotNull] ExpressionsParser.OriginElementPublicKeyContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="ExpressionsParser.signature_alg"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterSignature_alg([NotNull] ExpressionsParser.Signature_algContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="ExpressionsParser.signature_alg"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitSignature_alg([NotNull] ExpressionsParser.Signature_algContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="ExpressionsParser.authorizer"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterAuthorizer([NotNull] ExpressionsParser.AuthorizerContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="ExpressionsParser.authorizer"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitAuthorizer([NotNull] ExpressionsParser.AuthorizerContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="ExpressionsParser.authorizer_element"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterAuthorizer_element([NotNull] ExpressionsParser.Authorizer_elementContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="ExpressionsParser.authorizer_element"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitAuthorizer_element([NotNull] ExpressionsParser.Authorizer_elementContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="ExpressionsParser.fact"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterFact([NotNull] ExpressionsParser.FactContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="ExpressionsParser.fact"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitFact([NotNull] ExpressionsParser.FactContext context) { }
+	/// <summary>
 	/// Enter a parse tree produced by <see cref="ExpressionsParser.check"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
@@ -47,6 +149,18 @@ public partial class ExpressionsBaseListener : IExpressionsListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitCheck([NotNull] ExpressionsParser.CheckContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="ExpressionsParser.policy"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterPolicy([NotNull] ExpressionsParser.PolicyContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="ExpressionsParser.policy"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitPolicy([NotNull] ExpressionsParser.PolicyContext context) { }
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="ExpressionsParser.rule_body"/>.
 	/// <para>The default implementation does nothing.</para>

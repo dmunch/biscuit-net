@@ -1,7 +1,7 @@
 ﻿namespace biscuit_net.Parser;
 
 using Antlr4.Runtime;
-using biscuit_net.Datalog;
+using Antlr4.Runtime.Tree;
 using biscuit_net.Expressions;
 
 public class Parser
@@ -9,36 +9,41 @@ public class Parser
     private readonly ExpressionsVisitor _expressionsVisitor = new ExpressionsVisitor();
     public List<Op> Parse(string rule)
     {
-        var charStream = new AntlrInputStream(rule);
-        var lexer = new ExpressionsLexer(charStream);
-        var tokenStream = new CommonTokenStream(lexer);
-        var parser = new ExpressionsParser(tokenStream);
+        var parser = InitializeParser(rule, out _);
         
-        parser.AddErrorListener(new ErrorListener());
-        var tree = parser.check();
-
-        var errors = parser.NumberOfSyntaxErrors;
-
-        var ops = tree.Accept(_expressionsVisitor);
-        
-        return ops;
+        return parser.check().Accept(_expressionsVisitor);
     }
 
     public RuleConstrained ParseRule(string ruleString)
     {
-        var charStream = new AntlrInputStream(ruleString);
+        var parser = InitializeParser(ruleString, out _);
+
+        var ruleListener = new RuleListener();
+        ParseTreeWalker.Default.Walk(ruleListener, parser.check());
+
+        return ruleListener.GetRule();
+    }
+
+    public AuthorizerBlock ParseAuthorizer(string authorizerBlock)
+    {
+        var parser = InitializeParser(authorizerBlock, out _);
+
+        var listener = new AuthorizerListener();
+        ParseTreeWalker.Default.Walk(listener, parser.authorizer());
+        
+        return listener.GetAuthorizerBlock();
+    }
+
+    ExpressionsParser InitializeParser(string code, out ErrorListener errorListener)
+    {
+        var charStream = new AntlrInputStream(code);
         var lexer = new ExpressionsLexer(charStream);
         var tokenStream = new CommonTokenStream(lexer);
         var parser = new ExpressionsParser(tokenStream);
         
-        parser.AddErrorListener(new ErrorListener());
+        errorListener = new ErrorListener();
+        parser.AddErrorListener(errorListener);
 
-        var ruleListener = new RuleListener();
-        parser.AddParseListener(ruleListener);
-        var tree = parser.check();
-
-        var errors = parser.NumberOfSyntaxErrors;
-        
-        return ruleListener.GetRuleExpressions();
+        return parser;
     }
 }

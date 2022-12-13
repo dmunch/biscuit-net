@@ -31,6 +31,92 @@ using IToken = Antlr4.Runtime.IToken;
 [System.CLSCompliant(false)]
 public interface IExpressionsListener : IParseTreeListener {
 	/// <summary>
+	/// Enter a parse tree produced by <see cref="ExpressionsParser.origin_clause"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterOrigin_clause([NotNull] ExpressionsParser.Origin_clauseContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="ExpressionsParser.origin_clause"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitOrigin_clause([NotNull] ExpressionsParser.Origin_clauseContext context);
+	/// <summary>
+	/// Enter a parse tree produced by the <c>originElementAuthority</c>
+	/// labeled alternative in <see cref="ExpressionsParser.origin_element"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterOriginElementAuthority([NotNull] ExpressionsParser.OriginElementAuthorityContext context);
+	/// <summary>
+	/// Exit a parse tree produced by the <c>originElementAuthority</c>
+	/// labeled alternative in <see cref="ExpressionsParser.origin_element"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitOriginElementAuthority([NotNull] ExpressionsParser.OriginElementAuthorityContext context);
+	/// <summary>
+	/// Enter a parse tree produced by the <c>originElementPrevious</c>
+	/// labeled alternative in <see cref="ExpressionsParser.origin_element"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterOriginElementPrevious([NotNull] ExpressionsParser.OriginElementPreviousContext context);
+	/// <summary>
+	/// Exit a parse tree produced by the <c>originElementPrevious</c>
+	/// labeled alternative in <see cref="ExpressionsParser.origin_element"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitOriginElementPrevious([NotNull] ExpressionsParser.OriginElementPreviousContext context);
+	/// <summary>
+	/// Enter a parse tree produced by the <c>originElementPublicKey</c>
+	/// labeled alternative in <see cref="ExpressionsParser.origin_element"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterOriginElementPublicKey([NotNull] ExpressionsParser.OriginElementPublicKeyContext context);
+	/// <summary>
+	/// Exit a parse tree produced by the <c>originElementPublicKey</c>
+	/// labeled alternative in <see cref="ExpressionsParser.origin_element"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitOriginElementPublicKey([NotNull] ExpressionsParser.OriginElementPublicKeyContext context);
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="ExpressionsParser.signature_alg"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterSignature_alg([NotNull] ExpressionsParser.Signature_algContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="ExpressionsParser.signature_alg"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitSignature_alg([NotNull] ExpressionsParser.Signature_algContext context);
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="ExpressionsParser.authorizer"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterAuthorizer([NotNull] ExpressionsParser.AuthorizerContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="ExpressionsParser.authorizer"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitAuthorizer([NotNull] ExpressionsParser.AuthorizerContext context);
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="ExpressionsParser.authorizer_element"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterAuthorizer_element([NotNull] ExpressionsParser.Authorizer_elementContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="ExpressionsParser.authorizer_element"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitAuthorizer_element([NotNull] ExpressionsParser.Authorizer_elementContext context);
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="ExpressionsParser.fact"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterFact([NotNull] ExpressionsParser.FactContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="ExpressionsParser.fact"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitFact([NotNull] ExpressionsParser.FactContext context);
+	/// <summary>
 	/// Enter a parse tree produced by <see cref="ExpressionsParser.check"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
@@ -40,6 +126,16 @@ public interface IExpressionsListener : IParseTreeListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	void ExitCheck([NotNull] ExpressionsParser.CheckContext context);
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="ExpressionsParser.policy"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterPolicy([NotNull] ExpressionsParser.PolicyContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="ExpressionsParser.policy"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitPolicy([NotNull] ExpressionsParser.PolicyContext context);
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="ExpressionsParser.rule_body"/>.
 	/// </summary>

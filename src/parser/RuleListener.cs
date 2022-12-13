@@ -12,13 +12,16 @@ public class RuleListener : ExpressionsBaseListener
     List<Fact> _facts = new List<Fact>();
     List<Expression> _expressions = new List<Expression>();
 
-    public RuleConstrained GetRuleExpressions()
+    List<ScopeType> _scopeTypes = new List<ScopeType>();
+    List<PublicKey> _publicKeys = new List<PublicKey>();
+
+    public RuleConstrained GetRule()
     {
         return new RuleConstrained(
             new Fact("check1"), 
             _facts,
             _expressions,
-            Scope.DefaultRuleScope
+            new Scope(_scopeTypes, _publicKeys)
         );
     }
     
@@ -39,5 +42,22 @@ public class RuleListener : ExpressionsBaseListener
             var ops = _expressionsVisitor.Visit(context.expression());
             _expressions.Add(new Expression(ops));
         }
+    }
+
+    public override void ExitOriginElementAuthority([NotNull] ExpressionsParser.OriginElementAuthorityContext context)
+    {
+        _scopeTypes.Add(ScopeType.Authority);
+    }
+
+    public override void ExitOriginElementPrevious([NotNull] ExpressionsParser.OriginElementPreviousContext context)
+    {
+        _scopeTypes.Add(ScopeType.Previous);
+    } 
+
+    public override void ExitOriginElementPublicKey([NotNull] ExpressionsParser.OriginElementPublicKeyContext context)
+    {
+        var bytes = context.PUBLICKEYBYTES().GetText().TrimStart('/');
+        var publicKey = new PublicKey(Algorithm.Ed25519, Convert.FromHexString(bytes));
+        _publicKeys.Add(publicKey);
     }
 }

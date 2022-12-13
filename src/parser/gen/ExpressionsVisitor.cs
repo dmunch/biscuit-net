@@ -32,11 +32,68 @@ using IToken = Antlr4.Runtime.IToken;
 [System.CLSCompliant(false)]
 public interface IExpressionsVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <summary>
+	/// Visit a parse tree produced by <see cref="ExpressionsParser.origin_clause"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitOrigin_clause([NotNull] ExpressionsParser.Origin_clauseContext context);
+	/// <summary>
+	/// Visit a parse tree produced by the <c>originElementAuthority</c>
+	/// labeled alternative in <see cref="ExpressionsParser.origin_element"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitOriginElementAuthority([NotNull] ExpressionsParser.OriginElementAuthorityContext context);
+	/// <summary>
+	/// Visit a parse tree produced by the <c>originElementPrevious</c>
+	/// labeled alternative in <see cref="ExpressionsParser.origin_element"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitOriginElementPrevious([NotNull] ExpressionsParser.OriginElementPreviousContext context);
+	/// <summary>
+	/// Visit a parse tree produced by the <c>originElementPublicKey</c>
+	/// labeled alternative in <see cref="ExpressionsParser.origin_element"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitOriginElementPublicKey([NotNull] ExpressionsParser.OriginElementPublicKeyContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="ExpressionsParser.signature_alg"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitSignature_alg([NotNull] ExpressionsParser.Signature_algContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="ExpressionsParser.authorizer"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitAuthorizer([NotNull] ExpressionsParser.AuthorizerContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="ExpressionsParser.authorizer_element"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitAuthorizer_element([NotNull] ExpressionsParser.Authorizer_elementContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="ExpressionsParser.fact"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitFact([NotNull] ExpressionsParser.FactContext context);
+	/// <summary>
 	/// Visit a parse tree produced by <see cref="ExpressionsParser.check"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitCheck([NotNull] ExpressionsParser.CheckContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="ExpressionsParser.policy"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitPolicy([NotNull] ExpressionsParser.PolicyContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="ExpressionsParser.rule_body"/>.
 	/// </summary>

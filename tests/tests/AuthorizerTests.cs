@@ -2,31 +2,33 @@ using System.Text.RegularExpressions;
 using biscuit_net;
 using biscuit_net.Parser;
 using biscuit_net.Datalog;
+using biscuit_net.Expressions;
 
 namespace tests;
 public class AuthorizerTests
 {
     [Theory]
-    //[BiscuitCases("test1_basic.bc")] //OK
-    //[BiscuitCases("test2_different_root_key.bc")] //OK
-    //[BiscuitCases("test3_invalid_signature_format.bc")] //OK
-    //[BiscuitCases("test7_scoped_rules.bc")] //OK
-    //[BiscuitCases("test8_scoped_checks.bc")] //OK
-    //[BiscuitCases("test9_expired_token.bc")] //OK - why? TODO needs expressions
-    //[BiscuitCases("test10_authorizer_scope.bc")] //TODO: rules in authorizer
-    //[BiscuitCases("test11_authorizer_authority_caveats.bc")] //TODO: rules in authorizer
-    //[BiscuitCases("test12_authority_caveats.bc")] //OK
-    //[BiscuitCases("test13_block_rules.bc")] //TODO contains time and string set expressions
-    //[BiscuitCases("test14_regex_constraint.bc")] //TODO contains string expressions regex
-    //[BiscuitCases("test16_caveat_head_name.bc")] //OK
-    //[BiscuitCases("test17_expressions.bc")] //OK
-    //[BiscuitCases("test18_unbound_variables_in_rule.bc")] //TODO
-    //[BiscuitCases("test19_generating_ambient_from_variables.bc")] //OK
-    //[BiscuitCases("test22_default_symbols.bc")] //TODO contains int term
-    //[BiscuitCases("test23_execution_scope.bc")] //TODO contains int term
-    [BiscuitCases("test24_third_party.bc")] //TODO 
-    //[BiscuitCases("test25_check_all.bc")] //TODO
-    //[BiscuitCases()]
+    //[BiscuitCases("test001_basic.bc")] //OK
+    //[BiscuitCases("test002_different_root_key.bc")] //OK
+    //[BiscuitCases("test003_invalid_signature_format.bc")] //OK
+    //[BiscuitCases("test007_scoped_rules.bc")] //OK
+    //[BiscuitCases("test008_scoped_checks.bc")] //OK
+    //[BiscuitCases("test009_expired_token.bc")] //OK - why? TODO needs expressions
+    //[BiscuitCases("test010_authorizer_scope.bc")] //TODO: rules in authorizer
+    //[BiscuitCases("test011_authorizer_authority_caveats.bc")] //TODO: rules in authorizer
+    //[BiscuitCases("test012_authority_caveats.bc")] //OK
+    //[BiscuitCases("test013_block_rules.bc")] //TODO contains time and string set expressions
+    //[BiscuitCases("test014_regex_constraint.bc")] //TODO contains string expressions regex
+    //[BiscuitCases("test016_caveat_head_name.bc")] //OK
+    //[BiscuitCases("test017_expressions.bc")] //OK
+    //[BiscuitCases("test018_unbound_variables_in_rule.bc")] //TODO
+    //[BiscuitCases("test019_generating_ambient_from_variables.bc")] //OK
+    //[BiscuitCases("test022_default_symbols.bc")] //TODO contains int term
+    //[BiscuitCases("test023_execution_scope.bc")] //TODO contains int term
+    //[BiscuitCases("test024_third_party.bc")] //TODO 
+    //[BiscuitCases("test025_check_all.bc")] //TODO
+    //[BiscuitCases("test026_public_keys_interning.bc")] //TODO
+    [BiscuitCases()]
     public void Test(BiscuitCase biscuitCase)
     {
         var validator = new SignatureValidator(biscuitCase.RootPublicKey);
@@ -39,7 +41,7 @@ public class AuthorizerTests
 
         var authorizer = new Authorizer();
 
-        foreach(var parseResult in Parse(biscuitCase.Validation.AuthorizerCode))
+        /*foreach(var parseResult in Parse(biscuitCase.Validation.AuthorizerCode))
         {
             switch(parseResult)
             {
@@ -48,8 +50,23 @@ public class AuthorizerTests
                 case (null, null, var policy): authorizer.Add(policy); break;
                 default: throw new Exception();
             }
+        }*/
+        var authorizerBlock = Parse(biscuitCase.Validation.AuthorizerCode);
+        foreach(var fact in authorizerBlock.Facts)
+        {
+            authorizer.Add(fact);
         }
-        
+
+        foreach(var policy in authorizerBlock.Policies)
+        {
+            authorizer.Add(policy);
+        }
+
+        foreach(var chck in authorizerBlock.Checks)
+        {
+            authorizer.Add(chck);
+        }
+
         var check = authorizer.TryAuthorize(biscuit, out var err);
         if(biscuitCase.Success)
         {
@@ -72,8 +89,15 @@ public class AuthorizerTests
         Assert.Equal(biscuitCase.Validation.RevocationIds, biscuit.RevocationIds);
     }
 
+    AuthorizerBlock Parse(string code)
+    {
+        var parser = new Parser();
 
-    IEnumerable<(Fact?, RuleConstrained?, Policy?)> Parse(string code)
+        return parser.ParseAuthorizer(code);
+    }
+
+#if false
+    AuthorizerBlock Parse(string code)
     {
         string stringTermPattern = @"^([a-zA-Z_]+)\(""([a-zA-Z.0-9]+)""\);$";
         string intTermPattern = @"^([a-zA-Z_]+)\((\d+)\)$";
@@ -87,6 +111,7 @@ public class AuthorizerTests
             .Split("\n")
             .Where(line => !string.IsNullOrEmpty(line));
 
+        var authorizerBlock = new AuthorizerBlock();
         foreach(var line in lines)
         {
             var stringMatch = stringTermRegex.Match(line);
@@ -96,7 +121,8 @@ public class AuthorizerTests
                 var name = stringMatch.Groups[1].Value;
                 var value = stringMatch.Groups[2].Value;
 
-                yield return (new Fact(name, new biscuit_net.Datalog.String(value)), null, null);
+                authorizerBlock.Add(new Fact(name, new biscuit_net.Datalog.String(value)));
+                return authorizerBlock;
             }
             else if(dateMatch.Success) 
             {
@@ -105,7 +131,8 @@ public class AuthorizerTests
 
                 var dateParsed = DateTime.Parse(date);
                 var dateTAI = Date.ToTAI64(dateParsed);
-                yield return (new Fact(name, new Date(dateTAI)), null, null);
+                authorizerBlock.Add(new Fact(name, new Date(dateTAI)));
+                return authorizerBlock;
             }
             else if(line.StartsWith("check if"))
             {
@@ -117,8 +144,58 @@ public class AuthorizerTests
                 var parser = new Parser();
                 yield return (null, null, Policy.AllowPolicy);
             }
+            else if(line.StartsWith("deny if query(3)"))
+            {
+                var parser = new Parser();
+                
+                var policy = new Policy(PolicyKind.Deny, new [] { new RuleConstrained(
+                        new Fact("policy1"), 
+                        new [] {    
+                            new Fact("query", new Integer(3))
+                        },
+                        Enumerable.Empty<Expression>(), 
+                        Scope.DefaultRuleScope
+                    ) 
+                });
+
+                yield return (null, null, policy);
+            }
+            else if(line.StartsWith("deny if query(1, 2)"))
+            {
+                var parser = new Parser();
+                
+                var policy = new Policy(PolicyKind.Deny, new [] { new RuleConstrained(
+                        new Fact("policy2"), 
+                        new [] {    
+                            new Fact("query", new Integer(1), new Integer(2))
+                        },
+                        Enumerable.Empty<Expression>(), 
+                        Scope.DefaultRuleScope
+                    ) 
+                });
+                yield return (null, null, policy);
+            }
+            else if(line.StartsWith("deny if query(0) trusting ed25519/3c8aeced6363b8a862552fb2b0b4b8b0f8244e8cef3c11c3e55fd553f3a90f59"))
+            {
+                var parser = new Parser();
+                
+                var scope = new Scope(new [] { ScopeType.Authority }, new [] { new PublicKey(Algorithm.Ed25519, Convert.FromHexString("3c8aeced6363b8a862552fb2b0b4b8b0f8244e8cef3c11c3e55fd553f3a90f59"))});
+                var policy = new Policy(PolicyKind.Deny, new [] { new RuleConstrained(
+                        new Fact("policy3"), 
+                        new [] {    
+                            new Fact("query", new Integer(0))
+                        },
+                        Enumerable.Empty<Expression>(), 
+                        scope
+                    ) 
+                });
+
+                yield return (null, null, policy);
+            }
+            
 
             else throw new NotSupportedException(line);
         }
     }
+#endif
 }
