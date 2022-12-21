@@ -20,21 +20,25 @@ public enum Algorithm
 
 public class KeyTable
 {
-    List<PublicKey> _keys;
-    
+    List<PublicKey> _keys = new List<PublicKey>();    
     public KeyTable()
     {
-        _keys = new List<PublicKey>();
     }
 
     public KeyTable(IEnumerable<PublicKey> initialKeys)
     {
-        _keys = initialKeys.ToList();
+        Add(initialKeys);
     }
 
     public void Add(IEnumerable<PublicKey> keys)
     {
-        _keys.AddRange(keys);
+        foreach(var key in keys)
+        {
+            if(!_keys.Contains(key))
+            {
+                _keys.Add(key);
+            }            
+        }
     }
 
     public PublicKey Lookup(long pos)

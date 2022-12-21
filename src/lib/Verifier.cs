@@ -39,25 +39,30 @@ public static class Verifier
 
         //run rules
         //run authority rules 
-        var authorityExecutionFacts = world.Facts.Filter(trustedOrigins.For(0, b.Authority.Scope)).Evaluate(b.Authority.Rules);
-        world.Facts.Merge(Origins.Authority, authorityExecutionFacts);
+        var authorityOrigins = trustedOrigins.With(Origins.Authority);
+        var authorityExecutionFacts = world.Facts.Filter(authorityOrigins.Origins()).Evaluate(b.Authority.Rules, world.Facts, trustedOrigins.With(Origins.Authority));
+        world.Facts.UnionWith(Origins.Authority, authorityExecutionFacts);
+        //world.Facts.Merge(Origins.Authority, authorityExecutionFacts);
         
         //run block rules 
         blockId = 1;
         foreach(var block in b.Blocks)
         {
-            var blockExecutionFacts = world.Facts.Filter(trustedOrigins.For(blockId, block.Scope)).Evaluate(block.Rules);
-            world.Facts.Merge(blockId, blockExecutionFacts);
+            //var blockExecutionFacts = world.Facts.Filter(trustedOrigins.For(blockId, block.Scope)).Evaluate(block.Rules);
+            var blockOrigins = trustedOrigins.With(blockId);
+            var blockExecutionFacts = world.Facts.Filter(blockOrigins.Origins()).Evaluate(block.Rules, world.Facts, blockOrigins);
+            //world.Facts.Merge(blockId, blockExecutionFacts);
+            world.Facts.UnionWith(blockId, blockExecutionFacts);
 
             blockId++;
         }
 
         //run authorizer rules 
-        var authorizerTrustedOrigin = trustedOrigins.For(uint.MaxValue, authorizerBlock.Scope);
+        var authorizerTrustedOrigin = trustedOrigins.Origins(uint.MaxValue, authorizerBlock.Scope);
         
         //run checks
         //run authority checks
-        if(!Checks.TryCheck(world.Facts, trustedOrigins, Origins.Authority, b.Authority.Checks, out var failedCheckId, out var failedCheck))
+        if(!Checks.TryCheck(world.Facts, trustedOrigins.With(Origins.Authority), b.Authority.Checks, out var failedCheckId, out var failedCheck))
         {
             err = new Error(new FailedBlockCheck(0, failedCheckId.Value/*, failedRule*/));
             return false;
@@ -67,7 +72,7 @@ public static class Verifier
         blockId = 1;
         foreach(var block in b.Blocks)
         {
-            if(!Checks.TryCheck(world.Facts, trustedOrigins, blockId, block.Checks, out var failedBlockCheckId, out var failedBlockCheck))
+            if(!Checks.TryCheck(world.Facts, trustedOrigins.With(blockId), block.Checks, out var failedBlockCheckId, out var failedBlockCheck))
             {
                 err = new Error(new FailedBlockCheck(blockId, failedBlockCheckId.Value/*, failedRule*/));
                 return false;
@@ -76,7 +81,7 @@ public static class Verifier
         }
             
         //run authorizer checks
-        if(!Checks.TryCheck(world.Facts, trustedOrigins, Origins.Authorizer, authorizerBlock.Checks, out var failedAuthorizerCheckId, out var failedAuthorizerCheck))
+        if(!Checks.TryCheck(world.Facts, trustedOrigins.With(Origins.Authorizer), authorizerBlock.Checks, out var failedAuthorizerCheckId, out var failedAuthorizerCheck))
         {
             err = new Error(new FailedAuthorizerCheck(failedAuthorizerCheckId.Value/*, failedAuthorizerRule*/));
             return false;
@@ -86,7 +91,7 @@ public static class Verifier
         //validate policies 
         foreach(var policy in authorizerBlock.Policies)
         {
-            if(Checks.TryCheckOne(world.Facts, trustedOrigins, Origins.Authorizer, policy.Rules))
+            if(Checks.TryCheckOne(world.Facts, trustedOrigins.With(Origins.Authorizer), policy.Rules))
             {
                 err = new Error(new FailedLogic(new Unauthorized(policy.Kind)));
                 return policy.Kind switch {

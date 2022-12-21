@@ -2,21 +2,23 @@ namespace biscuit_net;
 
 public class SymbolTable
 {
-    List<string> _symbols;
+    List<string> _symbols = new List<string>();
     
     public SymbolTable()
     {
-        _symbols = new List<string>();
     }
 
     public SymbolTable(IEnumerable<string> initialSymbols)
     {
-        _symbols = initialSymbols.ToList();
+        AddSymbols(initialSymbols);
     }
 
     public void AddSymbols(IEnumerable<string> symbols)
     {
-        _symbols.AddRange(symbols);
+        foreach(var symbol in symbols)
+        {
+            _symbols.Add(symbol);
+        }
     }
 
     public string Lookup(ulong pos)

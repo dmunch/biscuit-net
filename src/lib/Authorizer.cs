@@ -25,7 +25,7 @@ public class AuthorizerBlock : IBlock
     List<Policy> _policies = new List<Policy>();    
 
     public IEnumerable<Fact> Facts { get => _facts; }
-    public IEnumerable<IRuleConstrained> Rules { get => _rules; }
+    public IEnumerable<RuleConstrained> Rules { get => _rules; }
     public IEnumerable<Check> Checks { get => _checks; }
     public IEnumerable<Policy> Policies { get => _policies; }
         

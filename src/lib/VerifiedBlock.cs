@@ -6,7 +6,7 @@ using Datalog;
 public class VerifiedBlock : IBlock
 {
     public IEnumerable<Fact> Facts { get; protected set; }
-    public IEnumerable<IRuleConstrained> Rules { get; protected set; }
+    public IEnumerable<RuleConstrained> Rules { get; protected set; }
     public IEnumerable<Check> Checks { get; protected set; }
     public uint Version { get; protected set; }
     public string RevocationId { get; protected set; }

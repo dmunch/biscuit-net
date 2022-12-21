@@ -23,7 +23,7 @@ public record World(FactSet Facts, RuleSet Rules)
 
 public static class Checks
 {
-    public static bool TryCheck(FactSet factSet, TrustedOriginSet trustedOrigins, uint blockId, IEnumerable<Check> checks, [NotNullWhen(false)] out int? failedCheckId, [NotNullWhen(false)] out Check? failedCheck)
+    public static bool TryCheck(FactSet factSet, BlockTrustedOriginSet trustedOrigins, IEnumerable<Check> checks, [NotNullWhen(false)] out int? failedCheckId, [NotNullWhen(false)] out Check? failedCheck)
     {
         var result = true; 
         var checkId = 0;
@@ -31,8 +31,8 @@ public static class Checks
         {
             result &= check.Kind switch 
             {
-                Check.CheckKind.One => TryCheckOne(factSet, trustedOrigins, blockId, check.Rules),
-                Check.CheckKind.All => TryCheckAll(factSet, trustedOrigins, blockId, check.Rules),
+                Check.CheckKind.One => TryCheckOne(factSet, trustedOrigins, check.Rules),
+                Check.CheckKind.All => TryCheckAll(factSet, trustedOrigins, check.Rules),
                 _ => throw new NotSupportedException()
             };
             
@@ -52,13 +52,13 @@ public static class Checks
         return true;
     }
 
-    public static bool TryCheckOne(FactSet factSet, TrustedOriginSet trustedOrigins, uint blockId, IEnumerable<RuleConstrained> rules)
+    public static bool TryCheckOne(FactSet factSet, BlockTrustedOriginSet trustedOrigins, IEnumerable<RuleConstrained> rules)
     {
         var ruleResult = false;
 
         foreach(var rule in rules)
         {
-            var facts = factSet.Filter(trustedOrigins.For(blockId, rule.Scope));
+            var facts = factSet.Filter(trustedOrigins.Origins(rule.Scope));
 
             var eval = facts.Evaluate(rule, out var expressionResult);
             eval.UnionWith(facts);
@@ -77,11 +77,11 @@ public static class Checks
         return ruleResult;   
     }
 
-    static bool TryCheckAll(FactSet factSet, TrustedOriginSet trustedOrigins, uint blockId, IEnumerable<RuleConstrained> rules)
+    static bool TryCheckAll(FactSet factSet, BlockTrustedOriginSet trustedOrigins, IEnumerable<RuleConstrained> rules)
     {
         foreach(var rule in rules)
         {
-            var facts = factSet.Filter(trustedOrigins.For(blockId, rule.Scope));
+            var facts = factSet.Filter(trustedOrigins.Origins(rule.Scope));
 
             var eval = facts.Evaluate(rule);
             eval.UnionWith(facts);

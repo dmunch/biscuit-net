@@ -9,7 +9,7 @@ public class VerifierTests
     record Block
     (
         IEnumerable<Fact> Facts,
-        IEnumerable<IRuleConstrained> Rules,
+        IEnumerable<RuleConstrained> Rules,
         IEnumerable<Check> Checks,
         uint Version,
         Scope Scope,

@@ -29,7 +29,16 @@ public class VerifiedBiscuit : IBiscuit
     {
         foreach(var block in _biscuit.Blocks)
         {
-            yield return VerifiedBlock.FromProto(block, _symbols, _keys);
+            if(block.externalSignature != null)
+            {
+                var externalSymbolTable = new SymbolTable();
+                //var externalKeyTable = new KeyTable();
+                yield return VerifiedBlock.FromProto(block, externalSymbolTable, _keys);    
+            }
+            else
+            {
+                yield return VerifiedBlock.FromProto(block, _symbols, _keys);
+            }
         }
     }
 
