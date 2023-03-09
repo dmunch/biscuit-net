@@ -64,6 +64,10 @@ public readonly record struct OpBinary(OpBinary.Kind OpKind)
         Or = 14,
         Intersection = 15,
         Union = 16,
+        BitwiseAnd = 17,
+        BitwiseOr = 18,
+        BitwiseXor = 19,
+        NotEqual = 20
     }
 }
 

@@ -51,7 +51,9 @@ World {
     "right(\"file2\", \"read\")",
 }
   rules: {}
-  checks: {}
+  checks: {
+    "check if resource($0), operation(\"read\"), right($0, \"read\")",
+}
   policies: {
     "allow if true",
 }
@@ -280,7 +282,9 @@ World {
   rules: {
     "right($0, \"read\") <- resource($0), user_id($1), owner($1, $0)",
 }
-  checks: {}
+  checks: {
+    "check if resource($0), operation(\"read\"), right($0, \"read\")",
+}
   policies: {
     "allow if true",
 }
@@ -347,7 +351,9 @@ World {
     "right(\"file2\", \"read\")",
 }
   rules: {}
-  checks: {}
+  checks: {
+    "check if resource($0), operation(\"read\"), right($0, \"read\")",
+}
   policies: {
     "allow if true",
 }
@@ -404,7 +410,10 @@ World {
     "time(2020-12-21T09:23:12Z)",
 }
   rules: {}
-  checks: {}
+  checks: {
+    "check if resource(\"file1\")",
+    "check if time($time), $time <= 2018-12-20T00:00:00Z",
+}
   policies: {
     "allow if true",
 }
@@ -560,7 +569,9 @@ World {
     "resource(\"file1\")",
 }
   rules: {}
-  checks: {}
+  checks: {
+    "check if resource(\"file1\")",
+}
   policies: {
     "allow if true",
 }
@@ -589,7 +600,9 @@ World {
     "resource(\"file2\")",
 }
   rules: {}
-  checks: {}
+  checks: {
+    "check if resource(\"file1\")",
+}
   policies: {
     "allow if true",
 }
@@ -653,7 +666,9 @@ World {
     "valid_date(\"file1\") <- time($0), resource(\"file1\"), $0 <= 2030-12-31T12:59:59Z",
     "valid_date($1) <- time($0), resource($1), $0 <= 1999-12-31T12:59:59Z, ![\"file1\"].contains($1)",
 }
-  checks: {}
+  checks: {
+    "check if valid_date($0), resource($0)",
+}
   policies: {
     "allow if true",
 }
@@ -688,7 +703,9 @@ World {
     "valid_date(\"file1\") <- time($0), resource(\"file1\"), $0 <= 2030-12-31T12:59:59Z",
     "valid_date($1) <- time($0), resource($1), $0 <= 1999-12-31T12:59:59Z, ![\"file1\"].contains($1)",
 }
-  checks: {}
+  checks: {
+    "check if valid_date($0), resource($0)",
+}
   policies: {
     "allow if true",
 }
@@ -731,7 +748,9 @@ World {
     "resource(\"file1\")",
 }
   rules: {}
-  checks: {}
+  checks: {
+    "check if resource($0), $0.matches(\"file[0-9]+.txt\")",
+}
   policies: {
     "allow if true",
 }
@@ -758,7 +777,9 @@ World {
     "resource(\"file123.txt\")",
 }
   rules: {}
-  checks: {}
+  checks: {
+    "check if resource($0), $0.matches(\"file[0-9]+.txt\")",
+}
   policies: {
     "allow if true",
 }
@@ -854,7 +875,9 @@ World {
     "query(\"test\")",
 }
   rules: {}
-  checks: {}
+  checks: {
+    "check if resource(\"hello\")",
+}
   policies: {
     "allow if true",
 }
@@ -870,7 +893,7 @@ result: `Err(FailedLogic(Unauthorized { policy: Allow(0), checks: [Block(FailedB
 ### token
 
 authority:
-symbols: ["hello world", "hello", "world", "aaabde", "a*c?.e", "abd", "aaa", "b", "de", "abcD12", "abc", "def"]
+symbols: ["hello world", "hello", "world", "aaabde", "a*c?.e", "abd", "aaa", "b", "de", "abcD12", "abcD12x", "abc", "def"]
 
 public keys: []
 
@@ -887,12 +910,15 @@ check if 1 <= 1;
 check if 2 >= 1;
 check if 2 >= 2;
 check if 3 == 3;
+check if 1 != 3;
 check if 1 + 2 * 3 - 4 / 2 == 5;
+check if 1 | 2 ^ 3 == 0;
 check if "hello world".starts_with("hello") && "hello world".ends_with("world");
 check if "aaabde".matches("a*c?.e");
 check if "aaabde".contains("abd");
 check if "aaabde" == "aaa" + "b" + "de";
 check if "abcD12" == "abcD12";
+check if "abcD12x" != "abcD12";
 check if 2019-12-04T09:46:41Z < 2020-12-04T09:46:41Z;
 check if 2020-12-04T09:46:41Z > 2019-12-04T09:46:41Z;
 check if 2019-12-04T09:46:41Z <= 2020-12-04T09:46:41Z;
@@ -900,12 +926,16 @@ check if 2020-12-04T09:46:41Z >= 2020-12-04T09:46:41Z;
 check if 2020-12-04T09:46:41Z >= 2019-12-04T09:46:41Z;
 check if 2020-12-04T09:46:41Z >= 2020-12-04T09:46:41Z;
 check if 2020-12-04T09:46:41Z == 2020-12-04T09:46:41Z;
+check if 2022-12-04T09:46:41Z != 2020-12-04T09:46:41Z;
 check if hex:12ab == hex:12ab;
+check if hex:12abcd != hex:12ab;
 check if [1, 2].contains(2);
 check if [2019-12-04T09:46:41Z, 2020-12-04T09:46:41Z].contains(2020-12-04T09:46:41Z);
 check if [false, true].contains(true);
 check if ["abc", "def"].contains("abc");
 check if [hex:12ab, hex:34de].contains(hex:34de);
+check if [1, 2] == [1, 2];
+check if [1, 4] != [1, 2];
 ```
 
 ### validation
@@ -916,14 +946,52 @@ allow if true;
 ```
 
 revocation ids:
-- `f1391d7549f4c165dd58878c8433bdc23634533f4910bcd37fc53d5b3b29c542ef1b46a38a42beb2df911d526a52f65774e1d60f910dbe15ca1591735617240b`
+- `3e51db5f0453929a596485b59e89bf628a301a33d476132c48a1c0a208805809f15bdf99593733c1b5f30e8c1f473ee2f78042f81fd0557081bafb5370e65d0c`
 
 authorizer world:
 ```
 World {
   facts: {}
   rules: {}
-  checks: {}
+  checks: {
+    "check if !false",
+    "check if !false && true",
+    "check if \"aaabde\" == \"aaa\" + \"b\" + \"de\"",
+    "check if \"aaabde\".contains(\"abd\")",
+    "check if \"aaabde\".matches(\"a*c?.e\")",
+    "check if \"abcD12\" == \"abcD12\"",
+    "check if \"abcD12x\" != \"abcD12\"",
+    "check if \"hello world\".starts_with(\"hello\") && \"hello world\".ends_with(\"world\")",
+    "check if (true || false) && true",
+    "check if 1 != 3",
+    "check if 1 + 2 * 3 - 4 / 2 == 5",
+    "check if 1 < 2",
+    "check if 1 <= 1",
+    "check if 1 <= 2",
+    "check if 1 | 2 ^ 3 == 0",
+    "check if 2 > 1",
+    "check if 2 >= 1",
+    "check if 2 >= 2",
+    "check if 2019-12-04T09:46:41Z < 2020-12-04T09:46:41Z",
+    "check if 2019-12-04T09:46:41Z <= 2020-12-04T09:46:41Z",
+    "check if 2020-12-04T09:46:41Z == 2020-12-04T09:46:41Z",
+    "check if 2020-12-04T09:46:41Z > 2019-12-04T09:46:41Z",
+    "check if 2020-12-04T09:46:41Z >= 2019-12-04T09:46:41Z",
+    "check if 2020-12-04T09:46:41Z >= 2020-12-04T09:46:41Z",
+    "check if 2022-12-04T09:46:41Z != 2020-12-04T09:46:41Z",
+    "check if 3 == 3",
+    "check if [\"abc\", \"def\"].contains(\"abc\")",
+    "check if [1, 2] == [1, 2]",
+    "check if [1, 2].contains(2)",
+    "check if [1, 4] != [1, 2]",
+    "check if [2019-12-04T09:46:41Z, 2020-12-04T09:46:41Z].contains(2020-12-04T09:46:41Z)",
+    "check if [false, true].contains(true)",
+    "check if [hex:12ab, hex:34de].contains(hex:34de)",
+    "check if false or true",
+    "check if hex:12ab == hex:12ab",
+    "check if hex:12abcd != hex:12ab",
+    "check if true",
+}
   policies: {
     "allow if true",
 }
@@ -1007,7 +1075,9 @@ World {
   rules: {
     "operation(\"read\") <- operation($any)",
 }
-  checks: {}
+  checks: {
+    "check if operation(\"read\")",
+}
   policies: {
     "allow if true",
 }
@@ -1067,7 +1137,9 @@ World {
     "right(\"file2\", \"read\")",
 }
   rules: {}
-  checks: {}
+  checks: {
+    "check if resource($0), operation(\"read\"), right($0, \"read\")",
+}
   policies: {
     "allow if true",
 }
@@ -1274,7 +1346,10 @@ World {
     "block1_fact(1)",
 }
   rules: {}
-  checks: {}
+  checks: {
+    "check if authority_fact($var)",
+    "check if block1_fact($var)",
+}
   policies: {
     "allow if true",
 }
@@ -1330,7 +1405,10 @@ World {
     "right(\"read\")",
 }
   rules: {}
-  checks: {}
+  checks: {
+    "check if group(\"admin\") trusting ed25519/a424157b8c00c25214ea39894bf395650d88426147679a9dd43a64d65ae5bc25",
+    "check if right(\"read\")",
+}
   policies: {
     "allow if true",
 }
@@ -1377,7 +1455,9 @@ World {
     "operation(\"B\")",
 }
   rules: {}
-  checks: {}
+  checks: {
+    "check all operation($op), allowed_operations($allowed), $allowed.contains($op)",
+}
   policies: {
     "allow if true",
 }
@@ -1407,7 +1487,9 @@ World {
     "operation(\"invalid\")",
 }
   rules: {}
-  checks: {}
+  checks: {
+    "check all operation($op), allowed_operations($allowed), $allowed.contains($op)",
+}
   policies: {
     "allow if true",
 }
@@ -1517,7 +1599,12 @@ World {
     "query(1, 2) <- query(1), query(2) trusting ed25519/ecfb8ed11fd9e6be133ca4dd8d229d39c7dcb2d659704c39e82fd7acf0d12dee",
 }
   checks: {
+    "check if query(1) trusting ed25519/3c8aeced6363b8a862552fb2b0b4b8b0f8244e8cef3c11c3e55fd553f3a90f59",
     "check if query(1, 2) trusting ed25519/3c8aeced6363b8a862552fb2b0b4b8b0f8244e8cef3c11c3e55fd553f3a90f59, ed25519/ecfb8ed11fd9e6be133ca4dd8d229d39c7dcb2d659704c39e82fd7acf0d12dee",
+    "check if query(2) trusting ed25519/ecfb8ed11fd9e6be133ca4dd8d229d39c7dcb2d659704c39e82fd7acf0d12dee",
+    "check if query(2), query(3) trusting ed25519/ecfb8ed11fd9e6be133ca4dd8d229d39c7dcb2d659704c39e82fd7acf0d12dee",
+    "check if query(4) trusting ed25519/2e0118e63beb7731dab5119280ddb117234d0cdc41b7dd5dc4241bcbbb585d14",
+    "check if true trusting previous, ed25519/3c8aeced6363b8a862552fb2b0b4b8b0f8244e8cef3c11c3e55fd553f3a90f59",
 }
   policies: {
     "allow if true",
@@ -1529,4 +1616,49 @@ World {
 ```
 
 result: `Ok(3)`
+
+
+------------------------------
+
+## integer wraparound: test027_integer_wraparound.bc
+### token
+
+authority:
+symbols: []
+
+public keys: []
+
+```
+check if true || 10000000000 * 10000000000 != 0;
+check if true || 9223372036854775807 + 1 != 0;
+check if true || -9223372036854775808 - 1 != 0;
+```
+
+### validation
+
+authorizer code:
+```
+allow if true;
+```
+
+revocation ids:
+- `70d8941198ab5daa445a11357994d93278876ee95b6500f4c4a265ad668a0111440942b762e02513e471d40265d586ea76209921068524f588dc46eb4260db07`
+
+authorizer world:
+```
+World {
+  facts: {}
+  rules: {}
+  checks: {
+    "check if true || -9223372036854775808 - 1 != 0",
+    "check if true || 10000000000 * 10000000000 != 0",
+    "check if true || 9223372036854775807 + 1 != 0",
+}
+  policies: {
+    "allow if true",
+}
+}
+```
+
+result: `Err(Execution(Overflow))`
 

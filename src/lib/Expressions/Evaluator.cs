@@ -35,6 +35,7 @@ public static class Evaluator
                         (OpBinary.Kind.Equal, Integer i1, Integer i2) => new Boolean(i1 == i2),
                         (OpBinary.Kind.Equal, String s1, String s2) => new Boolean(s1 == s2),
                         (OpBinary.Kind.Equal, Bytes b1, Bytes b2) => new Boolean(b1 == b2),
+                        (OpBinary.Kind.Equal, Set s1, Set s2) => new Boolean(s1.Values.SequenceEqual(s2.Values)),
                         (OpBinary.Kind.And, Boolean b1, Boolean b2) => new Boolean(b1 & b2),
                         (OpBinary.Kind.Or, Boolean b1, Boolean b2) => new Boolean(b1 | b2),
                         (OpBinary.Kind.Regex, String s1, String s2) => new Boolean(Regex.IsMatch(s1.Value, s2.Value)),
@@ -55,6 +56,16 @@ public static class Evaluator
                         OpBinary.Kind.Intersection => throw new NotImplementedException(),
                         OpBinary.Kind.Union => throw new NotImplementedException(),
                         */
+                        (OpBinary.Kind.BitwiseAnd, Integer i1, Integer i2) => new Integer(i1.Value & i2.Value),
+                        (OpBinary.Kind.BitwiseOr, Integer i1, Integer i2) => new Integer(i1.Value | i2.Value),                        
+                        (OpBinary.Kind.BitwiseXor, Integer i1, Integer i2) => new Integer(i1.Value ^ i2.Value),
+                        
+                        (OpBinary.Kind.NotEqual, Date d1, Date d2) => new Boolean(d1 != d2),
+                        (OpBinary.Kind.NotEqual, Integer i1, Integer i2) => new Boolean(i1 != i2),
+                        (OpBinary.Kind.NotEqual, String s1, String s2) => new Boolean(s1 != s2),
+                        (OpBinary.Kind.NotEqual, Bytes b1, Bytes b2) => new Boolean(b1 != b2),
+                        (OpBinary.Kind.NotEqual, Set s1, Set s2) => new Boolean(!s1.Values.SequenceEqual(s2.Values)),
+
                         (var opKind, Term t1, Term t2) => throw new NotImplementedException($"Operator {opKind} not implemented on types {t1.GetType()} and {t2.GetType()}")
                     };
 
