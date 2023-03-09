@@ -14,13 +14,6 @@ public record Check(IEnumerable<RuleConstrained> Rules, Check.CheckKind Kind)
     }
 }
 
-public record World(FactSet Facts, RuleSet Rules)
-{
-    public World() : this(new FactSet(), new RuleSet())
-    {
-    }
-}
-
 public static class Checks
 {
     public static bool TryCheck(FactSet factSet, BlockTrustedOriginSet trustedOrigins, IEnumerable<Check> checks, [NotNullWhen(false)] out int? failedCheckId, [NotNullWhen(false)] out Check? failedCheck)
