@@ -28,6 +28,7 @@ public class AuthorizerTests
     //[BiscuitCases("test024_third_party.bc")] //TODO 
     //[BiscuitCases("test025_check_all.bc")] //TODO
     //[BiscuitCases("test026_public_keys_interning.bc")] //TODO
+    //[BiscuitCases("test027_integer_wraparound.bc")] //TODO
     [BiscuitCases()]
     public void Test(BiscuitCase biscuitCase)
     {

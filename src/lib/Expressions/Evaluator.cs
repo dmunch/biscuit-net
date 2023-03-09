@@ -48,9 +48,9 @@ public static class Evaluator
                         (OpBinary.Kind.Prefix, String s1, String s2) => new Boolean(s1.Value.StartsWith(s2.Value)),
                         (OpBinary.Kind.Suffix, String s1, String s2) => new Boolean(s1.Value.EndsWith(s2.Value)),
                         (OpBinary.Kind.Add, String s1, String s2) => new String($"{s1.Value}{s2.Value}"),
-                        (OpBinary.Kind.Add, Integer i1, Integer i2) => new Integer(i1.Value + i2.Value),
-                        (OpBinary.Kind.Sub, Integer i1, Integer i2) => new Integer(i1.Value - i2.Value),
-                        (OpBinary.Kind.Mul, Integer i1, Integer i2) => new Integer(i1.Value * i2.Value),
+                        (OpBinary.Kind.Add, Integer i1, Integer i2) => new Integer(checked(i1.Value + i2.Value)),
+                        (OpBinary.Kind.Sub, Integer i1, Integer i2) => new Integer(checked(i1.Value - i2.Value)),
+                        (OpBinary.Kind.Mul, Integer i1, Integer i2) => new Integer(checked(i1.Value * i2.Value)),
                         (OpBinary.Kind.Div, Integer i1, Integer i2) => new Integer(i1.Value / i2.Value),
                         /*
                         OpBinary.Kind.Intersection => throw new NotImplementedException(),

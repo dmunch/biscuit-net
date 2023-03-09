@@ -78,6 +78,7 @@ namespace QuickType
     {
         [J("FailedLogic", NullValueHandling = N.Ignore)] public FailedLogic FailedLogic { get; set; }
         [J("Format", NullValueHandling = N.Ignore)]      public Format Format { get; set; }                
+        [J("Execution", NullValueHandling = N.Ignore)]      public string Execution { get; set; }                
     }
 
     public partial class FailedLogic

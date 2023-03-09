@@ -5,10 +5,12 @@ public record Error
     public Error(FailedBlockCheck block) => Block = block;
     public Error(FailedAuthorizerCheck authorizer) => Authorizer = authorizer;
     public Error(FailedLogic failedLogic) => FailedLogic = failedLogic;
+    public Error(FailedExecution failedExecution) => Execution = failedExecution;
 
     FailedBlockCheck? Block { get; } = null;
     FailedAuthorizerCheck? Authorizer { get; } = null;
     FailedLogic? FailedLogic { get; } = null;
+    FailedExecution? Execution { get; } = null;
 }
 
 public record FailedBlockCheck(uint BlockId, int CheckId/*, RuleExpressions Rule*/);
@@ -28,3 +30,5 @@ public record FailedLogic(
 
 public record NoMatchingPolicy();
 public record Unauthorized(PolicyKind Policy);
+
+public record FailedExecution(string Reason);

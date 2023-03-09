@@ -24,7 +24,10 @@ public static class Verifier
         var trustedOrigins = TrustedOriginSet.Build(b, authorizerBlock);
 
         world.AddFacts(b, authorizerBlock);
-        world.RunRules(b, trustedOrigins);
+        if(!world.RunRules(b, trustedOrigins, out err))
+        {
+            return false;
+        }
         
         //run authorizer rules 
         //var authorizerTrustedOrigin = trustedOrigins.Origins(uint.MaxValue, authorizerBlock.Scope);

@@ -71,7 +71,7 @@ public class BiscuitCases : DataAttribute
 
     Asserts MapValidation(QuickType.File file)
     {
-        FailedFormat? failedFormat = null;
+        FailedFormat? failedFormat = null;        
         Error? error = null;
 
         if(file.Result?.Err?.FailedLogic?.Unauthorized != null)
@@ -103,6 +103,12 @@ public class BiscuitCases : DataAttribute
             var signature = invalidSignature != null ? new biscuit_net.Signature(invalidSignature) : null;
 
             failedFormat = new FailedFormat(signature, (int?)iss);
+        }
+
+        if(file.Result?.Err?.Execution != null)
+        {
+            var reason = file.Result.Err.Execution;
+            error = new Error(new FailedExecution(reason));
         }
         
         return new Asserts(file.AuthorizerCode, error, failedFormat, file.RevocationIds);
