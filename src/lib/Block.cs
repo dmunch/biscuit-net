@@ -3,7 +3,7 @@ using ProtoBuf;
 namespace biscuit_net;
 using Datalog;
 
-public class VerifiedBlock : IBlock
+public class Block
 {
     public IEnumerable<Fact> Facts { get; protected set; }
     public IEnumerable<RuleConstrained> Rules { get; protected set; }
@@ -13,7 +13,7 @@ public class VerifiedBlock : IBlock
     public Scope Scope { get; }
     public PublicKey? SignedBy { get; }
     
-    VerifiedBlock(
+    public Block(
         IEnumerable<Fact> facts, 
         IEnumerable<RuleConstrained> rules, 
         IEnumerable<Check> checks, 
@@ -24,7 +24,7 @@ public class VerifiedBlock : IBlock
         
     }
 
-    VerifiedBlock(
+    Block(
         IEnumerable<Fact> facts, 
         IEnumerable<RuleConstrained> rules, 
         IEnumerable<Check> checks, 
@@ -42,7 +42,7 @@ public class VerifiedBlock : IBlock
         SignedBy = signedBy;
     }
 
-    public static VerifiedBlock FromProto(Proto.SignedBlock signedBlock, SymbolTable symbols, KeyTable keys)
+    public static Block FromProto(Proto.SignedBlock signedBlock, SymbolTable symbols, KeyTable keys)
     {
         var block = Serializer.Deserialize<Proto.Block>( (ReadOnlySpan<byte>) signedBlock.Block);
         
@@ -52,7 +52,7 @@ public class VerifiedBlock : IBlock
         var scope = Converters.ToScope(block.Scopes, keys);
         scope = scope.IsEmpty ? Scope.DefaultBlockScope : scope; 
 
-        return new VerifiedBlock(
+        return new Block(
             block.FactsV2s.ToFacts(symbols),
             block.RulesV2s.ToRules(symbols, keys),
             block.ChecksV2s.ToChecks(symbols, keys),

@@ -4,27 +4,27 @@ namespace biscuit_net;
 
 public static class Verifier
 {
-    public static bool TryVerify(IBiscuit b, World world, AuthorizerBlock authorizerBlock, [NotNullWhen(false)] out Error? err)
+    public static bool TryVerify(Block authority, IEnumerable<Block> blocks, World world, AuthorizerBlock authorizerBlock, [NotNullWhen(false)] out Error? err)
     {
-        if(!Checks.CheckBoundVariables(b, out var invalidBlockRule))
+        if(!Checks.CheckBoundVariables(authority, blocks, out var invalidBlockRule))
         {
             err = new Error(new FailedLogic(invalidBlockRule));
             return false;
         }
 
-        if(b.Authority.Version < 3 || b.Authority.Version > 4)
-            throw new Exception($"Unsupported Authority Block Version {b.Authority.Version}");
+        if(authority.Version < 3 || authority.Version > 4)
+            throw new Exception($"Unsupported Authority Block Version {authority.Version}");
 
-        foreach(var block in b.Blocks)
+        foreach(var block in blocks)
         {
             if(block.Version < 3 || block.Version > 4)
-                throw new Exception($"Unsupported Block Version {b.Authority.Version}");
+                throw new Exception($"Unsupported Block Version {authority.Version}");
         }
 
-        var trustedOrigins = TrustedOriginSet.Build(b, authorizerBlock);
+        var trustedOrigins = TrustedOriginSet.Build(authority, blocks, authorizerBlock.Scope);
 
-        world.AddFacts(b, authorizerBlock);
-        if(!world.RunRules(b, trustedOrigins, out err))
+        world.AddFacts(authority, blocks, authorizerBlock);
+        if(!world.RunRules(authority, blocks, trustedOrigins, out err))
         {
             return false;
         }
@@ -32,7 +32,7 @@ public static class Verifier
         //run authorizer rules 
         //var authorizerTrustedOrigin = trustedOrigins.Origins(uint.MaxValue, authorizerBlock.Scope);
         
-        if(!world.RunChecks(b, authorizerBlock, trustedOrigins, out err))
+        if(!world.RunChecks(authority, blocks, authorizerBlock, trustedOrigins, out err))
         {
             return false;
         }

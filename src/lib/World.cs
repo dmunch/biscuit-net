@@ -9,32 +9,32 @@ public record World(FactSet Facts, RuleSet Rules)
     {
     }
 
-    public void AddFacts(IBiscuit b, AuthorizerBlock authorizerBlock)
+    public void AddFacts(Block authority, IEnumerable<Block> blocks, AuthorizerBlock authorizerBlock)
     {
         //add facts
         Facts.Add(Origins.Authorizer, authorizerBlock.Facts.ToHashSet());
-        Facts.Add(Origins.Authority, b.Authority.Facts.ToHashSet());
+        Facts.Add(Origins.Authority, authority.Facts.ToHashSet());
 
         uint blockId = 1;
-        foreach(var block in b.Blocks)
+        foreach(var block in blocks)
         {
             Facts.Add(blockId, block.Facts.ToHashSet());
             blockId++;
         }
     }
     
-    public bool RunRules(IBiscuit b, TrustedOriginSet trustedOrigins, [NotNullWhen(false)] out Error? err) 
+    public bool RunRules(Block authority, IEnumerable<Block> blocks, TrustedOriginSet trustedOrigins, [NotNullWhen(false)] out Error? err) 
     {
         try
         {
             //run authority rules             
-            RunRules(trustedOrigins.With(Origins.Authority), b.Authority);
+            RunRules(trustedOrigins.With(Origins.Authority), authority.Rules);
 
             //run block rules 
             uint blockId = 1;
-            foreach(var block in b.Blocks)
+            foreach(var block in blocks)
             {            
-                RunRules(trustedOrigins.With(blockId++), block);
+                RunRules(trustedOrigins.With(blockId++), block.Rules);
             }
         } catch(OverflowException)
         {
@@ -46,23 +46,23 @@ public record World(FactSet Facts, RuleSet Rules)
         return true;
     }
 
-    void RunRules(BlockTrustedOriginSet origins, IBlock block) 
+    void RunRules(BlockTrustedOriginSet origins, IEnumerable<RuleConstrained> rules) 
     {
         //var origins = trustedOrigins.With(blockId);
         var executionFacts = Facts
             .Filter(origins.Origins())
-            .Evaluate(block.Rules, Facts, origins);
+            .Evaluate(rules, Facts, origins);
 
         Facts.UnionWith(origins.BlockId, executionFacts);
     }
 
-    public bool RunChecks(IBiscuit b, AuthorizerBlock authorizerBlock, TrustedOriginSet trustedOrigins, [NotNullWhen(false)] out Error? err) 
+    public bool RunChecks(Block authority, IEnumerable<Block> blocks, AuthorizerBlock authorizerBlock, TrustedOriginSet trustedOrigins, [NotNullWhen(false)] out Error? err) 
     {
         try
         {
             //run checks
             //run authority checks
-            if(!Checks.TryCheck(Facts, trustedOrigins.With(Origins.Authority), b.Authority.Checks, out var failedCheckId, out var failedCheck))
+            if(!Checks.TryCheck(Facts, trustedOrigins.With(Origins.Authority), authority.Checks, out var failedCheckId, out var failedCheck))
             {
                 err = new Error(new FailedBlockCheck(0, failedCheckId.Value/*, failedRule*/));
                 return false;
@@ -70,7 +70,7 @@ public record World(FactSet Facts, RuleSet Rules)
 
             //run block checks
             uint blockId = 1;
-            foreach(var block in b.Blocks)
+            foreach(var block in blocks)
             {
                 if(!Checks.TryCheck(Facts, trustedOrigins.With(blockId), block.Checks, out var failedBlockCheckId, out var failedBlockCheck))
                 {
@@ -120,7 +120,7 @@ public record World(FactSet Facts, RuleSet Rules)
             err = new Error(new FailedExecution("Overflow"));
             return false;
         }
-        
+
         err = new Error(new FailedLogic(new NoMatchingPolicy()));
         return false;
     }

@@ -3,19 +3,16 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace biscuit_net;
 
-public class VerifiedBiscuit : IBiscuit
+public class Biscuit
 {
-    IBlock IBiscuit.Authority { get { return Authority; }}
-    IReadOnlyCollection<IBlock> IBiscuit.Blocks { get { return Blocks; }}
-
-    public VerifiedBlock Authority { get; private set; }
-    public IReadOnlyCollection<VerifiedBlock> Blocks { get; protected set; }
+    public Block Authority { get; private set; }
+    public IReadOnlyCollection<Block> Blocks { get; protected set; }
     
     Proto.Biscuit _biscuit;
     SymbolTable _symbols;
     KeyTable _keys;
     
-    VerifiedBiscuit(Proto.Biscuit biscuit, VerifiedBlock authority, SymbolTable symbols, KeyTable keys)
+    Biscuit(Proto.Biscuit biscuit, Block authority, SymbolTable symbols, KeyTable keys)
     {
         _biscuit = biscuit;
         Authority = authority;
@@ -25,7 +22,7 @@ public class VerifiedBiscuit : IBiscuit
         Blocks = BlockEnumerable().ToArray();
     }
     
-    IEnumerable<VerifiedBlock> BlockEnumerable() 
+    IEnumerable<Block> BlockEnumerable() 
     {
         foreach(var block in _biscuit.Blocks)
         {
@@ -33,11 +30,11 @@ public class VerifiedBiscuit : IBiscuit
             {
                 var externalSymbolTable = new SymbolTable();
                 //var externalKeyTable = new KeyTable();
-                yield return VerifiedBlock.FromProto(block, externalSymbolTable, _keys);    
+                yield return Block.FromProto(block, externalSymbolTable, _keys);    
             }
             else
             {
-                yield return VerifiedBlock.FromProto(block, _symbols, _keys);
+                yield return Block.FromProto(block, _symbols, _keys);
             }
         }
     }
@@ -54,7 +51,7 @@ public class VerifiedBiscuit : IBiscuit
         }
     }
 
-    public static bool TryDeserialize(ReadOnlySpan<byte> bytes, SignatureValidator validator, [NotNullWhen(true)] out VerifiedBiscuit? biscuit, [NotNullWhen(false)] out FailedFormat? err)
+    public static bool TryDeserialize(ReadOnlySpan<byte> bytes, SignatureValidator validator, [NotNullWhen(true)] out Biscuit? biscuit, [NotNullWhen(false)] out FailedFormat? err)
     {        
         var biscuitProto = Serializer.Deserialize<Proto.Biscuit>((ReadOnlySpan<byte>)bytes);
 
@@ -65,9 +62,9 @@ public class VerifiedBiscuit : IBiscuit
 
         var symbols = new SymbolTable();
         var keys = new KeyTable();
-        var authority = VerifiedBlock.FromProto(biscuitProto.Authority, symbols, keys);
+        var authority = Block.FromProto(biscuitProto.Authority, symbols, keys);
 
-        biscuit = new VerifiedBiscuit(biscuitProto, authority, symbols, keys);
+        biscuit = new Biscuit(biscuitProto, authority, symbols, keys);
 
         err = null; return true;
     }

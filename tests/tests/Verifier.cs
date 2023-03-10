@@ -6,17 +6,7 @@ using R = biscuit_net.RuleConstrained;
 namespace tests;
 public class VerifierTests
 {
-    record Block
-    (
-        IEnumerable<Fact> Facts,
-        IEnumerable<RuleConstrained> Rules,
-        IEnumerable<Check> Checks,
-        uint Version,
-        Scope Scope,
-        PublicKey? SignedBy
-    )  : IBlock;
-
-    record Biscuit(IBlock Authority, IReadOnlyCollection<IBlock> Blocks) : IBiscuit;
+    record Biscuit(Block Authority, IReadOnlyCollection<Block> Blocks);
 
     [Fact]
     public void Test()
@@ -57,11 +47,10 @@ public class VerifierTests
             new Check[] {
             },
             3,
-            Scope.DefaultBlockScope,
-            null
+            "revocationid"
         );
 
-        var biscuit = new Biscuit(authority, Array.Empty<IBlock>());
+        var biscuit = new Biscuit(authority, Array.Empty<Block>());
 
         bool Verify(string user, string resource, string operation)
         {
@@ -86,7 +75,7 @@ public class VerifierTests
                 factSet,
                 ruleSet
             );
-            return Verifier.TryVerify(biscuit, world, authorizerBlock, out var error);
+            return Verifier.TryVerify(biscuit.Authority, biscuit.Blocks, world, authorizerBlock, out var error);
 
         }
         Assert.True(Verify("alice", "file1", "write"));
@@ -147,11 +136,10 @@ public class VerifierTests
             new Check[] {
             },
             3,
-            Scope.DefaultBlockScope,
-            null
+            "revocationid"
         );
 
-        var biscuit = new Biscuit(authority, Array.Empty<IBlock>());
+        var biscuit = new Biscuit(authority, Array.Empty<Block>());
 
         
         var authorizerBlockAllow = new AuthorizerBlock()
@@ -197,9 +185,9 @@ public class VerifierTests
         var worldDeny = new World();
         var worldNoMatchingPolicy = new World();
 
-        Assert.True(Verifier.TryVerify(biscuit, worldAllow, authorizerBlockAllow, out var _));
-        Assert.False(Verifier.TryVerify(biscuit, worldDeny, authorizerBlockDeny, out var _));
-        Assert.False(Verifier.TryVerify(biscuit, worldNoMatchingPolicy, authorizerBlockNoMatchingPolicy, out var errorNoMatchingPolicy));
+        Assert.True(Verifier.TryVerify(biscuit.Authority, biscuit.Blocks, worldAllow, authorizerBlockAllow, out var _));
+        Assert.False(Verifier.TryVerify(biscuit.Authority, biscuit.Blocks, worldDeny, authorizerBlockDeny, out var _));
+        Assert.False(Verifier.TryVerify(biscuit.Authority, biscuit.Blocks, worldNoMatchingPolicy, authorizerBlockNoMatchingPolicy, out var errorNoMatchingPolicy));
 
         Assert.Equal(new Error(new FailedLogic(new NoMatchingPolicy())), errorNoMatchingPolicy);
     }

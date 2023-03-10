@@ -17,7 +17,7 @@ public enum PolicyKind
     Deny
 }
 
-public class AuthorizerBlock : IBlock
+public class AuthorizerBlock
 {
     List<Fact> _facts = new List<Fact>();
     List<RuleConstrained> _rules = new List<RuleConstrained>();
@@ -59,12 +59,12 @@ public class Authorizer
         Add(Policy.DenyPolicy);
     }
 
-    public bool TryAuthorize(VerifiedBiscuit b, [NotNullWhen(false)] out Error? err)
+    public bool TryAuthorize(Biscuit b, [NotNullWhen(false)] out Error? err)
     {
         var factSet = new FactSet();
         var ruleSet = new RuleSet();
         var world = new World(factSet, ruleSet/*, _authorizerChecks*/);
 
-        return Verifier.TryVerify(b, world, _authorizerBlock, out err);
+        return Verifier.TryVerify(b.Authority, b.Blocks, world, _authorizerBlock, out err);
     }
 }

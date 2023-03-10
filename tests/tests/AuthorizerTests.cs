@@ -33,7 +33,7 @@ public class AuthorizerTests
     public void Test(BiscuitCase biscuitCase)
     {
         var validator = new SignatureValidator(biscuitCase.RootPublicKey);
-        if(!VerifiedBiscuit.TryDeserialize(biscuitCase.Token, validator, out var biscuit, out var formatErr))
+        if(!Biscuit.TryDeserialize(biscuitCase.Token, validator, out var biscuit, out var formatErr))
         {
             Assert.False(biscuitCase.Success);
             Assert.Equal(biscuitCase.Validation.FormatError, formatErr);
@@ -83,7 +83,7 @@ public class AuthorizerTests
     public void Test_Revocation_Ids(BiscuitCase biscuitCase)
     {
         var validator = new SignatureValidator(biscuitCase.RootPublicKey);
-        if(!VerifiedBiscuit.TryDeserialize(biscuitCase.Token, validator, out var biscuit, out var formatErr))
+        if(!Biscuit.TryDeserialize(biscuitCase.Token, validator, out var biscuit, out var formatErr))
         {
             return;
         }

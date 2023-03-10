@@ -44,25 +44,25 @@ public class TrustedOriginSet
         _trustedOrigins = blockTrustedOrigins;
     }
 
-    public static TrustedOriginSet Build(IBiscuit b, IBlock authorizerBlock)
+    public static TrustedOriginSet Build(Block authority, IEnumerable<Block> blocks, Scope scope)
     {
         var trustedOrigins = new Dictionary<Origin, TrustedOrigins>();
 
-        var publicKeys = b.Blocks
+        var publicKeys = blocks
             .Select((block, idx) => new {block, idx = idx + 1})
             .Where(b => b.block.SignedBy != null)
             .ToLookup(b => b.block.SignedBy, b => (uint) b.idx);
 
         //populate block scopes 
-        trustedOrigins[biscuit_net.Origins.Authority] = Origins(biscuit_net.Origins.Authority, b.Authority.Scope, publicKeys);
+        trustedOrigins[biscuit_net.Origins.Authority] = Origins(biscuit_net.Origins.Authority, authority.Scope, publicKeys);
 
         uint blockId = 1;
-        foreach(var block in b.Blocks)
+        foreach(var block in blocks)
         {
             trustedOrigins[blockId] = Origins(blockId, block.Scope, publicKeys);
             blockId++;
         }
-        trustedOrigins[biscuit_net.Origins.Authorizer] = Origins(biscuit_net.Origins.Authorizer, authorizerBlock.Scope, publicKeys);
+        trustedOrigins[biscuit_net.Origins.Authorizer] = Origins(biscuit_net.Origins.Authorizer, scope, publicKeys);
 
         return new TrustedOriginSet(publicKeys, trustedOrigins);
     }

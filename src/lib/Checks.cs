@@ -96,10 +96,10 @@ public static class Checks
         return true;
     }
 
-    public static bool TryCheckBoundVariables(IBlock block, [NotNullWhen(false)] out int? invalidRuleId)
+    public static bool TryCheckBoundVariables(IEnumerable<Rule> rules, [NotNullWhen(false)] out int? invalidRuleId)
     {
         int ruleId = 0;
-        foreach(var rule in block.Rules)
+        foreach(var rule in rules)
         {
             var headVariables = rule.Head.Terms.OfType<Variable>();
             var bodyVariables = rule.Body.SelectMany(b => b.Terms).OfType<Variable>().ToHashSet();
@@ -116,17 +116,17 @@ public static class Checks
         return true;
     }
 
-    public static bool CheckBoundVariables(IBiscuit b, [NotNullWhen(false)] out InvalidBlockRule? invalidBlockRule)
+    public static bool CheckBoundVariables(Block authority, IEnumerable<Block> blocks, [NotNullWhen(false)] out InvalidBlockRule? invalidBlockRule)
     {
-        if(!Checks.TryCheckBoundVariables(b.Authority, out var invalidRuleId))
+        if(!Checks.TryCheckBoundVariables(authority.Rules, out var invalidRuleId))
         {
             invalidBlockRule = new InvalidBlockRule(invalidRuleId.Value);
             return false;
         }
 
-        foreach(var block in b.Blocks)
+        foreach(var block in blocks)
         {
-            if(!Checks.TryCheckBoundVariables(block, out var invalidBlockRuleId))
+            if(!Checks.TryCheckBoundVariables(block.Rules, out var invalidBlockRuleId))
             {
                 invalidBlockRule = new InvalidBlockRule(invalidBlockRuleId.Value);
                 return false;
