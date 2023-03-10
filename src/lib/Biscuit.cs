@@ -6,49 +6,15 @@ namespace biscuit_net;
 public class Biscuit
 {
     public Block Authority { get; private set; }
-    public IReadOnlyCollection<Block> Blocks { get; protected set; }
-    
-    Proto.Biscuit _biscuit;
-    SymbolTable _symbols;
-    KeyTable _keys;
-    
-    Biscuit(Proto.Biscuit biscuit, Block authority, SymbolTable symbols, KeyTable keys)
+    public IReadOnlyList<Block> Blocks { get; protected set; }
+    public IReadOnlyList<string> RevocationIds { get; private set; }
+        
+    Biscuit(Block authority, IReadOnlyList<Block> blocks, IReadOnlyList<string> revocationIds)
     {
-        _biscuit = biscuit;
         Authority = authority;
-        _symbols = symbols;
-        _keys = keys;
-
-        Blocks = BlockEnumerable().ToArray();
-    }
-    
-    IEnumerable<Block> BlockEnumerable() 
-    {
-        foreach(var block in _biscuit.Blocks)
-        {
-            if(block.externalSignature != null)
-            {
-                var externalSymbolTable = new SymbolTable();
-                //var externalKeyTable = new KeyTable();
-                yield return Block.FromProto(block, externalSymbolTable, _keys);    
-            }
-            else
-            {
-                yield return Block.FromProto(block, _symbols, _keys);
-            }
-        }
-    }
-
-    public IEnumerable<string> RevocationIds 
-    {
-        get
-        {
-            yield return Authority.RevocationId;
-            foreach(var block in Blocks)
-            {
-                yield return block.RevocationId;
-            }
-        }
+        
+        Blocks = blocks;
+        RevocationIds = revocationIds;
     }
 
     public static bool TryDeserialize(ReadOnlySpan<byte> bytes, SignatureValidator validator, [NotNullWhen(true)] out Biscuit? biscuit, [NotNullWhen(false)] out FailedFormat? err)
@@ -62,10 +28,46 @@ public class Biscuit
 
         var symbols = new SymbolTable();
         var keys = new KeyTable();
-        var authority = Block.FromProto(biscuitProto.Authority, symbols, keys);
+        var blocks = new Block[biscuitProto.Blocks.Count];
+        var revocationIds = new string[biscuitProto.Blocks.Count + 1];
 
-        biscuit = new Biscuit(biscuitProto, authority, symbols, keys);
+        var authority = FromProto(biscuitProto.Authority, symbols, keys);        
+        revocationIds[0] = GetRevocationId(biscuitProto.Authority);
+
+        for(var blockIdx = 0; blockIdx < biscuitProto.Blocks.Count; blockIdx++)
+        {
+            var block = biscuitProto.Blocks[blockIdx];
+            var blockSymbolTable = block.externalSignature != null ? new SymbolTable() : symbols;
+            
+            blocks[blockIdx] = FromProto(block, blockSymbolTable, keys);
+            revocationIds[blockIdx + 1] = GetRevocationId(block);
+        }
+        
+        biscuit = new Biscuit(authority, blocks.AsReadOnly(), revocationIds.AsReadOnly());
 
         err = null; return true;
+    }
+
+    public static string GetRevocationId(Proto.SignedBlock signedBlock) 
+        => Convert.ToHexString(signedBlock.Signature).ToLowerInvariant();
+
+    public static Block FromProto(Proto.SignedBlock signedBlock, SymbolTable symbols, KeyTable keys)
+    {
+        var block = Serializer.Deserialize<Proto.Block>( (ReadOnlySpan<byte>) signedBlock.Block);
+        
+        symbols.AddSymbols(block.Symbols);
+        keys.Add(block.publicKeys.Select(Converters.ToPublicKey));
+        
+        var scope = Converters.ToScope(block.Scopes, keys);
+        scope = scope.IsEmpty ? Scope.DefaultBlockScope : scope; 
+
+        return new Block(
+            block.FactsV2s.ToFacts(symbols),
+            block.RulesV2s.ToRules(symbols, keys),
+            block.ChecksV2s.ToChecks(symbols, keys),
+            block.Version,            
+            scope,
+            signedBlock.externalSignature != null ? Converters.ToPublicKey(signedBlock.externalSignature.publicKey) : null
+        );
     }
 }

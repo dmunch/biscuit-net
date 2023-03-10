@@ -46,8 +46,7 @@ public class VerifierTests
             },
             new Check[] {
             },
-            3,
-            "revocationid"
+            3            
         );
 
         var biscuit = new Biscuit(authority, Array.Empty<Block>());
@@ -135,8 +134,7 @@ public class VerifierTests
             },
             new Check[] {
             },
-            3,
-            "revocationid"
+            3
         );
 
         var biscuit = new Biscuit(authority, Array.Empty<Block>());
