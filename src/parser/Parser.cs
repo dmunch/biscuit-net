@@ -14,7 +14,7 @@ public class Parser
         return parser.check().Accept(_expressionsVisitor);
     }
 
-    public RuleConstrained ParseRule(string ruleString)
+    public Datalog.RuleConstrained ParseRule(string ruleString)
     {
         var parser = InitializeParser(ruleString, out _);
 

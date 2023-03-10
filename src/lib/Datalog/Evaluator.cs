@@ -81,7 +81,7 @@ public static class Evaluator
         return nextKb;
     }
 
-    public static HashSet<Fact> Evaluate(this IEnumerable<Fact> kb, IRule rule)
+    public static HashSet<Fact> Evaluate(this IEnumerable<Fact> kb, Rule rule)
     {
         var nextKb = rule.Apply(kb);
     
@@ -105,7 +105,7 @@ public static class Evaluator
         return matches;
     }
 
-    static HashSet<Fact> Apply(this IRule rule, IEnumerable<Fact> kb)
+    static HashSet<Fact> Apply(this Rule rule, IEnumerable<Fact> kb)
     {
         return rule.Body
             .Match(kb)

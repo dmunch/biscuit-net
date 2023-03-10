@@ -1,8 +1,7 @@
 
 global using Origin = System.UInt32;
 
-namespace biscuit_net;
-using Datalog;
+namespace biscuit_net.Datalog;
 
 public static class Origins
 {
@@ -54,7 +53,7 @@ public class TrustedOriginSet
             .ToLookup(b => b.block.SignedBy, b => (uint) b.idx);
 
         //populate block scopes 
-        trustedOrigins[biscuit_net.Origins.Authority] = Origins(biscuit_net.Origins.Authority, authority.Scope, publicKeys);
+        trustedOrigins[Datalog.Origins.Authority] = Origins(Datalog.Origins.Authority, authority.Scope, publicKeys);
 
         uint blockId = 1;
         foreach(var block in blocks)
@@ -62,7 +61,7 @@ public class TrustedOriginSet
             trustedOrigins[blockId] = Origins(blockId, block.Scope, publicKeys);
             blockId++;
         }
-        trustedOrigins[biscuit_net.Origins.Authorizer] = Origins(biscuit_net.Origins.Authorizer, scope, publicKeys);
+        trustedOrigins[Datalog.Origins.Authorizer] = Origins(Datalog.Origins.Authorizer, scope, publicKeys);
 
         return new TrustedOriginSet(publicKeys, trustedOrigins);
     }
@@ -101,12 +100,12 @@ public class TrustedOriginSet
         
         var trustedOrigin = scope.Types.Any(type => type == ScopeType.Previous)
             ? Previous(blockId)
-            : new TrustedOrigins(blockId, biscuit_net.Origins.Authorizer);
+            : new TrustedOrigins(blockId, Datalog.Origins.Authorizer);
         
 
         if(scope.Types.Any(type => type == ScopeType.Authority))
         {
-            trustedOrigin.Add(biscuit_net.Origins.Authority);
+            trustedOrigin.Add(Datalog.Origins.Authority);
         }
 
         foreach(var key in scope.Keys)
@@ -124,7 +123,7 @@ public class TrustedOriginSet
 
     static TrustedOrigins Previous(Origin blockId)
     {
-        var trustedOrigin = new TrustedOrigins(biscuit_net.Origins.Authority, biscuit_net.Origins.Authorizer);
+        var trustedOrigin = new TrustedOrigins(Datalog.Origins.Authority, Datalog.Origins.Authorizer);
         for(uint blockIdx = 1; blockIdx <= blockId; blockIdx++)
         {
             trustedOrigin.Add(blockIdx);
@@ -146,13 +145,13 @@ public class FactSet : OriginSet<HashSet<Fact>, Fact>
     }
 }
 
-public class RuleSet : OriginSet<List<(int, IRuleConstrained)>, (int, IRuleConstrained)>
+public class RuleSet : OriginSet<List<(int, RuleConstrained)>, (int, RuleConstrained)>
 {
     public RuleSet() 
     {
     }
 
-    public RuleSet(Origin origin, List<(int, IRuleConstrained)> intialValue) : base(origin, intialValue)
+    public RuleSet(Origin origin, List<(int, RuleConstrained)> intialValue) : base(origin, intialValue)
     {
     }
 }

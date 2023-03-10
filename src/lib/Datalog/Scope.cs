@@ -1,4 +1,4 @@
-namespace biscuit_net;
+namespace biscuit_net.Datalog;
 
 public record Scope(IEnumerable<ScopeType> Types, IEnumerable<PublicKey> Keys)
 {

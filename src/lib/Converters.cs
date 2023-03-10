@@ -71,9 +71,9 @@ public static class Converters
         });
     }
 
-    static public Scope ToScope(IEnumerable<Proto.Scope> scopes, KeyTable keys)
+    static public Datalog.Scope ToScope(IEnumerable<Proto.Scope> scopes, KeyTable keys)
     {
-        return new Scope(
+        return new Datalog.Scope(
                 ToScopeTypes(scopes),
                 ToTrustedPublicKeys(scopes, keys)
         );
