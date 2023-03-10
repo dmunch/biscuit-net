@@ -5,8 +5,9 @@ using Datalog;
 
 public class Authorizer
 {
+    public World World { get; } = new World();
     AuthorizerBlock _authorizerBlock = new AuthorizerBlock();
-
+    
     public void Add(Fact fact) => _authorizerBlock.Add(fact);
     public void Add(RuleConstrained rule) => _authorizerBlock.Add(rule);
     public void Add(Check check) => _authorizerBlock.Add(check);
@@ -23,12 +24,9 @@ public class Authorizer
     }
 
     public bool TryAuthorize(Biscuit b, [NotNullWhen(false)] out Error? err)
-    {
-        var factSet = new FactSet();
-        var ruleSet = new RuleSet();
-        var world = new World(factSet, ruleSet/*, _authorizerChecks*/);
-
-        return TryAuthorize(b.Authority, b.Blocks, world, _authorizerBlock, out err);
+    {        
+        
+        return TryAuthorize(b.Authority, b.Blocks, World, _authorizerBlock, out err);
     }
 
     public static bool TryAuthorize(Block authority, IEnumerable<Block> blocks, World world, AuthorizerBlock authorizerBlock, [NotNullWhen(false)] out Error? err)

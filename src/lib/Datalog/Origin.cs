@@ -157,8 +157,10 @@ public class RuleSet : OriginSet<List<(int, RuleConstrained)>, (int, RuleConstra
 }
 
 public class OriginSet<T, I> where T : ICollection<I>
-{
-    Dictionary<Origin, T> _values = new Dictionary<Origin, T>();
+{    
+    public IEnumerable<I> Values => _dict.Values.SelectMany(v => v);
+
+    Dictionary<Origin, T> _dict = new Dictionary<Origin, T>();
 
     public OriginSet()
     {
@@ -171,22 +173,22 @@ public class OriginSet<T, I> where T : ICollection<I>
 
     public void Add(Origin origin, T value)
     {
-        _values.Add(origin, value);
+        _dict.Add(origin, value);
     }
 
     public void Add(Origin origin, ICollection<T> values)
     {
         foreach(var value in values)
         {
-            _values.Add(origin, value);
+            _dict.Add(origin, value);
         }
     }
 
-    protected T Get(Origin origin) => _values[origin];
+    protected T Get(Origin origin) => _dict[origin];
 
     public IEnumerable<I> Filter(TrustedOrigins origin)
     {
-        return _values
+        return _dict
             .Where(kvp => origin.Contains(kvp.Key))
             .SelectMany(kvp => kvp.Value);
     }

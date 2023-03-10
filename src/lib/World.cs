@@ -3,22 +3,26 @@ namespace biscuit_net;
 using System.Diagnostics.CodeAnalysis;
 using Datalog;
 
-public record World(FactSet Facts, RuleSet Rules)
+public class World
 {
-    public World() : this(new FactSet(), new RuleSet())
+    FactSet _facts = new FactSet();
+
+    public IEnumerable<Fact> Facts => _facts.Values;
+    
+    public World()
     {
     }
 
     public void AddFacts(Block authority, IEnumerable<Block> blocks, AuthorizerBlock authorizerBlock)
     {
         //add facts
-        Facts.Add(Origins.Authorizer, authorizerBlock.Facts.ToHashSet());
-        Facts.Add(Origins.Authority, authority.Facts.ToHashSet());
+        _facts.Add(Origins.Authorizer, authorizerBlock.Facts.ToHashSet());
+        _facts.Add(Origins.Authority, authority.Facts.ToHashSet());
 
         uint blockId = 1;
         foreach(var block in blocks)
         {
-            Facts.Add(blockId, block.Facts.ToHashSet());
+            _facts.Add(blockId, block.Facts.ToHashSet());
             blockId++;
         }
     }
@@ -49,11 +53,11 @@ public record World(FactSet Facts, RuleSet Rules)
     void RunRules(BlockTrustedOriginSet origins, IEnumerable<RuleConstrained> rules) 
     {
         //var origins = trustedOrigins.With(blockId);
-        var executionFacts = Facts
+        var executionFacts = _facts
             .Filter(origins.Origins())
-            .Evaluate(rules, Facts, origins);
+            .Evaluate(rules, _facts, origins);
 
-        Facts.UnionWith(origins.BlockId, executionFacts);
+        _facts.UnionWith(origins.BlockId, executionFacts);
     }
 
     public bool RunChecks(Block authority, IEnumerable<Block> blocks, AuthorizerBlock authorizerBlock, TrustedOriginSet trustedOrigins, [NotNullWhen(false)] out Error? err) 
@@ -62,7 +66,7 @@ public record World(FactSet Facts, RuleSet Rules)
         {
             //run checks
             //run authority checks
-            if(!Checks.TryCheck(Facts, trustedOrigins.With(Origins.Authority), authority.Checks, out var failedCheckId, out var failedCheck))
+            if(!Checks.TryCheck(_facts, trustedOrigins.With(Origins.Authority), authority.Checks, out var failedCheckId, out var failedCheck))
             {
                 err = new Error(new FailedBlockCheck(0, failedCheckId.Value/*, failedRule*/));
                 return false;
@@ -72,7 +76,7 @@ public record World(FactSet Facts, RuleSet Rules)
             uint blockId = 1;
             foreach(var block in blocks)
             {
-                if(!Checks.TryCheck(Facts, trustedOrigins.With(blockId), block.Checks, out var failedBlockCheckId, out var failedBlockCheck))
+                if(!Checks.TryCheck(_facts, trustedOrigins.With(blockId), block.Checks, out var failedBlockCheckId, out var failedBlockCheck))
                 {
                     err = new Error(new FailedBlockCheck(blockId, failedBlockCheckId.Value/*, failedRule*/));
                     return false;
@@ -81,7 +85,7 @@ public record World(FactSet Facts, RuleSet Rules)
             }
 
             //run authorizer checks
-            if(!Checks.TryCheck(Facts, trustedOrigins.With(Origins.Authorizer), authorizerBlock.Checks, out var failedAuthorizerCheckId, out var failedAuthorizerCheck))
+            if(!Checks.TryCheck(_facts, trustedOrigins.With(Origins.Authorizer), authorizerBlock.Checks, out var failedAuthorizerCheckId, out var failedAuthorizerCheck))
             {
                 err = new Error(new FailedAuthorizerCheck(failedAuthorizerCheckId.Value/*, failedAuthorizerRule*/));
                 return false;
@@ -104,7 +108,7 @@ public record World(FactSet Facts, RuleSet Rules)
             //validate policies 
             foreach(var policy in authorizerBlock.Policies)
             {
-                if(Checks.TryCheckOne(Facts, trustedOrigins.With(Origins.Authorizer), policy.Rules))
+                if(Checks.TryCheckOne(_facts, trustedOrigins.With(Origins.Authorizer), policy.Rules))
                 {
                     err = new Error(new FailedLogic(new Unauthorized(policy.Kind)));
                     return policy.Kind switch {

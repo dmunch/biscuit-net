@@ -68,12 +68,7 @@ public class AuthorizerTests
                 )
                 .Add(Policy.AllowPolicy);
 
-            var factSet = new FactSet();
-            var ruleSet = new RuleSet();
-            var world = new World( 
-                factSet,
-                ruleSet
-            );
+            var world = new World();
             return Authorizer.TryAuthorize(biscuit.Authority, biscuit.Blocks, world, authorizerBlock, out var error);
 
         }

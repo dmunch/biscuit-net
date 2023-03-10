@@ -24,6 +24,16 @@ public class Parser
         return ruleListener.GetRule();
     }
 
+    public Datalog.Fact ParseFact(string factString)
+    {
+        var parser = InitializeParser(factString, out _);
+
+        var factListener = new FactListener();
+        ParseTreeWalker.Default.Walk(factListener, parser.fact());
+
+        return factListener.Facts.First();
+    }
+
     public AuthorizerBlock ParseAuthorizer(string authorizerBlock)
     {
         var parser = InitializeParser(authorizerBlock, out _);

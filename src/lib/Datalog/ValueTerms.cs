@@ -1,6 +1,31 @@
 namespace biscuit_net.Datalog;
 
-public sealed record Set(List<Term> Values) : Constant;
+public sealed record Set(List<Term> Values) : Constant
+{
+    public bool Equals(Set? other)
+    {
+        if(other == null)
+        {
+            return false;
+        }
+
+        return Values.SequenceEqual(other.Values);
+    }
+
+    public override int GetHashCode()
+    {
+        var hashCode = new HashCode();
+    
+        foreach(var v in Values)
+        {
+            hashCode.Add(v);
+        }
+        
+        return hashCode.ToHashCode();
+    }
+
+    public override string ToString() => $"[{string.Join(", ", Values)}]";
+}
 
 public sealed record Bytes(byte[] Value) : Constant
 {
@@ -36,6 +61,7 @@ public sealed record Boolean(bool Value) : Constant
 
 public sealed record Integer(long Value) : Constant
 {
+    public override string ToString() => Value.ToString();
     public static bool operator <(Integer one, Integer two) => one.Value < two.Value;
     public static bool operator >(Integer one, Integer two) => one.Value > two.Value;
     public static bool operator <=(Integer one, Integer two) => one.Value <= two.Value;

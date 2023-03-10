@@ -1,32 +1,45 @@
 using System.Reflection;
 using Xunit.Sdk;
 using biscuit_net;
+using biscuit_net.Datalog;
+using biscuit_net.Parser;
 
 namespace tests;
 
-public record Asserts(string AuthorizerCode, Error? Error, FailedFormat? FormatError, IList<string> RevocationIds);
+public record Asserts(string AuthorizerCode, Error? Error, FailedFormat? FormatError, IList<string> RevocationIds, HashSet<Fact> WorldFacts);
 public record BiscuitSample(string Filename, string Title, string RootPublicKey, string RootPrivateKey, Asserts Validation)
 {
     public bool Success => Validation.Error == null && Validation.FormatError == null;
     public byte[] Token => System.IO.File.ReadAllBytes($"samples/{Filename}");
+
     public override string ToString()
     {
         return $"{Filename}: {Title} [{(Success? "Success" : "Error")}]";
     }
 }
 
+public class BiscuitFileSample : BiscuitSamples
+{
+    public BiscuitFileSample(string fileName) : base(tc => tc.Filename == fileName)
+    {        
+    }
+}
+
 public class BiscuitSamples : DataAttribute
 {
-    private readonly string? _fileName;
+    Func<QuickType.Testcase, bool> _filter;
+    
     private static QuickType.Samples? _samples;
     
-    public BiscuitSamples(string fileName)
-    {
-        _fileName = fileName;
-    }
-
     public BiscuitSamples()
     {
+        //by default, include all
+        _filter = s => true;
+    }
+
+    public BiscuitSamples(Func<QuickType.Testcase, bool> filter)
+    {
+        _filter = filter;
     }
     
     static BiscuitSamples()
@@ -42,12 +55,8 @@ public class BiscuitSamples : DataAttribute
             throw new Exception("Error loading samples");
         }
 
-        var testCases = _samples.Testcases;
-        if(_fileName != null) 
-        {
-           testCases = _samples.Testcases.Where(tc => tc.Filename == _fileName).ToArray();
-        }
-
+        var testCases = _samples.Testcases.Where(_filter).ToArray();
+        
         return testCases
             .SelectMany(tc => MapBiscuitCases(_samples, tc))
             .OrderBy(c => int.Parse(c.Filename.Split('_')[0].Substring("test".Length)))
@@ -67,11 +76,19 @@ public class BiscuitSamples : DataAttribute
             )).ToArray();
     }
 
-    Asserts MapValidation(QuickType.File file)
+    static Asserts MapValidation(QuickType.File file)
     {
         FailedFormat? failedFormat = null;        
         Error? error = null;
 
+        var parser = new Parser();
+        var facts = new HashSet<Fact>();
+        foreach(var factStr in file.World?.Facts ?? new string[0])
+        {
+            var fact = parser.ParseFact(factStr);
+            facts.Add(fact);
+        }
+        
         if(file.Result?.Err?.FailedLogic?.Unauthorized != null)
         {
             var failedLogic = file.Result.Err.FailedLogic.Unauthorized;
@@ -109,6 +126,6 @@ public class BiscuitSamples : DataAttribute
             error = new Error(new FailedExecution(reason));
         }
         
-        return new Asserts(file.AuthorizerCode, error, failedFormat, file.RevocationIds);
+        return new Asserts(file.AuthorizerCode, error, failedFormat, file.RevocationIds, facts);
     }
 }
