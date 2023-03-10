@@ -3,7 +3,7 @@ namespace biscuit_net;
 public class SymbolTable
 {
     List<string> _symbols = new List<string>();
-    
+    public IReadOnlyList<string> Symbols { get => _symbols.AsReadOnly(); }
     public SymbolTable()
     {
     }
@@ -21,9 +21,7 @@ public class SymbolTable
         }
     }
 
-    public string Lookup(ulong pos)
-    {
-        var table = new []{
+    static List<string> table = new List<string>{
             "read",
             "write",
             "resource",
@@ -54,9 +52,28 @@ public class SymbolTable
             "query"
         };
 
+    public string Lookup(ulong pos)
+    {    
         if(pos < 1024)
-            return table[pos];
+            return table[(int)pos];
 
         return _symbols[(int)pos - 1024];
+    }
+
+    public uint LookupOrAdd(string str)
+    {        
+        if(table.Contains(str))
+        {
+            return (uint) table.IndexOf(str);
+        }
+
+        if(_symbols.Contains(str))
+        {
+            return (uint) _symbols.IndexOf(str) + 1024;
+        }
+
+        //we add the symbol
+        _symbols.Add(str);
+        return (uint) _symbols.Count - 1 + 1024;
     }
 }

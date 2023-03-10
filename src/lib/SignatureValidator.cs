@@ -30,10 +30,9 @@ public class SignatureValidator
 
 }
 
-static class BlockSignatureVerification
+static class SignatureHelper
 {
-
-    static byte[] MakeBuffer(byte[] block, Proto.PublicKey.Algorithm alg, byte[] key)
+    public static byte[] MakeBuffer(byte[] block, Proto.PublicKey.Algorithm alg, byte[] key)
     {
         var buffer = new byte[block.Length + sizeof(int) + key.Length];
         var bytes = (Span<byte>) buffer;
