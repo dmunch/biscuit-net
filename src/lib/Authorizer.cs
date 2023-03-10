@@ -3,43 +3,6 @@ using System.Diagnostics.CodeAnalysis;
 namespace biscuit_net;
 using Datalog;
 
-public record Policy(PolicyKind Kind, IReadOnlyCollection<RuleConstrained> Rules)
-{
-    static Expressions.Expression True = new Expressions.Expression(new List<Expressions.Op>{ new Expressions.Op(new Boolean(true))});
-
-    public static Policy AllowPolicy = new Policy(PolicyKind.Allow, new [] { new RuleConstrained(new Fact("query"), True) });
-    public static Policy DenyPolicy = new Policy(PolicyKind.Deny, new [] { new RuleConstrained(new Fact("query"), True) });
-}
-
-public enum PolicyKind
-{
-    Allow,
-    Deny
-}
-
-public class AuthorizerBlock
-{
-    List<Fact> _facts = new List<Fact>();
-    List<RuleConstrained> _rules = new List<RuleConstrained>();
-    List<Check> _checks = new List<Check>();
-    List<Policy> _policies = new List<Policy>();    
-
-    public IEnumerable<Fact> Facts { get => _facts; }
-    public IEnumerable<RuleConstrained> Rules { get => _rules; }
-    public IEnumerable<Check> Checks { get => _checks; }
-    public IEnumerable<Policy> Policies { get => _policies; }
-        
-
-    public Scope Scope { get => Scope.DefaultBlockScope; }
-    public PublicKey? SignedBy { get => null; }
-    public uint Version { get => 4; }
-
-    public AuthorizerBlock Add(Fact fact) { _facts.Add(fact); return this; }
-    public AuthorizerBlock Add(RuleConstrained rule) { _rules.Add(rule); return this; }
-    public AuthorizerBlock Add(Check check) { _checks.Add(check); return this; }
-    public AuthorizerBlock Add(Policy policy) { _policies.Add(policy); return this; }
-}
-
 public class Authorizer
 {
     AuthorizerBlock _authorizerBlock = new AuthorizerBlock();
@@ -65,6 +28,47 @@ public class Authorizer
         var ruleSet = new RuleSet();
         var world = new World(factSet, ruleSet/*, _authorizerChecks*/);
 
-        return Verifier.TryVerify(b.Authority, b.Blocks, world, _authorizerBlock, out err);
+        return TryAuthorize(b.Authority, b.Blocks, world, _authorizerBlock, out err);
+    }
+
+    public static bool TryAuthorize(Block authority, IEnumerable<Block> blocks, World world, AuthorizerBlock authorizerBlock, [NotNullWhen(false)] out Error? err)
+    {
+        if(!Checks.CheckBoundVariables(authority, blocks, out var invalidBlockRule))
+        {
+            err = new Error(new FailedLogic(invalidBlockRule));
+            return false;
+        }
+
+        if(authority.Version < 3 || authority.Version > 4)
+            throw new Exception($"Unsupported Authority Block Version {authority.Version}");
+
+        foreach(var block in blocks)
+        {
+            if(block.Version < 3 || block.Version > 4)
+                throw new Exception($"Unsupported Block Version {authority.Version}");
+        }
+
+        var trustedOrigins = TrustedOriginSet.Build(authority, blocks, authorizerBlock.Scope);
+
+        world.AddFacts(authority, blocks, authorizerBlock);
+        if(!world.RunRules(authority, blocks, trustedOrigins, out err))
+        {
+            return false;
+        }
+        
+        //run authorizer rules 
+        //var authorizerTrustedOrigin = trustedOrigins.Origins(uint.MaxValue, authorizerBlock.Scope);
+        
+        if(!world.RunChecks(authority, blocks, authorizerBlock, trustedOrigins, out err))
+        {
+            return false;
+        }
+    
+        if(!world.ValidatePolicies(authorizerBlock, trustedOrigins, out err))
+        {
+            return false;
+        }
+
+        return true;
     }
 }

@@ -1,13 +1,11 @@
 using System.Reflection;
 using Xunit.Sdk;
+using biscuit_net;
 
 namespace tests;
 
-using biscuit_net;
-using biscuit_net.Datalog;
-
 public record Asserts(string AuthorizerCode, Error? Error, FailedFormat? FormatError, IList<string> RevocationIds);
-public record BiscuitCase(string Filename, string Title, string RootPublicKey, string RootPrivateKey, Asserts Validation)
+public record BiscuitSample(string Filename, string Title, string RootPublicKey, string RootPrivateKey, Asserts Validation)
 {
     public bool Success => Validation.Error == null && Validation.FormatError == null;
     public byte[] Token => System.IO.File.ReadAllBytes($"samples/{Filename}");
@@ -17,21 +15,21 @@ public record BiscuitCase(string Filename, string Title, string RootPublicKey, s
     }
 }
 
-public class BiscuitCases : DataAttribute
+public class BiscuitSamples : DataAttribute
 {
     private readonly string? _fileName;
     private static QuickType.Samples? _samples;
     
-    public BiscuitCases(string fileName)
+    public BiscuitSamples(string fileName)
     {
         _fileName = fileName;
     }
 
-    public BiscuitCases()
+    public BiscuitSamples()
     {
     }
     
-    static BiscuitCases()
+    static BiscuitSamples()
     {
         var samplesJson =  System.IO.File.ReadAllText("samples/samples.json");
         _samples = Newtonsoft.Json.JsonConvert.DeserializeObject<QuickType.Samples>(samplesJson);
@@ -57,10 +55,10 @@ public class BiscuitCases : DataAttribute
             .ToArray();
     }
 
-    public IEnumerable<BiscuitCase> MapBiscuitCases(QuickType.Samples samples, QuickType.Testcase testCase)
+    public IEnumerable<BiscuitSample> MapBiscuitCases(QuickType.Samples samples, QuickType.Testcase testCase)
     {
         return testCase.Validations
-            .Select(validation => new BiscuitCase(
+            .Select(validation => new BiscuitSample(
                 Filename: testCase.Filename,
                 Title: $"{testCase.Title}: {validation.Key}",
                 Validation: MapValidation(validation.Value),

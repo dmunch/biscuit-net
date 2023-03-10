@@ -1,202 +1,192 @@
-using System.Text.RegularExpressions;
 using biscuit_net;
-using biscuit_net.Parser;
 using biscuit_net.Datalog;
-using biscuit_net.Expressions;
+using F = biscuit_net.Datalog.Fact;
+using R = biscuit_net.RuleConstrained;
 
 namespace tests;
 public class AuthorizerTests
 {
-    [Theory]
-    //[BiscuitCases("test001_basic.bc")] //OK
-    //[BiscuitCases("test002_different_root_key.bc")] //OK
-    //[BiscuitCases("test003_invalid_signature_format.bc")] //OK
-    //[BiscuitCases("test007_scoped_rules.bc")] //OK
-    //[BiscuitCases("test008_scoped_checks.bc")] //OK
-    //[BiscuitCases("test009_expired_token.bc")] //OK - why? TODO needs expressions
-    //[BiscuitCases("test010_authorizer_scope.bc")] //TODO: rules in authorizer
-    //[BiscuitCases("test011_authorizer_authority_caveats.bc")] //TODO: rules in authorizer
-    //[BiscuitCases("test012_authority_caveats.bc")] //OK
-    //[BiscuitCases("test013_block_rules.bc")] //TODO contains time and string set expressions
-    //[BiscuitCases("test014_regex_constraint.bc")] //TODO contains string expressions regex
-    //[BiscuitCases("test016_caveat_head_name.bc")] //OK
-    //[BiscuitCases("test017_expressions.bc")] //OK
-    //[BiscuitCases("test018_unbound_variables_in_rule.bc")] //TODO
-    //[BiscuitCases("test019_generating_ambient_from_variables.bc")] //OK
-    //[BiscuitCases("test022_default_symbols.bc")] //TODO contains int term
-    //[BiscuitCases("test023_execution_scope.bc")] //TODO contains int term
-    //[BiscuitCases("test024_third_party.bc")] //TODO 
-    //[BiscuitCases("test025_check_all.bc")] //TODO
-    //[BiscuitCases("test026_public_keys_interning.bc")] //TODO
-    //[BiscuitCases("test027_integer_wraparound.bc")] //TODO
-    [BiscuitCases()]
-    public void Test(BiscuitCase biscuitCase)
+    record Biscuit(Block Authority, IReadOnlyCollection<Block> Blocks);
+
+    [Fact]
+    public void Test()
     {
-        var validator = new SignatureValidator(biscuitCase.RootPublicKey);
-        if(!Biscuit.TryDeserialize(biscuitCase.Token, validator, out var biscuit, out var formatErr))
-        {
-            Assert.False(biscuitCase.Success);
-            Assert.Equal(biscuitCase.Validation.FormatError, formatErr);
-            return;
-        }
+        var authority = new Block(
+            new [] {
+                new F("owner", "alice", "file1"),
+                new F("owner", "alice", "file2"),
+                new F("reader", "alice", "file3"),
+                new F("reader", "bob", "file4"),
+            },
+            new [] {
+                new R(
+                    new F("right", "$1", "read"),
+                    new F("user_id", "$0"),
+                    new F("resource", "$1"),
+                    new F("reader", "$0", "$1")
+                ),
+                new R(
+                    new F("right", "$1", "read"), 
+                    new F("user_id", "$0"), 
+                    new F("resource", "$1"), 
+                    new F("owner", "$0", "$1")
+                ),
+                new R(
+                    new F("right", "$1", "read"), 
+                    new F("user_id", "$0"), 
+                    new F("resource", "$1"), 
+                    new F("owner", "$0", "$1")
+                ),
+                new R(
+                    new F("right", "$1", "write"), 
+                    new F("user_id", "$0"), 
+                    new F("resource", "$1"), 
+                    new F("owner", "$0", "$1")
+                )
+            },
+            new Check[] {
+            },
+            3            
+        );
 
-        var authorizer = new Authorizer();
+        var biscuit = new Biscuit(authority, Array.Empty<Block>());
 
-        /*foreach(var parseResult in Parse(biscuitCase.Validation.AuthorizerCode))
+        bool Verify(string user, string resource, string operation)
         {
-            switch(parseResult)
-            {
-                case (var authorizerFact, null, null): authorizer.Add(authorizerFact); break;
-                case (null, var authorizerCheckRule, null): authorizer.Add(new Check(new []{authorizerCheckRule})); break;
-                case (null, null, var policy): authorizer.Add(policy); break;
-                default: throw new Exception();
-            }
-        }*/
-        var authorizerBlock = Parse(biscuitCase.Validation.AuthorizerCode);
-        foreach(var fact in authorizerBlock.Facts)
-        {
-            authorizer.Add(fact);
-        }
+            var authorizerBlock = new AuthorizerBlock()
+                .Add(new F("resource", resource))
+                .Add(new F("user_id", user))
+                .Add(new F("operation", operation))
+                .Add(new Check(
+                        new R(
+                            new F("check1"), 
+                            new F("resource", "$0"),
+                            new F("operation", "$1"),
+                            new F("right", "$0", "$1")
+                        )
+                    )
+                )
+                .Add(Policy.AllowPolicy);
 
-        foreach(var policy in authorizerBlock.Policies)
-        {
-            authorizer.Add(policy);
-        }
+            var factSet = new FactSet();
+            var ruleSet = new RuleSet();
+            var world = new World( 
+                factSet,
+                ruleSet
+            );
+            return Authorizer.TryAuthorize(biscuit.Authority, biscuit.Blocks, world, authorizerBlock, out var error);
 
-        foreach(var chck in authorizerBlock.Checks)
-        {
-            authorizer.Add(chck);
         }
+        Assert.True(Verify("alice", "file1", "write"));
+        Assert.True(Verify("alice", "file2", "write"));
+        Assert.False(Verify("alice", "file3", "write"));
 
-        var check = authorizer.TryAuthorize(biscuit, out var err);
-        if(biscuitCase.Success)
-        {
-            Assert.True(check);
-            return;
-        }
+        Assert.True(Verify("alice", "file1", "read"));
+        Assert.True(Verify("alice", "file2", "read"));
+        Assert.True(Verify("alice", "file3", "read"));
+
+        Assert.False(Verify("bob", "file1", "write"));
+        Assert.False(Verify("bob", "file2", "write"));
+        Assert.False(Verify("bob", "file3", "write"));
+
+        Assert.False(Verify("bob", "file1", "read"));
+        Assert.False(Verify("bob", "file2", "read"));
+        Assert.False(Verify("bob", "file3", "read"));
+
+        Assert.True(Verify("bob", "file4", "read"));
+    }
+
+    [Fact]
+    public void Test_Deny_And_Allow_Policies()
+    {
+        var authority = new Block(
+            new [] {
+                new F("owner", "alice", "file1"),
+                new F("owner", "alice", "file2"),
+                new F("reader", "alice", "file3"),
+                new F("reader", "bob", "file4"),
+            },
+            new [] {
+                new R(
+                    new F("right", "$1", "read"),
+                    new F("user_id", "$0"),
+                    new F("resource", "$1"),
+                    new F("reader", "$0", "$1")
+                ),
+                new R(
+                    new F("right", "$1", "read"), 
+                    new F("user_id", "$0"), 
+                    new F("resource", "$1"), 
+                    new F("owner", "$0", "$1")
+                ),
+                new R(
+                    new F("right", "$1", "read"), 
+                    new F("user_id", "$0"), 
+                    new F("resource", "$1"), 
+                    new F("owner", "$0", "$1")
+                ),
+                new R(
+                    new F("right", "$1", "write"), 
+                    new F("user_id", "$0"), 
+                    new F("resource", "$1"), 
+                    new F("owner", "$0", "$1")
+                )
+            },
+            new Check[] {
+            },
+            3
+        );
+
+        var biscuit = new Biscuit(authority, Array.Empty<Block>());
+
         
-        Assert.Equal(biscuitCase.Validation.Error, err);
+        var authorizerBlockAllow = new AuthorizerBlock()
+            .Add(new F("resource", "file1"))
+            .Add(new F("user_id", "alice"))
+            .Add(new F("operation", "write"))
+            .Add(new Policy(PolicyKind.Allow, new [] { 
+                new R(
+                        new F("check1"), 
+                        new F("resource", "$0"),
+                        new F("operation", "$1"),
+                        new F("right", "$0", "$1")
+                    )
+            }));
+
+        var authorizerBlockDeny = new AuthorizerBlock()
+            .Add(new F("resource", "file1"))
+            .Add(new F("user_id", "alice"))
+            .Add(new F("operation", "write"))
+            .Add(new Policy(PolicyKind.Deny, new [] { 
+                new R(
+                        new F("check1"), 
+                        new F("resource", "$0"),
+                        new F("operation", "$1"),
+                        new F("right", "$0", "$1")
+                    )
+            }));
+
+        var authorizerBlockNoMatchingPolicy = new AuthorizerBlock()
+            .Add(new F("resource", "file666"))
+            .Add(new F("user_id", "alice"))
+            .Add(new F("operation", "write"))
+            .Add(new Policy(PolicyKind.Deny, new [] { 
+                new R(
+                        new F("check1"), 
+                        new F("resource", "$0"),
+                        new F("operation", "$1"),
+                        new F("right", "$0", "$1")
+                    )
+            }));
+        
+        var worldAllow = new World();
+        var worldDeny = new World();
+        var worldNoMatchingPolicy = new World();
+
+        Assert.True(Authorizer.TryAuthorize(biscuit.Authority, biscuit.Blocks, worldAllow, authorizerBlockAllow, out var _));
+        Assert.False(Authorizer.TryAuthorize(biscuit.Authority, biscuit.Blocks, worldDeny, authorizerBlockDeny, out var _));
+        Assert.False(Authorizer.TryAuthorize(biscuit.Authority, biscuit.Blocks, worldNoMatchingPolicy, authorizerBlockNoMatchingPolicy, out var errorNoMatchingPolicy));
+
+        Assert.Equal(new Error(new FailedLogic(new NoMatchingPolicy())), errorNoMatchingPolicy);
     }
-
-    [Theory]
-    [BiscuitCases()]
-    public void Test_Revocation_Ids(BiscuitCase biscuitCase)
-    {
-        var validator = new SignatureValidator(biscuitCase.RootPublicKey);
-        if(!Biscuit.TryDeserialize(biscuitCase.Token, validator, out var biscuit, out var formatErr))
-        {
-            return;
-        }
-        Assert.Equal(biscuitCase.Validation.RevocationIds, biscuit.RevocationIds);
-    }
-
-    AuthorizerBlock Parse(string code)
-    {
-        var parser = new Parser();
-
-        return parser.ParseAuthorizer(code);
-    }
-
-#if false
-    AuthorizerBlock Parse(string code)
-    {
-        string stringTermPattern = @"^([a-zA-Z_]+)\(""([a-zA-Z.0-9]+)""\);$";
-        string intTermPattern = @"^([a-zA-Z_]+)\((\d+)\)$";
-        string dateTermPattern = @"^([a-zA-Z_]+)\(((?:(\d{4}-\d{2}-\d{2})T(\d{2}:\d{2}:\d{2}(?:\.\d+)?))(Z|[\+-]\d{2}:\d{2})?)\);$";
-
-        var stringTermRegex = new Regex(stringTermPattern);
-        var intTermRegex = new Regex(intTermPattern);
-        var dateTermRegex = new Regex(dateTermPattern);
-
-        var lines = code
-            .Split("\n")
-            .Where(line => !string.IsNullOrEmpty(line));
-
-        var authorizerBlock = new AuthorizerBlock();
-        foreach(var line in lines)
-        {
-            var stringMatch = stringTermRegex.Match(line);
-            var dateMatch = dateTermRegex.Match(line);
-            if(stringMatch.Success) 
-            {
-                var name = stringMatch.Groups[1].Value;
-                var value = stringMatch.Groups[2].Value;
-
-                authorizerBlock.Add(new Fact(name, new biscuit_net.Datalog.String(value)));
-                return authorizerBlock;
-            }
-            else if(dateMatch.Success) 
-            {
-                var name = dateMatch.Groups[1].Value;
-                var date = dateMatch.Groups[2].Value;
-
-                var dateParsed = DateTime.Parse(date);
-                var dateTAI = Date.ToTAI64(dateParsed);
-                authorizerBlock.Add(new Fact(name, new Date(dateTAI)));
-                return authorizerBlock;
-            }
-            else if(line.StartsWith("check if"))
-            {
-                var parser = new Parser();
-                yield return (null, parser.ParseRule(line), null);
-            }
-            else if(line.StartsWith("allow if true"))
-            {
-                var parser = new Parser();
-                yield return (null, null, Policy.AllowPolicy);
-            }
-            else if(line.StartsWith("deny if query(3)"))
-            {
-                var parser = new Parser();
-                
-                var policy = new Policy(PolicyKind.Deny, new [] { new RuleConstrained(
-                        new Fact("policy1"), 
-                        new [] {    
-                            new Fact("query", new Integer(3))
-                        },
-                        Enumerable.Empty<Expression>(), 
-                        Scope.DefaultRuleScope
-                    ) 
-                });
-
-                yield return (null, null, policy);
-            }
-            else if(line.StartsWith("deny if query(1, 2)"))
-            {
-                var parser = new Parser();
-                
-                var policy = new Policy(PolicyKind.Deny, new [] { new RuleConstrained(
-                        new Fact("policy2"), 
-                        new [] {    
-                            new Fact("query", new Integer(1), new Integer(2))
-                        },
-                        Enumerable.Empty<Expression>(), 
-                        Scope.DefaultRuleScope
-                    ) 
-                });
-                yield return (null, null, policy);
-            }
-            else if(line.StartsWith("deny if query(0) trusting ed25519/3c8aeced6363b8a862552fb2b0b4b8b0f8244e8cef3c11c3e55fd553f3a90f59"))
-            {
-                var parser = new Parser();
-                
-                var scope = new Scope(new [] { ScopeType.Authority }, new [] { new PublicKey(Algorithm.Ed25519, Convert.FromHexString("3c8aeced6363b8a862552fb2b0b4b8b0f8244e8cef3c11c3e55fd553f3a90f59"))});
-                var policy = new Policy(PolicyKind.Deny, new [] { new RuleConstrained(
-                        new Fact("policy3"), 
-                        new [] {    
-                            new Fact("query", new Integer(0))
-                        },
-                        Enumerable.Empty<Expression>(), 
-                        scope
-                    ) 
-                });
-
-                yield return (null, null, policy);
-            }
-            
-
-            else throw new NotSupportedException(line);
-        }
-    }
-#endif
 }

@@ -1,0 +1,25 @@
+namespace biscuit_net;
+using Datalog;
+
+public class AuthorizerBlock
+{
+    List<Fact> _facts = new List<Fact>();
+    List<RuleConstrained> _rules = new List<RuleConstrained>();
+    List<Check> _checks = new List<Check>();
+    List<Policy> _policies = new List<Policy>();    
+
+    public IEnumerable<Fact> Facts { get => _facts; }
+    public IEnumerable<RuleConstrained> Rules { get => _rules; }
+    public IEnumerable<Check> Checks { get => _checks; }
+    public IEnumerable<Policy> Policies { get => _policies; }
+        
+
+    public Scope Scope { get => Scope.DefaultBlockScope; }
+    public PublicKey? SignedBy { get => null; }
+    public uint Version { get => 4; }
+
+    public AuthorizerBlock Add(Fact fact) { _facts.Add(fact); return this; }
+    public AuthorizerBlock Add(RuleConstrained rule) { _rules.Add(rule); return this; }
+    public AuthorizerBlock Add(Check check) { _checks.Add(check); return this; }
+    public AuthorizerBlock Add(Policy policy) { _policies.Add(policy); return this; }
+}
