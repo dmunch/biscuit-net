@@ -1,7 +1,7 @@
 using biscuit_net;
 using biscuit_net.Datalog;
 using F = biscuit_net.Datalog.Fact;
-using R = biscuit_net.Datalog.RuleConstrained;
+using R = biscuit_net.Datalog.Rule;
 
 namespace tests;
 public class AuthorizerTests

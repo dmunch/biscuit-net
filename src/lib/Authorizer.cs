@@ -9,7 +9,7 @@ public class Authorizer
     AuthorizerBlock _authorizerBlock = new AuthorizerBlock();
     
     public void Add(Fact fact) => _authorizerBlock.Add(fact);
-    public void Add(RuleConstrained rule) => _authorizerBlock.Add(rule);
+    public void Add(Rule rule) => _authorizerBlock.Add(rule);
     public void Add(Check check) => _authorizerBlock.Add(check);
     public void Add(Policy policy) => _authorizerBlock.Add(policy);
     

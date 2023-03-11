@@ -55,7 +55,7 @@ public class ParserTests
         var parser = new Parser();
         var rule = parser.ParseRule(text);
 
-        Assert.Equal(new RuleConstrained(
+        Assert.Equal(new Rule(
             new Fact("rule", new Variable("rulevar")), 
             new List<Fact>
             {
@@ -72,7 +72,7 @@ public class ParserTests
         var parser = new Parser();
         var rule = parser.ParseCheck("check if right($0, $1), resource($0), operation($1)");
 
-        Assert.Equal(new RuleConstrained(
+        Assert.Equal(new Rule(
             new Fact("check1"), 
             new List<Fact>
             {
@@ -91,7 +91,7 @@ public class ParserTests
         var parser = new Parser();
         var rule = parser.ParseCheck("check if must_be_present($0) or must_be_present($0)");
 
-        Assert.Equal(new RuleConstrained(
+        Assert.Equal(new Rule(
             new Fact("check1"), 
             new []
             {
@@ -127,7 +127,7 @@ public class ParserTests
             facts.Add(new Fact(name.Value, new Integer(intValue)));
         }
         
-        Assert.Equal(new RuleConstrained(
+        Assert.Equal(new Rule(
             new Fact("check1"), 
             facts,
             Enumerable.Empty<Expression>(),
@@ -142,7 +142,7 @@ public class ParserTests
         var rule = parser.ParseCheck("check if ns::fact_123(\"hello é\t😁\");");
 
         
-        Assert.Equal(new RuleConstrained(
+        Assert.Equal(new Rule(
             new Fact("check1"), 
             new []
             {
@@ -209,7 +209,7 @@ public class ParserTests
 
         var rule = block.Rules.First();
         
-        Assert.Equal(new RuleConstrained(
+        Assert.Equal(new Rule(
             new Fact("rule", new Variable("rulevar")), 
             new List<Fact>
             {
@@ -232,7 +232,7 @@ public class ParserTests
 
         var rule1 = block.Rules.First();
         
-        Assert.Equal(new RuleConstrained(
+        Assert.Equal(new Rule(
             new Fact("rule1", new Variable("rule1var")), 
             new List<Fact>
             {
@@ -244,7 +244,7 @@ public class ParserTests
 
         var rule2 = block.Rules.ElementAt(1);
         
-        Assert.Equal(new RuleConstrained(
+        Assert.Equal(new Rule(
             new Fact("rule2", new Variable("rule2var")), 
             new List<Fact>
             {

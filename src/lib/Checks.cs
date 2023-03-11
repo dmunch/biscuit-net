@@ -3,9 +3,9 @@ using System.Diagnostics.CodeAnalysis;
 namespace biscuit_net;
 using Datalog;
 
-public record Check(IEnumerable<RuleConstrained> Rules, Check.CheckKind Kind)
+public record Check(IEnumerable<Rule> Rules, Check.CheckKind Kind)
 {
-    public Check(params RuleConstrained[] rules) : this(rules.AsEnumerable(), CheckKind.One) {}
+    public Check(params Rule[] rules) : this(rules.AsEnumerable(), CheckKind.One) {}
 
     public enum CheckKind
     {
@@ -45,7 +45,7 @@ public static class Checks
         return true;
     }
 
-    public static bool TryCheckOne(FactSet factSet, BlockTrustedOriginSet trustedOrigins, IEnumerable<RuleConstrained> rules)
+    public static bool TryCheckOne(FactSet factSet, BlockTrustedOriginSet trustedOrigins, IEnumerable<Rule> rules)
     {
         var ruleResult = false;
 
@@ -62,7 +62,7 @@ public static class Checks
         return ruleResult;   
     }
 
-    static bool TryCheckAll(FactSet factSet, BlockTrustedOriginSet trustedOrigins, IEnumerable<RuleConstrained> rules)
+    static bool TryCheckAll(FactSet factSet, BlockTrustedOriginSet trustedOrigins, IEnumerable<Rule> rules)
     {
         foreach(var rule in rules)
         {
@@ -94,7 +94,7 @@ public static class Checks
         return true;
     }
 
-    public static bool TryCheckBoundVariables(IEnumerable<RuleConstrained> rules, [NotNullWhen(false)] out int? invalidRuleId)
+    public static bool TryCheckBoundVariables(IEnumerable<Rule> rules, [NotNullWhen(false)] out int? invalidRuleId)
     {
         int ruleId = 0;
         foreach(var rule in rules)

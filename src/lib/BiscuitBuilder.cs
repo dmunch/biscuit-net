@@ -17,7 +17,7 @@ public class BiscuitBuilder
     }
 
     public BiscuitBuilder AddAuthority(Fact fact) { Authority.Add(fact); return this; }
-    public BiscuitBuilder AddAuthority(RuleConstrained rule) { Authority.Add(rule); return this; }
+    public BiscuitBuilder AddAuthority(Rule rule) { Authority.Add(rule); return this; }
     public BiscuitBuilder AddAuthority(Check check) { Authority.Add(check); return this; }   
 
     public Proto.Biscuit ToProto()
@@ -60,11 +60,11 @@ public class BiscuitBuilder
 public class BlockBuilder
 {
     public List<Fact> Facts { get; } = new List<Fact>();
-    public List<RuleConstrained> Rules { get; } = new List<RuleConstrained>();
+    public List<Rule> Rules { get; } = new List<Rule>();
     public List<Check> Checks { get; } = new List<Check>();
 
     public BlockBuilder Add(Fact fact) { Facts.Add(fact); return this; }
-    public BlockBuilder Add(RuleConstrained rule) { Rules.Add(rule); return this; }
+    public BlockBuilder Add(Rule rule) { Rules.Add(rule); return this; }
     public BlockBuilder Add(Check check) { Checks.Add(check); return this; } 
 
     public Proto.Block ToProto()

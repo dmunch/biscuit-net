@@ -6,7 +6,7 @@ using Datalog;
 public class Block
 {
     public IEnumerable<Fact> Facts { get; protected set; }
-    public IEnumerable<RuleConstrained> Rules { get; protected set; }
+    public IEnumerable<Rule> Rules { get; protected set; }
     public IEnumerable<Check> Checks { get; protected set; }
     public uint Version { get; protected set; }    
     public Scope Scope { get; }
@@ -14,7 +14,7 @@ public class Block
     
     public Block(
         IEnumerable<Fact> facts, 
-        IEnumerable<RuleConstrained> rules, 
+        IEnumerable<Rule> rules, 
         IEnumerable<Check> checks, 
         uint version        
     ) : this(facts, rules, checks, version, Scope.DefaultBlockScope, null)
@@ -24,7 +24,7 @@ public class Block
 
     public Block(
         IEnumerable<Fact> facts, 
-        IEnumerable<RuleConstrained> rules, 
+        IEnumerable<Rule> rules, 
         IEnumerable<Check> checks, 
         uint version,
         Scope scope,

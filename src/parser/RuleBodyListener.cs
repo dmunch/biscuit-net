@@ -16,7 +16,7 @@ public class RuleBodyListener : ExpressionsBaseListener
     List<PublicKey> _publicKeys = new List<PublicKey>();
 
     Fact? _head = null;
-    public RuleConstrained GetRule()
+    public Rule GetRule()
     {
         if(_head == null) 
         {
@@ -26,9 +26,9 @@ public class RuleBodyListener : ExpressionsBaseListener
         return GetHeadlessRule(_head);
     }
 
-    public RuleConstrained GetHeadlessRule(Fact head)
+    public Rule GetHeadlessRule(Fact head)
     {
-        return new RuleConstrained(
+        return new Rule(
             head, 
             _facts,
             _expressions,

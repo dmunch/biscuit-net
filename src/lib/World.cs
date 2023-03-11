@@ -50,7 +50,7 @@ public class World
         return true;
     }
 
-    void RunRules(BlockTrustedOriginSet origins, IEnumerable<RuleConstrained> rules) 
+    void RunRules(BlockTrustedOriginSet origins, IEnumerable<Rule> rules) 
     {
         var executionFacts = _facts
             .Filter(origins.Origins())

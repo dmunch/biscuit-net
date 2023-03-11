@@ -14,7 +14,7 @@ public class Parser
         return parser.check().Accept(_expressionsVisitor);
     }
 
-    public Datalog.RuleConstrained ParseCheck(string ruleString)
+    public Datalog.Rule ParseCheck(string ruleString)
     {
         var parser = InitializeParser(ruleString, out _);
 
@@ -24,7 +24,7 @@ public class Parser
         return ruleListener.GetHeadlessRule(new Datalog.Fact("check1"));
     }
 
-    public Datalog.RuleConstrained ParseRule(string ruleString)
+    public Datalog.Rule ParseRule(string ruleString)
     {
         var parser = InitializeParser(ruleString, out _);
 

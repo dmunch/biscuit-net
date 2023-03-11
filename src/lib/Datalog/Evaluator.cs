@@ -2,7 +2,7 @@ namespace biscuit_net.Datalog;
 
 public static class Evaluator
 {
-    public static HashSet<Fact> Apply(this IEnumerable<RuleConstrained> rules, IEnumerable<Fact> blockFacts, Func<Scope, IEnumerable<Fact>> additionalFacts)
+    public static HashSet<Fact> Apply(this IEnumerable<Rule> rules, IEnumerable<Fact> blockFacts, Func<Scope, IEnumerable<Fact>> additionalFacts)
     {
         var seed = new HashSet<Fact>();
 
@@ -16,7 +16,7 @@ public static class Evaluator
         return seed;
     }
 
-    public static HashSet<Fact> Evaluate(this IEnumerable<Fact> blockFacts, IEnumerable<RuleConstrained> rules, Func<Scope, IEnumerable<Fact>> additionalFacts)
+    public static HashSet<Fact> Evaluate(this IEnumerable<Fact> blockFacts, IEnumerable<Rule> rules, Func<Scope, IEnumerable<Fact>> additionalFacts)
     {
         var nextKb = rules.Apply(blockFacts, additionalFacts);
 
@@ -29,7 +29,7 @@ public static class Evaluator
         return nextKb;
     }
 
-    public static HashSet<Fact> Evaluate(this IEnumerable<Fact> kb, RuleConstrained rule)
+    public static HashSet<Fact> Evaluate(this IEnumerable<Fact> kb, Rule rule)
     {
         var nextKb = rule.Apply(kb);
         
@@ -53,7 +53,7 @@ public static class Evaluator
         return matches;
     }
 
-    static HashSet<Fact> Apply(this RuleConstrained rule, IEnumerable<Fact> kb)
+    static HashSet<Fact> Apply(this Rule rule, IEnumerable<Fact> kb)
     {
         bool EvalExpressions(Substitution s) => 
             rule.Constraints.All(ex =>

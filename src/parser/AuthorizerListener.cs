@@ -9,7 +9,7 @@ public class AuthorizerListener : ExpressionsBaseListener
 {
     TermVisitor _termVisitor = new TermVisitor();
     List<Fact> _facts = new List<Fact>();
-    List<RuleConstrained> _rules = new List<RuleConstrained>();
+    List<Rule> _rules = new List<Rule>();
     List<Policy> _policies = new List<Policy>();
     List<Check> _checks = new List<Check>();
 
@@ -88,9 +88,9 @@ public class AuthorizerListener : ExpressionsBaseListener
         _checks.Add(check);
     }
 
-    static List<RuleConstrained> GetHeadlessRules(Fact head, IEnumerable<ExpressionsParser.Rule_bodyContext> ruleBodyContexts)
+    static List<Rule> GetHeadlessRules(Fact head, IEnumerable<ExpressionsParser.Rule_bodyContext> ruleBodyContexts)
     {
-        var rules = new List<RuleConstrained>();
+        var rules = new List<Rule>();
         foreach(var ruleBodyContext in ruleBodyContexts) 
         {
             var ruleBodyListener = new RuleBodyListener();
