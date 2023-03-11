@@ -23,6 +23,11 @@ public class AuthorizerListener : ExpressionsBaseListener
             authorizerBlock.Add(fact);
         }
 
+        foreach(var rule in _rules)
+        {
+            authorizerBlock.Add(rule);
+        }
+
         foreach(var policy in _policies)
         {
             authorizerBlock.Add(policy);
@@ -46,12 +51,12 @@ public class AuthorizerListener : ExpressionsBaseListener
         _facts.Add(new Fact(name, Facts));
     }
 
-    public override void ExitRule_body([NotNull] ExpressionsParser.Rule_bodyContext context)
+    public override void ExitRule_([NotNull] ExpressionsParser.Rule_Context context)
     {
-        var ruleListener = new RuleListener();
-        ParseTreeWalker.Default.Walk(ruleListener, context);
-        
-        _rules.Add(ruleListener.GetRule());
+        var ruleBodyListener = new RuleBodyListener();
+        ParseTreeWalker.Default.Walk(ruleBodyListener, context);
+
+        _rules.Add(ruleBodyListener.GetRule());
     }
 
     public override void ExitPolicy([NotNull] ExpressionsParser.PolicyContext context)
@@ -62,10 +67,10 @@ public class AuthorizerListener : ExpressionsBaseListener
             "allow" => PolicyKind.Allow,
             _ => throw new NotSupportedException($"Policy kind {context.kind.Text} not supported")
         };
-        var policy = new Policy(kind, _rules.AsReadOnly());
-        _policies.Add(policy);
+        var rules = GetHeadlessRules(new Fact("policy1"), context.rule_body());
 
-        _rules = new List<RuleConstrained>();
+        var policy = new Policy(kind, rules.AsReadOnly());
+        _policies.Add(policy);
     }
 
     public override void ExitCheck([NotNull] ExpressionsParser.CheckContext context)
@@ -76,9 +81,23 @@ public class AuthorizerListener : ExpressionsBaseListener
             "all" => Check.CheckKind.All,
             _ => throw new NotSupportedException($"Check kind {context.kind.Text} not supported")
         };
-        var check = new Check(_rules, kind);
-        _checks.Add(check);
 
-        _rules = new List<RuleConstrained>();
+        var rules = GetHeadlessRules(new Fact("check1"), context.rule_body());
+        
+        var check = new Check(rules, kind);
+        _checks.Add(check);
+    }
+
+    static List<RuleConstrained> GetHeadlessRules(Fact head, IEnumerable<ExpressionsParser.Rule_bodyContext> ruleBodyContexts)
+    {
+        var rules = new List<RuleConstrained>();
+        foreach(var ruleBodyContext in ruleBodyContexts) 
+        {
+            var ruleBodyListener = new RuleBodyListener();
+            ParseTreeWalker.Default.Walk(ruleBodyListener, ruleBodyContext);
+            rules.Add(ruleBodyListener.GetHeadlessRule(head));
+        }
+
+        return rules;
     }
 }

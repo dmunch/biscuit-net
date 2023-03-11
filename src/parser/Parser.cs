@@ -14,12 +14,22 @@ public class Parser
         return parser.check().Accept(_expressionsVisitor);
     }
 
+    public Datalog.RuleConstrained ParseCheck(string ruleString)
+    {
+        var parser = InitializeParser(ruleString, out _);
+
+        var ruleListener = new RuleBodyListener();
+        ParseTreeWalker.Default.Walk(ruleListener, parser.check());
+
+        return ruleListener.GetHeadlessRule(new Datalog.Fact("check1"));
+    }
+
     public Datalog.RuleConstrained ParseRule(string ruleString)
     {
         var parser = InitializeParser(ruleString, out _);
 
-        var ruleListener = new RuleListener();
-        ParseTreeWalker.Default.Walk(ruleListener, parser.check());
+        var ruleListener = new RuleBodyListener();
+        ParseTreeWalker.Default.Walk(ruleListener, parser.rule_());
 
         return ruleListener.GetRule();
     }

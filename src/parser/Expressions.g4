@@ -11,9 +11,10 @@ origin_element
 signature_alg: 'ed25519';
 
 authorizer: (authorizer_element)*;
-authorizer_element: ( policy | check | fact /*| rule*/ ) ';';
+authorizer_element: ( policy | check | fact | rule_ ) ';';
 
 fact: NAME '(' fact_term (',' fact_term)* ')';
+rule_: predicate  '<-' rule_body;
 check: 'check' kind=('if' | 'all') rule_body ('or' rule_body)*;
 policy: kind=('allow' | 'deny') 'if' rule_body ('or' rule_body)*;
 

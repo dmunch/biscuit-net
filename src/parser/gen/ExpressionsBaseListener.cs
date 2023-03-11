@@ -138,6 +138,18 @@ public partial class ExpressionsBaseListener : IExpressionsListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitFact([NotNull] ExpressionsParser.FactContext context) { }
 	/// <summary>
+	/// Enter a parse tree produced by <see cref="ExpressionsParser.rule_"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterRule_([NotNull] ExpressionsParser.Rule_Context context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="ExpressionsParser.rule_"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitRule_([NotNull] ExpressionsParser.Rule_Context context) { }
+	/// <summary>
 	/// Enter a parse tree produced by <see cref="ExpressionsParser.check"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
