@@ -18,13 +18,25 @@ public class SignatureCreator
         PublicKey = _key.PublicKey.Export(KeyBlobFormat.RawPublicKey);
     }
     
+    public SignatureCreator(NextKey nextKey)
+    {
+        _key = NSec.Cryptography.Key.Import(_algorithm, nextKey.Private, KeyBlobFormat.RawPrivateKey);
+        
+        PublicKey = nextKey.Public;
+    }
+
     public NextKey GetNextKey() 
     {
-        var nextKey = NSec.Cryptography.Key.Create(_algorithm);
+        var creationParameters = new KeyCreationParameters() 
+        {
+            ExportPolicy = KeyExportPolicies.AllowPlaintextExport
+        };
+
+        var nextKey = NSec.Cryptography.Key.Create(_algorithm, creationParameters);
 
         return new NextKey(
             nextKey.PublicKey.Export(KeyBlobFormat.RawPublicKey),
-            nextKey.Export(KeyBlobFormat.RawPublicKey)
+            nextKey.Export(KeyBlobFormat.RawPrivateKey)
         );
     }
 

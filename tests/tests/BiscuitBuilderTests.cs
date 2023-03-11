@@ -100,4 +100,27 @@ public class BiscuitBuilderTests
         Assert.False(Parser.Authorizer("""resource("file3"); allow if true;""").TryAuthorize(biscuit, out _));
         Assert.True(Parser.Authorizer("""resource("file4"); allow if true;""").TryAuthorize(biscuit, out _));
     }
+
+    [Fact]
+    public void TestBuilderBlocks()
+    {
+        var signer = new SignatureCreator();
+        var builder = new BiscuitBuilder(signer);
+        var parser = new Parser();
+        
+        builder
+            .AddAuthority(new Fact("resource", new biscuit_net.Datalog.String("file4")))
+            .AddBlock()
+            .Add(parser.ParseCheck("""check if resource("file4")"""))
+            .Add(parser.ParseCheck("""check if resource("file5")"""));
+
+        var validator = new SignatureValidator(signer.PublicKey);
+        if(!Biscuit.TryDeserialize(builder.Serialize(), validator, out var biscuit, out var formatErr))
+        {
+            throw new Exception($"Couldn't round-trip biscuit: {formatErr}");
+        }
+
+        Assert.True(Parser.Authorizer("""resource("file5"); allow if true;""").TryAuthorize(biscuit, out _));
+        Assert.False(Parser.Authorizer("""resource("file6"); allow if true;""").TryAuthorize(biscuit, out _));
+    }
 }
