@@ -73,6 +73,8 @@ public class BlockBuilder
         var blockV2 = new Proto.Block();
 
         blockV2.FactsV2s.AddRange(ProtoConverters.ToFactsV2(Facts, symbols));
+        blockV2.RulesV2s.AddRange(ProtoConverters.ToRulesV2(Rules, symbols));
+        
         blockV2.Symbols.AddRange(symbols.Symbols);
         blockV2.Version = 3;
 
@@ -123,4 +125,51 @@ public static class ProtoConverters
         termSet.Sets.AddRange(s.Values.Select(v => ToTermV2(v, symbols)).ToList());
         return new TermV2() { Set = termSet }; 
     }
+
+    static public IEnumerable<RuleV2> ToRulesV2(IEnumerable<Rule> rules, SymbolTable symbols)
+    {
+        return rules.Select(rule => ToRuleV2(rule, symbols)).ToList();
+    }
+
+    static public RuleV2 ToRuleV2(Rule rule, SymbolTable symbols)
+    {
+        var ruleV2 = new RuleV2();
+        ruleV2.Head = ToFactV2(rule.Head, symbols).Predicate;
+        ruleV2.Bodies.AddRange(rule.Body.Select(t => ToFactV2(t, symbols).Predicate));
+        ruleV2.Expressions.AddRange(rule.Constraints.Select(c => ToExpressionsV2(c, symbols)));
+        
+        ruleV2.Scopes.Add(new Proto.Scope() { scopeType = Proto.Scope.ScopeType.Authority });
+        
+        return ruleV2;
+    }
+
+    static public ExpressionV2 ToExpressionsV2(Expressions.Expression expr, SymbolTable symbols)
+    {
+        var exprV2 = new ExpressionV2();
+        exprV2.Ops.AddRange(expr.Ops.Select(op => ToOp(op, symbols)));
+        return exprV2;
+    }
+
+    static public Op ToOp(Expressions.Op op, SymbolTable symbols)
+    {
+        var protoOp = new Op();
+        
+        switch(op.Type)
+        {
+            case Expressions.Op.OpType.None:
+                break;
+            case Expressions.Op.OpType.Unary:
+                protoOp.Unary = new OpUnary() { kind = (OpUnary.Kind) op.UnaryOp.OpKind };
+                break;
+            case Expressions.Op.OpType.Binary:
+                protoOp.Binary = new OpBinary() { kind = (OpBinary.Kind) op.BinaryOp.OpKind };
+                break;
+            case Expressions.Op.OpType.Value:
+                protoOp.Value = ToTermV2(op.Value, symbols);
+                break;
+        }
+        
+        return protoOp;
+    }
+
 }

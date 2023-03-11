@@ -27,7 +27,7 @@ public class World
         }
     }
     
-    public bool RunRules(Block authority, IEnumerable<Block> blocks, TrustedOriginSet trustedOrigins, [NotNullWhen(false)] out Error? err) 
+    public bool RunRules(Block authority, IEnumerable<Block> blocks, AuthorizerBlock authorizer, TrustedOriginSet trustedOrigins, [NotNullWhen(false)] out Error? err) 
     {
         try
         {
@@ -40,6 +40,8 @@ public class World
             {            
                 RunRules(trustedOrigins.With(blockId++), block.Rules);
             }
+
+            RunRules(trustedOrigins.With(Origins.Authorizer), authorizer.Rules);
         } catch(OverflowException)
         {
             err = new Error(new FailedExecution("Overflow"));

@@ -70,27 +70,8 @@ public class BiscuitSamplesTests
 
     public static Authorizer ParseAuthorizer(string authorizerCode)
     {
-        var authorizer = new Authorizer();
         var parser = new Parser();
-
-        var authorizerBlock = parser.ParseAuthorizer(authorizerCode);
-        
-        foreach(var fact in authorizerBlock.Facts)
-        {
-            authorizer.Add(fact);
-        }
-
-        foreach(var policy in authorizerBlock.Policies)
-        {
-            authorizer.Add(policy);
-        }
-
-        foreach(var chck in authorizerBlock.Checks)
-        {
-            authorizer.Add(chck);
-        }
-
-        return authorizer;
+        return new Authorizer(parser.ParseAuthorizer(authorizerCode));
     }
 
     [Theory]

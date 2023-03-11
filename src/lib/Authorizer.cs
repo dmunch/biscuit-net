@@ -12,6 +12,13 @@ public class Authorizer
     public void Add(Rule rule) => _authorizerBlock.Add(rule);
     public void Add(Check check) => _authorizerBlock.Add(check);
     public void Add(Policy policy) => _authorizerBlock.Add(policy);
+    public void Add(AuthorizerBlock authorizer) => _authorizerBlock.Add(authorizer);
+    
+    public Authorizer() {}
+    public Authorizer(AuthorizerBlock authorizerBlock)
+    {
+        Add(authorizerBlock);
+    }
     
     public void Allow()
     {
@@ -49,13 +56,10 @@ public class Authorizer
         var trustedOrigins = TrustedOriginSet.Build(authority, blocks, authorizerBlock.Scope);
 
         world.AddFacts(authority, blocks, authorizerBlock);
-        if(!world.RunRules(authority, blocks, trustedOrigins, out err))
+        if(!world.RunRules(authority, blocks, authorizerBlock, trustedOrigins, out err))
         {
             return false;
         }
-        
-        //run authorizer rules 
-        //var authorizerTrustedOrigin = trustedOrigins.Origins(uint.MaxValue, authorizerBlock.Scope);
         
         if(!world.RunChecks(authority, blocks, authorizerBlock, trustedOrigins, out err))
         {

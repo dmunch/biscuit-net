@@ -22,4 +22,29 @@ public class AuthorizerBlock
     public AuthorizerBlock Add(Rule rule) { _rules.Add(rule); return this; }
     public AuthorizerBlock Add(Check check) { _checks.Add(check); return this; }
     public AuthorizerBlock Add(Policy policy) { _policies.Add(policy); return this; }
+
+    public AuthorizerBlock Add(AuthorizerBlock other) 
+    {
+        foreach(var fact in other.Facts)
+        {
+            Add(fact);
+        }
+
+        foreach(var rule in other.Rules)
+        {
+            Add(rule);
+        }
+
+        foreach(var policy in other.Policies)
+        {
+            Add(policy);
+        }
+
+        foreach(var chck in other.Checks)
+        {
+            Add(chck);
+        }
+        
+        return this;
+    }
 }
