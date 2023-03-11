@@ -53,18 +53,10 @@ public static class Checks
         {
             var facts = factSet.Filter(trustedOrigins.Origins(rule.Scope));
 
-            var eval = facts.Evaluate(rule, out var expressionResult);
-            eval.UnionWith(facts);
-            var subs = rule.Head.UnifyWith(eval, new Substitution());
+            var eval = facts.Evaluate(rule);
+            ruleResult |= eval.Any();
 
-            if(rule.Body.Any())
-            {
-                ruleResult |= subs.Any();
-            }
-            if(rule.Constraints.Any())
-            {
-                ruleResult |= expressionResult;
-            }
+            eval.UnionWith(facts);
         }
 
         return ruleResult;   
@@ -76,7 +68,13 @@ public static class Checks
         {
             var facts = factSet.Filter(trustedOrigins.Origins(rule.Scope));
 
-            var eval = facts.Evaluate(rule);
+            //for check all, we want to evaluate the expressions once we found all matches
+            //so we evaluate the body without taking into account the expressions first
+            //and run the expressions only later ontop of the matches
+            var ruleWithoutExpressions = rule with {
+                Constraints = Enumerable.Empty<Expressions.Expression>()
+            };
+            var eval = facts.Evaluate(ruleWithoutExpressions);
             eval.UnionWith(facts);
             
             var matches = rule.Body.Match(eval);
@@ -96,7 +94,7 @@ public static class Checks
         return true;
     }
 
-    public static bool TryCheckBoundVariables(IEnumerable<Rule> rules, [NotNullWhen(false)] out int? invalidRuleId)
+    public static bool TryCheckBoundVariables(IEnumerable<RuleConstrained> rules, [NotNullWhen(false)] out int? invalidRuleId)
     {
         int ruleId = 0;
         foreach(var rule in rules)

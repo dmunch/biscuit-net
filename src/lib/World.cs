@@ -52,10 +52,9 @@ public class World
 
     void RunRules(BlockTrustedOriginSet origins, IEnumerable<RuleConstrained> rules) 
     {
-        //var origins = trustedOrigins.With(blockId);
         var executionFacts = _facts
             .Filter(origins.Origins())
-            .Evaluate(rules, _facts, origins);
+            .Evaluate(rules, scope => _facts.Filter(origins.Origins(scope)));
 
         _facts.UnionWith(origins.BlockId, executionFacts);
     }
