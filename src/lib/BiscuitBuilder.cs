@@ -74,6 +74,7 @@ public class BlockBuilder
 
         blockV2.FactsV2s.AddRange(ProtoConverters.ToFactsV2(Facts, symbols));
         blockV2.RulesV2s.AddRange(ProtoConverters.ToRulesV2(Rules, symbols));
+        blockV2.ChecksV2s.AddRange(ProtoConverters.ToChecksV2(Checks, symbols));
         
         blockV2.Symbols.AddRange(symbols.Symbols);
         blockV2.Version = 3;
@@ -141,6 +142,21 @@ public static class ProtoConverters
         ruleV2.Scopes.Add(new Proto.Scope() { scopeType = Proto.Scope.ScopeType.Authority });
         
         return ruleV2;
+    }
+
+    static public IEnumerable<CheckV2> ToChecksV2(IEnumerable<Check> checks, SymbolTable symbols)
+    {
+        return checks.Select(check => ToCheckV2(check, symbols)).ToList();
+    }
+
+    static public CheckV2 ToCheckV2(Check check, SymbolTable symbols)
+    {
+        var checkV2 = new CheckV2();
+
+        checkV2.kind = (CheckV2.Kind) check.Kind;
+        checkV2.Queries.AddRange(ToRulesV2(check.Rules, symbols));
+        
+        return checkV2;
     }
 
     static public ExpressionV2 ToExpressionsV2(Expressions.Expression expr, SymbolTable symbols)

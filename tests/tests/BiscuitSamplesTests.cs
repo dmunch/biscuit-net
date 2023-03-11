@@ -37,7 +37,7 @@ public class BiscuitSamplesTests
             return;
         }
 
-        var authorizer = ParseAuthorizer(biscuitCase.Validation.AuthorizerCode);
+        var authorizer = Parser.Authorizer(biscuitCase.Validation.AuthorizerCode);
         
         var check = authorizer.TryAuthorize(biscuit, out var err);
 
@@ -61,17 +61,11 @@ public class BiscuitSamplesTests
             return;
         }
         
-        var authorizer = ParseAuthorizer(biscuitCase.Validation.AuthorizerCode);
+        var authorizer = Parser.Authorizer(biscuitCase.Validation.AuthorizerCode);
         var check = authorizer.TryAuthorize(biscuit, out var err);
         
         var aFacts = new HashSet<biscuit_net.Datalog.Fact>(authorizer.World.Facts);
         Assert.Equal(biscuitCase.Validation.WorldFacts, aFacts);
-    }
-
-    public static Authorizer ParseAuthorizer(string authorizerCode)
-    {
-        var parser = new Parser();
-        return new Authorizer(parser.ParseAuthorizer(authorizerCode));
     }
 
     [Theory]

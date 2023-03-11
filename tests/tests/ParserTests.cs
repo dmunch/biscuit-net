@@ -70,7 +70,7 @@ public class ParserTests
     public void Should_Parse_Check_1()
     {
         var parser = new Parser();
-        var rule = parser.ParseCheck("check if right($0, $1), resource($0), operation($1)");
+        var check = parser.ParseCheck("check if right($0, $1), resource($0), operation($1)");
 
         Assert.Equal(new Rule(
             new Fact("check1"), 
@@ -82,14 +82,14 @@ public class ParserTests
             }, 
             new List<Expression>(),
             Scope.DefaultBlockScope
-        ), rule);
+        ), check.Rules.First());
     }
 
     [Fact]
     public void Should_Parse_Check_With_Or()
     {
         var parser = new Parser();
-        var rule = parser.ParseCheck("check if must_be_present($0) or must_be_present($0)");
+        var check = parser.ParseCheck("check if must_be_present($0) or must_be_present($0)");
 
         Assert.Equal(new Rule(
             new Fact("check1"), 
@@ -100,17 +100,17 @@ public class ParserTests
             }, 
             Enumerable.Empty<Expression>(),
             Scope.DefaultBlockScope
-        ), rule);
+        ), check.Rules.First());
     }
 
     [Fact]
     public void Should_Parse_Check_With_Default_Symbols()
     {
         var parser = new Parser();
-        var check = "check if read(0), write(1), resource(2), operation(3), right(4), time(5), role(6), owner(7), tenant(8), namespace(9), user(10), team(11), service(12), admin(13), email(14), group(15), member(16), ip_address(17), client(18), client_ip(19), domain(20), path(21), version(22), cluster(23), node(24), hostname(25), nonce(26), query(27)";
-        var rule = parser.ParseCheck(check);
+        var code = "check if read(0), write(1), resource(2), operation(3), right(4), time(5), role(6), owner(7), tenant(8), namespace(9), user(10), team(11), service(12), admin(13), email(14), group(15), member(16), ip_address(17), client(18), client_ip(19), domain(20), path(21), version(22), cluster(23), node(24), hostname(25), nonce(26), query(27)";
+        var check = parser.ParseCheck(code);
 
-        var tokens = check.Split(", ");
+        var tokens = code.Split(", ");
         tokens[0] = tokens[0].Remove(0, "check if ".Length);
 
         string intTermPattern = @"^([a-zA-Z_]+)\((\d+)\)$";
@@ -132,14 +132,14 @@ public class ParserTests
             facts,
             Enumerable.Empty<Expression>(),
             Scope.DefaultBlockScope
-        ), rule);
+        ), check.Rules.First());
     }
 
     [Fact]
     public void Should_Parse_Check_With_Funny_Characters()
     {
         var parser = new Parser();
-        var rule = parser.ParseCheck("check if ns::fact_123(\"hello é\t😁\");");
+        var check = parser.ParseCheck("check if ns::fact_123(\"hello é\t😁\");");
 
         
         Assert.Equal(new Rule(
@@ -150,7 +150,7 @@ public class ParserTests
             }, 
             Enumerable.Empty<Expression>(),
             Scope.DefaultBlockScope
-        ), rule);
+        ), check.Rules.First());
     }
 
     [Fact]

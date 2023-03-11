@@ -6,6 +6,12 @@ using biscuit_net.Expressions;
 
 public class Parser
 {
+    public static Authorizer Authorizer(string code)
+    {
+        var parser = new Parser();
+        return new Authorizer(parser.ParseAuthorizer(code));
+    }
+
     private readonly ExpressionsVisitor _expressionsVisitor = new ExpressionsVisitor();
     public List<Op> Parse(string rule)
     {
@@ -14,14 +20,15 @@ public class Parser
         return parser.check().Accept(_expressionsVisitor);
     }
 
-    public Datalog.Rule ParseCheck(string ruleString)
+    public Check ParseCheck(string ruleString)
     {
         var parser = InitializeParser(ruleString, out _);
 
-        var ruleListener = new RuleBodyListener();
-        ParseTreeWalker.Default.Walk(ruleListener, parser.check());
+        var listener = new AuthorizerListener();
+        ParseTreeWalker.Default.Walk(listener, parser.check());
 
-        return ruleListener.GetHeadlessRule(new Datalog.Fact("check1"));
+        return listener.GetAuthorizerBlock().Checks.First();;
+        //return ruleListener.GetHeadlessRule(new Datalog.Fact("check1"));
     }
 
     public Datalog.Rule ParseRule(string ruleString)

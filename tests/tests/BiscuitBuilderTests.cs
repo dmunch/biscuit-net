@@ -53,7 +53,7 @@ public class BiscuitBuilderTests
             throw new Exception($"Couldn't round-trip biscuit: {formatErr}");
         }
 
-        var authorizer = ParseAuthorizer("kkk($0, $1) <- opi($0, $1); allow if true;");        
+        var authorizer = Parser.Authorizer("kkk($0, $1) <- opi($0, $1); allow if true;");        
         var success = authorizer.TryAuthorize(biscuit, out var err);
 
         Assert.True(success);
@@ -79,9 +79,25 @@ public class BiscuitBuilderTests
         
     }
 
-    public static Authorizer ParseAuthorizer(string authorizerCode)
+    [Fact]
+    public void TestBuilderChecks()
     {
+        var signer = new SignatureCreator();
+        var builder = new BiscuitBuilder(signer);
         var parser = new Parser();
-        return new Authorizer(parser.ParseAuthorizer(authorizerCode));
+        
+        builder
+            .AddAuthority(parser.ParseCheck("""check if resource("file4")"""));
+
+        var bytes = builder.Serialize();
+
+        var validator = new SignatureValidator(signer.PublicKey);
+        if(!Biscuit.TryDeserialize(bytes, validator, out var biscuit, out var formatErr))
+        {
+            throw new Exception($"Couldn't round-trip biscuit: {formatErr}");
+        }
+
+        Assert.False(Parser.Authorizer("""resource("file3"); allow if true;""").TryAuthorize(biscuit, out _));
+        Assert.True(Parser.Authorizer("""resource("file4"); allow if true;""").TryAuthorize(biscuit, out _));
     }
 }
