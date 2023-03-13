@@ -2,6 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 
 namespace biscuit_net;
+using Builder;
 
 public class Biscuit
 {

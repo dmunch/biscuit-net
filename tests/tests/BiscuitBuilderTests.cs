@@ -1,6 +1,7 @@
 using biscuit_net;
 using biscuit_net.Datalog;
 using biscuit_net.Parser;
+using biscuit_net.Builder;
 using F = biscuit_net.Datalog.Fact;
 
 namespace tests;

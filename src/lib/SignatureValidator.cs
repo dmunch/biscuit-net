@@ -116,8 +116,8 @@ static class SignatureHelper
     static bool VerifyProof(Proto.Biscuit biscuitProto)
     {
         //verify proof 
-        var key = (biscuitProto.Blocks.LastOrDefault() ?? biscuitProto.Authority).nextKey.Key;
-        var validator = new SignatureValidator(key);
+        var publicKey = (biscuitProto.Blocks.LastOrDefault() ?? biscuitProto.Authority).nextKey.Key;
+        var validator = new SignatureValidator(publicKey);
         
         if(biscuitProto.Proof.finalSignature != null)
         {
@@ -128,8 +128,8 @@ static class SignatureHelper
         } 
         else if(biscuitProto.Proof.nextSecret != null) 
         {
-            var signer = new SignatureCreator(biscuitProto.Proof.nextSecret);
-            return validator.Key.SequenceEqual(signer.PublicKey);
+            var key = NSec.Cryptography.Key.Import(SignatureAlgorithm.Ed25519, biscuitProto.Proof.nextSecret, KeyBlobFormat.RawPrivateKey);
+            return validator.Key.SequenceEqual(key.PublicKey.Export(KeyBlobFormat.RawPublicKey));
         } 
 
         //proof field has been tampered with          

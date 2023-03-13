@@ -1,6 +1,6 @@
 using biscuit_net.Datalog;
 
-namespace biscuit_net;
+namespace biscuit_net.Builder;
 
 public class BlockBuilder
 {

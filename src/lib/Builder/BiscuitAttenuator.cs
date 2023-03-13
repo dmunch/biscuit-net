@@ -1,7 +1,6 @@
 using ProtoBuf;
-using System.Buffers;
 
-namespace biscuit_net;
+namespace biscuit_net.Builder;
 
 public class BiscuitAttenuator : IBiscuitBuilder
 {
