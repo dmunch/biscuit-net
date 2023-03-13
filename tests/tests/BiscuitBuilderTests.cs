@@ -11,15 +11,17 @@ public class BiscuitBuilderTests
     public void TestBuilder()
     {
         var signer = new SignatureCreator();
-        var builder = new BiscuitBuilder(signer);
+        
+        var bytes = Biscuit.New(signer)
+            .AuthorityBlock()
+                .Add(new F("right", "/a/file1.txt", "read"))
+                .Add(new F("right", "/a/file1.txt", "write"))
+                .Add(new F("right", "/a/file2.txt", "read"))
+                .Add(new F("right", "/b/file2.txt", "write"))
+            .EndBlock()
+            .Serialize();
 
-        builder
-            .AddAuthority(new F("right", "/a/file1.txt", "read"))
-            .AddAuthority(new F("right", "/a/file1.txt", "write"))
-            .AddAuthority(new F("right", "/a/file2.txt", "read"))
-            .AddAuthority(new F("right", "/b/file2.txt", "write"));
-
-        var bytes = builder.Serialize();
+        //var bytes = builder.Serialize();
 
         var validator = new SignatureValidator(signer.PublicKey);
         if(!Biscuit.TryDeserialize(bytes, validator, out var biscuit, out var formatErr))
@@ -35,17 +37,18 @@ public class BiscuitBuilderTests
     public void TestBuilderRules()
     {
         var signer = new SignatureCreator();
-        var builder = new BiscuitBuilder(signer);
+        var builder = Biscuit.New(signer);
         var parser = new Parser();
         
-        builder
-            .AddAuthority(new F("resource", "file1"))
-            .AddAuthority(new F("resource", "file2"))
-            .AddAuthority(new F("operation", "read"))
-            .AddAuthority(new F("operation", "write"))
-            .AddAuthority(parser.ParseRule("opi($0, $1) <- resource($0), operation($1)"));
-
-        var bytes = builder.Serialize();
+        var bytes = Biscuit.New(signer)
+            .AuthorityBlock()
+                .Add(new F("resource", "file1"))
+                .Add(new F("resource", "file2"))
+                .Add(new F("operation", "read"))
+                .Add(new F("operation", "write"))
+                .Add(parser.ParseRule("opi($0, $1) <- resource($0), operation($1)"))
+            .EndBlock()
+            .Serialize();
 
         var validator = new SignatureValidator(signer.PublicKey);
         if(!Biscuit.TryDeserialize(bytes, validator, out var biscuit, out var formatErr))
@@ -83,13 +86,13 @@ public class BiscuitBuilderTests
     public void TestBuilderChecks()
     {
         var signer = new SignatureCreator();
-        var builder = new BiscuitBuilder(signer);
         var parser = new Parser();
         
-        builder
-            .AddAuthority(parser.ParseCheck("""check if resource("file4")"""));
-
-        var bytes = builder.Serialize();
+        var bytes = Biscuit.New(signer)
+            .AuthorityBlock()
+                .Add(parser.ParseCheck("""check if resource("file4")"""))
+            .EndBlock()
+            .Serialize();
 
         var validator = new SignatureValidator(signer.PublicKey);
         if(!Biscuit.TryDeserialize(bytes, validator, out var biscuit, out var formatErr))
@@ -105,17 +108,49 @@ public class BiscuitBuilderTests
     public void TestBuilderBlocks()
     {
         var signer = new SignatureCreator();
-        var builder = new BiscuitBuilder(signer);
+        var validator = new SignatureValidator(signer.PublicKey);        
         var parser = new Parser();
         
-        builder
-            .AddAuthority(new Fact("resource", new biscuit_net.Datalog.String("file4")))
+        var bytes = Biscuit.New(signer)
+            .AuthorityBlock()
+                .Add(new F("resource", "file4"))
+            .EndBlock()
             .AddBlock()
-            .Add(parser.ParseCheck("""check if resource("file4")"""))
-            .Add(parser.ParseCheck("""check if resource("file5")"""));
+                .Add(parser.ParseCheck("""check if resource("file4")"""))
+                .Add(parser.ParseCheck("""check if resource("file5")"""))
+            .EndBlock()
+            .Serialize();
 
-        var validator = new SignatureValidator(signer.PublicKey);
-        if(!Biscuit.TryDeserialize(builder.Serialize(), validator, out var biscuit, out var formatErr))
+        if(!Biscuit.TryDeserialize(bytes, validator, out var biscuit, out var formatErr))
+        {
+            throw new Exception($"Couldn't round-trip biscuit: {formatErr}");
+        }
+
+        Assert.True(Parser.Authorizer("""resource("file5"); allow if true;""").TryAuthorize(biscuit, out _));
+        Assert.False(Parser.Authorizer("""resource("file6"); allow if true;""").TryAuthorize(biscuit, out _));
+    }
+
+    [Fact]
+    public void TestAttenuation()
+    {
+        var signer = new SignatureCreator();
+        var validator = new SignatureValidator(signer.PublicKey);        
+        var parser = new Parser();
+        
+        var token1 = Biscuit.New(signer)
+            .AuthorityBlock()
+                .Add(new F("resource", "file4"))
+            .EndBlock()            
+            .Serialize();
+
+        var token2 = Biscuit.Attenuate(token1)
+            .AddBlock()
+                .Add(parser.ParseCheck("""check if resource("file4")"""))
+                .Add(parser.ParseCheck("""check if resource("file5")"""))
+            .EndBlock()
+            .Serialize();
+        
+        if(!Biscuit.TryDeserialize(token2, validator, out var biscuit, out var formatErr))
         {
             throw new Exception($"Couldn't round-trip biscuit: {formatErr}");
         }

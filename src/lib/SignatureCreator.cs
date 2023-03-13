@@ -25,6 +25,12 @@ public class SignatureCreator
         PublicKey = nextKey.Public;
     }
 
+    public SignatureCreator(byte[] nextSecretKey)
+    {
+        _key = NSec.Cryptography.Key.Import(_algorithm, nextSecretKey, KeyBlobFormat.RawPrivateKey);
+        PublicKey = _key.PublicKey.Export(KeyBlobFormat.RawPublicKey);
+    }
+
     public NextKey GetNextKey() 
     {
         var creationParameters = new KeyCreationParameters() 

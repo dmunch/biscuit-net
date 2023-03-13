@@ -8,13 +8,23 @@ public class Biscuit
     public Block Authority { get; private set; }
     public IReadOnlyList<Block> Blocks { get; protected set; }
     public IReadOnlyList<string> RevocationIds { get; private set; }
-        
+
     Biscuit(Block authority, IReadOnlyList<Block> blocks, IReadOnlyList<string> revocationIds)
     {
         Authority = authority;
         
         Blocks = blocks;
         RevocationIds = revocationIds;
+    }
+
+    public static BiscuitBuilder New(SignatureCreator rootSigner)
+    {
+        return new BiscuitBuilder(rootSigner);
+    }
+
+    public static BiscuitAttenuator Attenuate(ReadOnlySpan<byte> bytes)
+    {
+        return BiscuitAttenuator.Attenuate(bytes);
     }
 
     public static bool TryDeserialize(ReadOnlySpan<byte> bytes, SignatureValidator validator, [NotNullWhen(true)] out Biscuit? biscuit, [NotNullWhen(false)] out FailedFormat? err)
@@ -44,7 +54,7 @@ public class Biscuit
         }
         
         biscuit = new Biscuit(authority, blocks.AsReadOnly(), revocationIds.AsReadOnly());
-
+        
         err = null; return true;
     }
 

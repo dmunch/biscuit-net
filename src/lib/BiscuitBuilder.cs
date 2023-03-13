@@ -5,26 +5,41 @@ using System.Buffers;
 
 namespace biscuit_net;
 
-public class BiscuitBuilder
+public interface IBiscuitBuilder
 {
-    public BlockBuilder Authority { get; private set; }
+    BlockBuilder AddBlock();
+    Proto.Biscuit ToProto();    
+}
+
+public static class BiscuitBuilderExtensions
+{
+    public static ReadOnlySpan<byte> Serialize(this IBiscuitBuilder builder)
+    {        
+        var bufferWriter = new ArrayBufferWriter<byte>();
+        Serializer.Serialize(bufferWriter, builder.ToProto());
+
+        return bufferWriter.WrittenSpan;
+    }
+}
+
+public class BiscuitBuilder : IBiscuitBuilder
+{
+    BlockBuilder _authority;
     List<BlockBuilder> _blocks = new List<BlockBuilder>();
 
     SignatureCreator _signatureCreator;
             
     public BiscuitBuilder(SignatureCreator signatureCreator)
     {
-        Authority = new BlockBuilder();
+        _authority = new BlockBuilder(this);
         _signatureCreator = signatureCreator;
     }
 
-    public BiscuitBuilder AddAuthority(Fact fact) { Authority.Add(fact); return this; }
-    public BiscuitBuilder AddAuthority(Rule rule) { Authority.Add(rule); return this; }
-    public BiscuitBuilder AddAuthority(Check check) { Authority.Add(check); return this; }   
-
+    public BlockBuilder AuthorityBlock() => _authority;
+    
     public BlockBuilder AddBlock()
     {
-        var block = new BlockBuilder();
+        var block = new BlockBuilder(this);
         _blocks.Add(block);
         return block;
     }
@@ -36,15 +51,14 @@ public class BiscuitBuilder
 
         var biscuit = new Proto.Biscuit() 
         {
-            Authority = SignBlock(Authority.ToProto(symbols), nextKey, _signatureCreator)
+            Authority = SignBlock(_authority.ToProto(symbols), nextKey, _signatureCreator)
         };
         
         foreach(var block in _blocks)
         {
             var nextSigner = new SignatureCreator(nextKey);
 
-            nextKey = _signatureCreator.GetNextKey();
-            
+            nextKey = _signatureCreator.GetNextKey();            
             biscuit.Blocks.Add(SignBlock(block.ToProto(symbols), nextKey, nextSigner));
         }
 
@@ -54,7 +68,7 @@ public class BiscuitBuilder
         return biscuit;    
     }
 
-    static Proto.SignedBlock SignBlock(Proto.Block block, SignatureCreator.NextKey nextKey, SignatureCreator signer)
+    public static Proto.SignedBlock SignBlock(Proto.Block block, SignatureCreator.NextKey nextKey, SignatureCreator signer)
     {
         var signedBlock = new SignedBlock();
 
@@ -67,53 +81,13 @@ public class BiscuitBuilder
             algorithm = Proto.PublicKey.Algorithm.Ed25519,
             Key = nextKey.Public
         };
-
         
         var buffer = SignatureHelper.MakeBuffer(signedBlock.Block, signedBlock.nextKey.algorithm, signedBlock.nextKey.Key);
         signedBlock.Signature = signer.Sign(new ReadOnlySpan<byte>(buffer));
         
         return signedBlock;    
     }
-
-    
-    public ReadOnlySpan<byte> Serialize()
-    {        
-        var bufferWriter = new ArrayBufferWriter<byte>();
-        Serializer.Serialize(bufferWriter, ToProto());
-
-        return bufferWriter.WrittenSpan;
-    }
 }
-
-public class BlockBuilder
-{
-    public List<Fact> Facts { get; } = new List<Fact>();
-    public List<Rule> Rules { get; } = new List<Rule>();
-    public List<Check> Checks { get; } = new List<Check>();
-
-    public BlockBuilder Add(Fact fact) { Facts.Add(fact); return this; }
-    public BlockBuilder Add(Rule rule) { Rules.Add(rule); return this; }
-    public BlockBuilder Add(Check check) { Checks.Add(check); return this; } 
-
-    public Proto.Block ToProto(SymbolTable symbols)
-    {
-        var blockV2 = new Proto.Block();
-
-        var symbolsBefore = symbols.Symbols.ToList(); //deep copy 
-        blockV2.FactsV2s.AddRange(ProtoConverters.ToFactsV2(Facts, symbols));
-        blockV2.RulesV2s.AddRange(ProtoConverters.ToRulesV2(Rules, symbols));
-        blockV2.ChecksV2s.AddRange(ProtoConverters.ToChecksV2(Checks, symbols));
-        
-        blockV2.Symbols.AddRange(symbols.Symbols.Except(symbolsBefore)); //add symbol delta, not all symbols
-
-        blockV2.Version = 3;
-
-        blockV2.Scopes.Add(new Proto.Scope() { scopeType = Proto.Scope.ScopeType.Authority });
-
-        return blockV2;
-    }
-}
-
 
 public static class ProtoConverters
 {
