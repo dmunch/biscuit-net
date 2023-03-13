@@ -15,10 +15,25 @@ public static class BiscuitBuilderExtensions
 {
     public static ReadOnlySpan<byte> Serialize(this IBiscuitBuilder builder)
     {        
+        return builder.ToProto().Serialize();        
+    }
+
+    public static ReadOnlySpan<byte> Serialize(this Proto.Biscuit proto)
+    {        
         var bufferWriter = new ArrayBufferWriter<byte>();
-        Serializer.Serialize(bufferWriter, builder.ToProto());
+        Serializer.Serialize(bufferWriter, proto);
 
         return bufferWriter.WrittenSpan;
+    }
+
+    public static ReadOnlySpan<byte> Seal(this IBiscuitBuilder builder) 
+    {
+        var biscuit = builder.ToProto();
+        var signer = new SignatureCreator(biscuit.Proof.nextSecret);
+
+        var finalSignature = signer.Sign(SignatureHelper.MakeFinalSignatureBuffer(biscuit));
+        biscuit.Proof = new Proto.Proof() { finalSignature = finalSignature };
+        return biscuit.Serialize();
     }
 }
 

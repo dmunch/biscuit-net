@@ -158,4 +158,69 @@ public class BiscuitBuilderTests
         Assert.True(Parser.Authorizer("""resource("file5"); allow if true;""").TryAuthorize(biscuit, out _));
         Assert.False(Parser.Authorizer("""resource("file6"); allow if true;""").TryAuthorize(biscuit, out _));
     }
+
+    [Fact]
+    public void Test_Sealed_Token_Without_Blocks_Should_Pass_Verification()
+    {
+        var signer = new SignatureCreator();
+        var validator = new SignatureValidator(signer.PublicKey);        
+        var parser = new Parser();
+        
+        var token1 = Biscuit.New(signer)
+            .AuthorityBlock()
+                .Add(new F("resource", "file4"))
+            .EndBlock()  
+            .Seal();
+
+        if(!Biscuit.TryDeserialize(token1, validator, out var biscuit, out var formatErr))
+        {
+            throw new Exception($"Couldn't round-trip biscuit: {formatErr}");
+        }
+
+        Assert.True(Parser.Authorizer("""check if resource("file4"); allow if true;""").TryAuthorize(biscuit, out _));        
+    }
+
+    [Fact]
+    public void Test_Sealed_Token_With_Blocks_Should_Pass_Verification()
+    {
+        var signer = new SignatureCreator();
+        var validator = new SignatureValidator(signer.PublicKey);        
+        var parser = new Parser();
+        
+        var token1 = Biscuit.New(signer)
+            .AuthorityBlock()
+                .Add(new F("resource", "file4"))
+            .EndBlock()
+            .AddBlock()
+                .Add(parser.ParseCheck("""check if resource("file4")"""))
+                .Add(parser.ParseCheck("""check if resource("file5")"""))
+            .EndBlock()
+            .Seal();
+
+        if(!Biscuit.TryDeserialize(token1, validator, out var biscuit, out var formatErr))
+        {
+            throw new Exception($"Couldn't round-trip biscuit: {formatErr}");
+        }
+
+        Assert.True(Parser.Authorizer("""resource("file5"); allow if true;""").TryAuthorize(biscuit, out _));
+        Assert.False(Parser.Authorizer("""resource("file6"); allow if true;""").TryAuthorize(biscuit, out _));
+    }
+
+    [Fact]
+    public void Test_Sealed_Cant_be_attenuated()
+    {
+        var signer = new SignatureCreator();
+        var validator = new SignatureValidator(signer.PublicKey);        
+        var parser = new Parser();
+        
+        var token1 = Biscuit.New(signer)
+            .AuthorityBlock()
+                .Add(new F("resource", "file4"))
+            .EndBlock()
+            .Seal()
+            .ToArray();
+
+        //todo better exception here 
+        Assert.Throws<System.FormatException>(() => {Biscuit.Attenuate(token1);});
+    }
 }

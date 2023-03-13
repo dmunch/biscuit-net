@@ -32,15 +32,20 @@ public class SignatureValidator
 
 static class SignatureHelper
 {
-    public static byte[] MakeBuffer(byte[] block, Proto.PublicKey.Algorithm alg, byte[] key)
+    public static byte[] MakeBuffer(byte[] block, Proto.PublicKey.Algorithm alg, byte[] key, byte[]? additionalBytes = null)
     {
-        var buffer = new byte[block.Length + sizeof(int) + key.Length];
+        var buffer = new byte[block.Length + sizeof(int) + key.Length + (additionalBytes?.Length ?? 0)];
         var bytes = (Span<byte>) buffer;
         
         block.CopyTo(buffer, 0);
 
         BinaryPrimitives.WriteInt32LittleEndian(bytes.Slice(block.Length, sizeof(int)), (int)alg);
         key.CopyTo(buffer, block.Length + sizeof(int));
+
+        if(additionalBytes != null)
+        {
+            additionalBytes.CopyTo(buffer, block.Length + sizeof(int) + key.Length);
+        }
         
         return buffer;
     }
@@ -108,6 +113,29 @@ static class SignatureHelper
         return true;
     }
 
+    static bool VerifyProof(Proto.Biscuit biscuitProto)
+    {
+        //verify proof 
+        var key = (biscuitProto.Blocks.LastOrDefault() ?? biscuitProto.Authority).nextKey.Key;
+        var validator = new SignatureValidator(key);
+        
+        if(biscuitProto.Proof.finalSignature != null)
+        {
+            //token is sealed                
+            var buffer = MakeFinalSignatureBuffer(biscuitProto);
+            
+            return validator.Verify(buffer, biscuitProto.Proof.finalSignature);            
+        } 
+        else if(biscuitProto.Proof.nextSecret != null) 
+        {
+            var signer = new SignatureCreator(biscuitProto.Proof.nextSecret);
+            return validator.Key.SequenceEqual(signer.PublicKey);
+        } 
+
+        //proof field has been tampered with          
+        return false;        
+    }
+
     public static bool VerifySignatures(this Proto.Biscuit biscuitProto, SignatureValidator validator, [NotNullWhen(false)] out FailedFormat? err)
     {
         if(!biscuitProto.VerifySignatures(validator, out int? invalidSignatureSize))
@@ -117,6 +145,22 @@ static class SignatureHelper
                 : new FailedFormat(new Signature("signature error: Verification equation was not satisfied"), null);
             return false; 
         }
+
+        if(!VerifyProof(biscuitProto))
+        {
+            err =  new FailedFormat(new Signature("signature error: Proof verification equation was not satisfied"), null);
+            return false;
+        }
+
         err = null; return true;
+    }
+
+    public static ReadOnlySpan<byte> MakeFinalSignatureBuffer(Proto.Biscuit biscuit)
+    {
+        var lastBlock = biscuit.Blocks.LastOrDefault() ?? biscuit.Authority;
+        
+        var buffer = SignatureHelper.MakeBuffer(lastBlock.Block, lastBlock.nextKey.algorithm, lastBlock.nextKey.Key, lastBlock.Signature);
+        
+        return (ReadOnlySpan<byte>)buffer;
     }
 }
