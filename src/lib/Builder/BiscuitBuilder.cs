@@ -40,7 +40,7 @@ public static class BiscuitBuilderExtensions
 public class BiscuitBuilder : IBiscuitBuilder
 {
     BlockBuilder _authority;
-    List<IBlockBuilder> _blocks = new List<IBlockBuilder>();
+    List<IBlockSigner> _blocks = new List<IBlockSigner>();
 
     SignatureCreator _signatureCreator;
             
@@ -61,7 +61,7 @@ public class BiscuitBuilder : IBiscuitBuilder
 
     public IBiscuitBuilder AddThirdPartyBlock(ThirdPartyBlock thirdPartyBlock)
     {
-        var block = new ThirdPartyBlockBuilder(thirdPartyBlock);
+        var block = new ThirdPartyBlockSigner(thirdPartyBlock);
         _blocks.Add(block);
         return this;
     }

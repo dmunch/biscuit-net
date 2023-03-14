@@ -5,16 +5,16 @@ using ProtoBuf;
 namespace biscuit_net.Builder;
 
 
-public interface IBlockBuilder 
+public interface IBlockSigner
 {
     Proto.SignedBlock Sign(SymbolTable globalSymbols, SignatureCreator.NextKey nextKey, SignatureCreator signer);
 }
 
-public class ThirdPartyBlockBuilder: IBlockBuilder
+public class ThirdPartyBlockSigner: IBlockSigner
 {
     ThirdPartyBlock _thirdPartyBlock;      
 
-    public ThirdPartyBlockBuilder(ThirdPartyBlock thirdPartyBlock)
+    public ThirdPartyBlockSigner(ThirdPartyBlock thirdPartyBlock)
     {
         _thirdPartyBlock = thirdPartyBlock;
     }
@@ -44,7 +44,7 @@ public class ThirdPartyBlockBuilder: IBlockBuilder
     }
 }
 
-public class BlockBuilder : IBlockBuilder
+public class BlockBuilder : IBlockSigner
 {
     public List<Fact> Facts { get; } = new List<Fact>();
     public List<Rule> Rules { get; } = new List<Rule>();

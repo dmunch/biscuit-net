@@ -224,4 +224,47 @@ public class BiscuitBuilderTests
         //todo better exception here 
         Assert.Throws<System.FormatException>(() => {Biscuit.Attenuate(token1);});
     }
+
+    [Fact]
+    public void Test_Third_Party_Block()
+    {
+        var signer = new SignatureCreator();
+        var thirdPartySigner = new SignatureCreator();
+
+        var validator = new SignatureValidator(signer.PublicKey);        
+        var parser = new Parser();
+        
+        var token1 = Biscuit.New(signer)
+            .AuthorityBlock()
+                .Add(new F("resource", "file4"))
+            .EndBlock()
+            .Serialize();
+
+        var token2 = Biscuit.Attenuate(token1)
+            .AddThirdPartyBlock(request => 
+                Biscuit.NewThirdParty()
+                    .Add(parser.ParseCheck("""check if resource("file4")"""))
+                    .Add(parser.ParseCheck("""check if resource("file5")"""))
+                .Sign(thirdPartySigner, request)
+            ).Serialize();
+
+        /*
+        var thirdPartySigner = new SignatureCreator();
+        var thirdPartyBlock = new ThirdPartyBlockSigner(thirdPartyBlockRequest)
+            .Add(parser.ParseCheck("""check if resource("file4")"""))
+            .Add(parser.ParseCheck("""check if resource("file5")"""))
+            .Sign(thirdPartySigner);
+
+        var token2 = Biscuit.Attenuate(token1)
+            .AddThirdPartyBlock(thirdPartyBlock)
+            .Serialize();
+        */
+        if(!Biscuit.TryDeserialize(token2, validator, out var biscuit, out var formatErr))
+        {
+            throw new Exception($"Couldn't round-trip biscuit: {formatErr}");
+        }
+
+        Assert.True(Parser.Authorizer("""resource("file5"); allow if true;""").TryAuthorize(biscuit, out _));
+        Assert.False(Parser.Authorizer("""resource("file6"); allow if true;""").TryAuthorize(biscuit, out _));
+    }
 }

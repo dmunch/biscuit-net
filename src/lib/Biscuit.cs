@@ -23,6 +23,11 @@ public class Biscuit
         return new BiscuitBuilder(rootSigner);
     }
 
+    public static ThirdPartyBlockBuilder NewThirdParty()
+    {
+        return new ThirdPartyBlockBuilder();
+    }
+
     public static BiscuitAttenuator Attenuate(ReadOnlySpan<byte> bytes)
     {
         return BiscuitAttenuator.Attenuate(bytes);

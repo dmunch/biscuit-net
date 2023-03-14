@@ -6,17 +6,19 @@ public class BiscuitAttenuator : IBiscuitBuilder
 {
     Proto.Biscuit _biscuit; 
     SymbolTable _symbolTable;
-
-    List<IBlockBuilder> _blocks = new List<IBlockBuilder>();
+    Proto.PublicKey _nextKey;
+    
+    List<IBlockSigner> _blocks = new List<IBlockSigner>();
 
     SignatureCreator _signatureCreator;
             
     
-    BiscuitAttenuator(Proto.Biscuit biscuit, SymbolTable symbolTable)
+    BiscuitAttenuator(Proto.Biscuit biscuit, SymbolTable symbolTable, Proto.PublicKey nextKey)
     {
         _biscuit = biscuit;
         _symbolTable = symbolTable;
         _signatureCreator = new SignatureCreator(biscuit.Proof.nextSecret);
+        _nextKey = nextKey;
     }
 
     public static BiscuitAttenuator Attenuate(ReadOnlySpan<byte> bytes)    
@@ -24,17 +26,21 @@ public class BiscuitAttenuator : IBiscuitBuilder
         var biscuit = Serializer.Deserialize<Proto.Biscuit>((ReadOnlySpan<byte>)bytes);
 
         var symbols = new SymbolTable();
+        
 
         var authority = Serializer.Deserialize<Proto.Block>((ReadOnlySpan<byte>)biscuit.Authority.Block);
         symbols.AddSymbols(authority.Symbols);
+        var nextKey = biscuit.Authority.nextKey;
+        
 
         foreach(var signedBlock in biscuit.Blocks)
         {
             var block = Serializer.Deserialize<Proto.Block>( (ReadOnlySpan<byte>) signedBlock.Block);        
             symbols.AddSymbols(block.Symbols);
+            nextKey = signedBlock.nextKey;
         }
 
-        return new BiscuitAttenuator(biscuit, symbols);
+        return new BiscuitAttenuator(biscuit, symbols, nextKey);
     }
 
     public BlockBuilder AddBlock()
@@ -47,9 +53,20 @@ public class BiscuitAttenuator : IBiscuitBuilder
 
     public IBiscuitBuilder AddThirdPartyBlock(ThirdPartyBlock thirdPartyBlock)
     {
-        var block = new ThirdPartyBlockBuilder(thirdPartyBlock);
+        var block = new ThirdPartyBlockSigner(thirdPartyBlock);
         _blocks.Add(block);
         return this;
+    }
+
+    public IBiscuitBuilder AddThirdPartyBlock(Func<ThirdPartyBlockRequest, ThirdPartyBlock> thirdPartyBlockConfigurator)
+    {
+        var thirdPartyBlock = thirdPartyBlockConfigurator(BuildThirdPartyBlockRequest());
+        return AddThirdPartyBlock(thirdPartyBlock);
+    }
+
+    public ThirdPartyBlockRequest BuildThirdPartyBlockRequest()
+    {
+        return new ThirdPartyBlockRequest(new PublicKey((Algorithm)_nextKey.algorithm, _nextKey.Key), Enumerable.Empty<PublicKey>());
     }
 
     public Proto.Biscuit ToProto()
