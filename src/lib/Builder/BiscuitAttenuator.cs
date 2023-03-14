@@ -7,7 +7,7 @@ public class BiscuitAttenuator : IBiscuitBuilder
     Proto.Biscuit _biscuit; 
     SymbolTable _symbolTable;
 
-    List<BlockBuilder> _blocks = new List<BlockBuilder>();
+    List<IBlockBuilder> _blocks = new List<IBlockBuilder>();
 
     SignatureCreator _signatureCreator;
             
@@ -45,6 +45,13 @@ public class BiscuitAttenuator : IBiscuitBuilder
         return block;
     }
 
+    public IBiscuitBuilder AddThirdPartyBlock(ThirdPartyBlock thirdPartyBlock)
+    {
+        var block = new ThirdPartyBlockBuilder(thirdPartyBlock);
+        _blocks.Add(block);
+        return this;
+    }
+
     public Proto.Biscuit ToProto()
     {                
         var nextSigner = _signatureCreator;
@@ -52,7 +59,7 @@ public class BiscuitAttenuator : IBiscuitBuilder
         foreach(var block in _blocks)
         {   
             nextKey = _signatureCreator.GetNextKey();                     
-            _biscuit.Blocks.Add(BiscuitBuilder.SignBlock(block.ToProto(_symbolTable), nextKey, nextSigner));
+            _biscuit.Blocks.Add(block.Sign(_symbolTable, nextKey, nextSigner));
 
             nextSigner = new SignatureCreator(nextKey);        
         }

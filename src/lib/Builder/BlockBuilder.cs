@@ -1,14 +1,57 @@
+using System.Buffers;
 using biscuit_net.Datalog;
+using ProtoBuf;
 
 namespace biscuit_net.Builder;
 
-public class BlockBuilder
+
+public interface IBlockBuilder 
+{
+    Proto.SignedBlock Sign(SymbolTable globalSymbols, SignatureCreator.NextKey nextKey, SignatureCreator signer);
+}
+
+public class ThirdPartyBlockBuilder: IBlockBuilder
+{
+    ThirdPartyBlock _thirdPartyBlock;      
+
+    public ThirdPartyBlockBuilder(ThirdPartyBlock thirdPartyBlock)
+    {
+        _thirdPartyBlock = thirdPartyBlock;
+    }
+
+    public Proto.SignedBlock Sign(SymbolTable globalSymbols, SignatureCreator.NextKey nextKey, SignatureCreator signer)
+    {
+        var signedBlock = new Proto.SignedBlock();
+
+        signedBlock.Block = _thirdPartyBlock.Bytes;
+        signedBlock.externalSignature = new Proto.ExternalSignature();
+        signedBlock.externalSignature.Signature = _thirdPartyBlock.Signature;
+        signedBlock.externalSignature.publicKey = new Proto.PublicKey() 
+        {
+             algorithm = (Proto.PublicKey.Algorithm) _thirdPartyBlock.PublicKey.Algorithm,
+             Key = _thirdPartyBlock.PublicKey.Key
+        };
+        signedBlock.nextKey = new Proto.PublicKey() 
+        {
+            algorithm = Proto.PublicKey.Algorithm.Ed25519,
+            Key = nextKey.Public
+        };
+        
+        var buffer = SignatureHelper.MakeBuffer(signedBlock.Block, signedBlock.externalSignature.Signature, signedBlock.nextKey.algorithm, signedBlock.nextKey.Key);
+        signedBlock.Signature = signer.Sign(new ReadOnlySpan<byte>(buffer));
+
+        return signedBlock;
+    }
+}
+
+public class BlockBuilder : IBlockBuilder
 {
     public List<Fact> Facts { get; } = new List<Fact>();
     public List<Rule> Rules { get; } = new List<Rule>();
     public List<Check> Checks { get; } = new List<Check>();
 
     IBiscuitBuilder _topLevelBuilder;
+    
     public BlockBuilder(IBiscuitBuilder topLevelBuilder)
     {
         _topLevelBuilder = topLevelBuilder;
@@ -20,11 +63,13 @@ public class BlockBuilder
 
     public IBiscuitBuilder EndBlock() => _topLevelBuilder;
 
-    public Proto.Block ToProto(SymbolTable symbols)
+    Proto.Block ToProto(SymbolTable globalSymbols)
     {
         var blockV2 = new Proto.Block();
 
+        var symbols = globalSymbols;
         var symbolsBefore = symbols.Symbols.ToList(); //deep copy 
+
         blockV2.FactsV2s.AddRange(ProtoConverters.ToFactsV2(Facts, symbols));
         blockV2.RulesV2s.AddRange(ProtoConverters.ToRulesV2(Rules, symbols));
         blockV2.ChecksV2s.AddRange(ProtoConverters.ToChecksV2(Checks, symbols));
@@ -36,5 +81,25 @@ public class BlockBuilder
         blockV2.Scopes.Add(new Proto.Scope() { scopeType = Proto.Scope.ScopeType.Authority });
 
         return blockV2;
+    }
+
+    public Proto.SignedBlock Sign(SymbolTable globalSymbols, SignatureCreator.NextKey nextKey, SignatureCreator signer)
+    {
+        var signedBlock = new Proto.SignedBlock();
+
+        var bufferWriter = new ArrayBufferWriter<byte>();
+        Serializer.Serialize(bufferWriter, ToProto(globalSymbols));
+        
+        signedBlock.Block = bufferWriter.WrittenMemory.ToArray();
+        signedBlock.nextKey = new Proto.PublicKey() 
+        {
+            algorithm = Proto.PublicKey.Algorithm.Ed25519,
+            Key = nextKey.Public
+        };
+        
+        var buffer = SignatureHelper.MakeBuffer(signedBlock.Block, signedBlock.nextKey.algorithm, signedBlock.nextKey.Key);
+        signedBlock.Signature = signer.Sign(new ReadOnlySpan<byte>(buffer));
+        
+        return signedBlock;    
     }
 }

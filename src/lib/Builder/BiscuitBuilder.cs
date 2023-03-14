@@ -7,6 +7,7 @@ namespace biscuit_net.Builder;
 public interface IBiscuitBuilder
 {
     BlockBuilder AddBlock();
+    IBiscuitBuilder AddThirdPartyBlock(ThirdPartyBlock thirdPartyBlock);
     Proto.Biscuit ToProto();    
 }
 
@@ -39,7 +40,7 @@ public static class BiscuitBuilderExtensions
 public class BiscuitBuilder : IBiscuitBuilder
 {
     BlockBuilder _authority;
-    List<BlockBuilder> _blocks = new List<BlockBuilder>();
+    List<IBlockBuilder> _blocks = new List<IBlockBuilder>();
 
     SignatureCreator _signatureCreator;
             
@@ -58,6 +59,13 @@ public class BiscuitBuilder : IBiscuitBuilder
         return block;
     }
 
+    public IBiscuitBuilder AddThirdPartyBlock(ThirdPartyBlock thirdPartyBlock)
+    {
+        var block = new ThirdPartyBlockBuilder(thirdPartyBlock);
+        _blocks.Add(block);
+        return this;
+    }
+
     public Proto.Biscuit ToProto()
     {
         var nextKey = _signatureCreator.GetNextKey();
@@ -65,40 +73,22 @@ public class BiscuitBuilder : IBiscuitBuilder
 
         var biscuit = new Proto.Biscuit() 
         {
-            Authority = SignBlock(_authority.ToProto(symbols), nextKey, _signatureCreator)
+            Authority = _authority.Sign(symbols, nextKey, _signatureCreator)
         };
         
         foreach(var block in _blocks)
         {
             var nextSigner = new SignatureCreator(nextKey);
 
-            nextKey = _signatureCreator.GetNextKey();            
-            biscuit.Blocks.Add(SignBlock(block.ToProto(symbols), nextKey, nextSigner));
+            nextKey = _signatureCreator.GetNextKey();      
+
+            
+            biscuit.Blocks.Add(block.Sign(symbols, nextKey, nextSigner));
         }
 
         biscuit.Proof = new Proto.Proof() { nextSecret = nextKey.Private };
         //biscuit.rootKeyId = 1;
 
         return biscuit;    
-    }
-
-    public static Proto.SignedBlock SignBlock(Proto.Block block, SignatureCreator.NextKey nextKey, SignatureCreator signer)
-    {
-        var signedBlock = new SignedBlock();
-
-        var bufferWriter = new ArrayBufferWriter<byte>();
-        Serializer.Serialize(bufferWriter, block);
-        
-        signedBlock.Block = bufferWriter.WrittenMemory.ToArray();
-        signedBlock.nextKey = new Proto.PublicKey() 
-        {
-            algorithm = Proto.PublicKey.Algorithm.Ed25519,
-            Key = nextKey.Public
-        };
-        
-        var buffer = SignatureHelper.MakeBuffer(signedBlock.Block, signedBlock.nextKey.algorithm, signedBlock.nextKey.Key);
-        signedBlock.Signature = signer.Sign(new ReadOnlySpan<byte>(buffer));
-        
-        return signedBlock;    
     }
 }

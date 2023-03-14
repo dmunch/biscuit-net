@@ -50,7 +50,7 @@ static class SignatureHelper
         return buffer;
     }
 
-    static byte[] MakeBuffer(byte[] block, byte[] externalSignature, Proto.PublicKey.Algorithm alg, byte[] key)
+    public static byte[] MakeBuffer(byte[] block, byte[] externalSignature, Proto.PublicKey.Algorithm alg, byte[] key)
     {
         var buffer = new byte[block.Length + externalSignature.Length + sizeof(int) + key.Length];
         var bytes = (Span<byte>) buffer;

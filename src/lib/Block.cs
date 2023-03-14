@@ -3,6 +3,8 @@ using ProtoBuf;
 namespace biscuit_net;
 using Datalog;
 
+public record ThirdPartyBlock(byte[] Bytes, byte[] Signature, PublicKey PublicKey);
+
 public class Block
 {
     public IEnumerable<Fact> Facts { get; protected set; }
