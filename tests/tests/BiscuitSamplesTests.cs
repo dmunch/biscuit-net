@@ -29,8 +29,8 @@ public class BiscuitSamplesTests
     [BiscuitSamples()]
     public void TestSuccessAndError(BiscuitSample biscuitCase)
     {
-        var validator = SignatureValidator.FromHexKey(biscuitCase.RootPublicKey);
-        if(!Biscuit.TryDeserialize(biscuitCase.Token, validator, out var biscuit, out var formatErr))
+        var verificationKey = VerificationKey.FromHexKey(biscuitCase.RootPublicKey);
+        if(!Biscuit.TryDeserialize(biscuitCase.Token, verificationKey, out var biscuit, out var formatErr))
         {
             Assert.False(biscuitCase.Success);
             Assert.Equal(biscuitCase.Validation.FormatError, formatErr);
@@ -54,8 +54,8 @@ public class BiscuitSamplesTests
     [BiscuitSamples()]
     public void TestWorldFacts(BiscuitSample biscuitCase)
     {
-        var validator = SignatureValidator.FromHexKey(biscuitCase.RootPublicKey);
-        if(!Biscuit.TryDeserialize(biscuitCase.Token, validator, out var biscuit, out var formatErr))
+        var verificationKey = VerificationKey.FromHexKey(biscuitCase.RootPublicKey);
+        if(!Biscuit.TryDeserialize(biscuitCase.Token, verificationKey, out var biscuit, out var formatErr))
         {
             //ignore
             return;
@@ -72,8 +72,8 @@ public class BiscuitSamplesTests
     [BiscuitSamples()]
     public void Test_Revocation_Ids(BiscuitSample biscuitCase)
     {
-        var validator = SignatureValidator.FromHexKey(biscuitCase.RootPublicKey);
-        if(!Biscuit.TryDeserialize(biscuitCase.Token, validator, out var biscuit, out var formatErr))
+        var verificationKey = VerificationKey.FromHexKey(biscuitCase.RootPublicKey);
+        if(!Biscuit.TryDeserialize(biscuitCase.Token, verificationKey, out var biscuit, out var formatErr))
         {
             return;
         }

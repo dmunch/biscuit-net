@@ -33,11 +33,11 @@ public class Biscuit
         return BiscuitAttenuator.Attenuate(bytes);
     }
 
-    public static bool TryDeserialize(ReadOnlySpan<byte> bytes, SignatureValidator validator, [NotNullWhen(true)] out Biscuit? biscuit, [NotNullWhen(false)] out FailedFormat? err)
+    public static bool TryDeserialize(ReadOnlySpan<byte> bytes, VerificationKey verificationKey, [NotNullWhen(true)] out Biscuit? biscuit, [NotNullWhen(false)] out FailedFormat? err)
     {        
         var biscuitProto = Serializer.Deserialize<Proto.Biscuit>((ReadOnlySpan<byte>)bytes);
 
-        if(!biscuitProto.VerifySignatures(validator, out err))
+        if(!biscuitProto.VerifySignatures(verificationKey, out err))
         {
             biscuit = null; return false; 
         }

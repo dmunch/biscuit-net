@@ -24,8 +24,8 @@ public class BiscuitBuilderTests
 
         //var bytes = builder.Serialize();
 
-        var validator = new SignatureValidator(rootKey.Public);
-        if(!Biscuit.TryDeserialize(bytes, validator, out var biscuit, out var formatErr))
+        var verificationKey = new VerificationKey(rootKey.Public);
+        if(!Biscuit.TryDeserialize(bytes, verificationKey, out var biscuit, out var formatErr))
         {
             throw new Exception($"Couldn't round-trip biscuit: {formatErr}");
         }
@@ -50,8 +50,8 @@ public class BiscuitBuilderTests
             .EndBlock()
             .Serialize();
 
-        var validator = new SignatureValidator(rootKey.Public);
-        if(!Biscuit.TryDeserialize(bytes, validator, out var biscuit, out var formatErr))
+        var verificationKey = new VerificationKey(rootKey.Public);
+        if(!Biscuit.TryDeserialize(bytes, verificationKey, out var biscuit, out var formatErr))
         {
             throw new Exception($"Couldn't round-trip biscuit: {formatErr}");
         }
@@ -94,8 +94,8 @@ public class BiscuitBuilderTests
             .EndBlock()
             .Serialize();
 
-        var validator = new SignatureValidator(rootKey.Public);
-        if(!Biscuit.TryDeserialize(bytes, validator, out var biscuit, out var formatErr))
+        var verificationKey = new VerificationKey(rootKey.Public);
+        if(!Biscuit.TryDeserialize(bytes, verificationKey, out var biscuit, out var formatErr))
         {
             throw new Exception($"Couldn't round-trip biscuit: {formatErr}");
         }
@@ -120,8 +120,8 @@ public class BiscuitBuilderTests
             .EndBlock()
             .Serialize();
 
-        var validator = new SignatureValidator(rootKey.Public);
-        if(!Biscuit.TryDeserialize(bytes, validator, out var biscuit, out var formatErr))
+        var verificationKey = new VerificationKey(rootKey.Public);
+        if(!Biscuit.TryDeserialize(bytes, verificationKey, out var biscuit, out var formatErr))
         {
             throw new Exception($"Couldn't round-trip biscuit: {formatErr}");
         }
@@ -149,8 +149,8 @@ public class BiscuitBuilderTests
             .EndBlock()
             .Serialize();
         
-        var validator = new SignatureValidator(rootKey.Public);
-        if(!Biscuit.TryDeserialize(token2, validator, out var biscuit, out var formatErr))
+        var verificationKey = new VerificationKey(rootKey.Public);
+        if(!Biscuit.TryDeserialize(token2, verificationKey, out var biscuit, out var formatErr))
         {
             throw new Exception($"Couldn't round-trip biscuit: {formatErr}");
         }
@@ -171,8 +171,8 @@ public class BiscuitBuilderTests
             .EndBlock()  
             .Seal();
 
-        var validator = new SignatureValidator(rootKey.Public);
-        if(!Biscuit.TryDeserialize(token1, validator, out var biscuit, out var formatErr))
+        var verificationKey = new VerificationKey(rootKey.Public);
+        if(!Biscuit.TryDeserialize(token1, verificationKey, out var biscuit, out var formatErr))
         {
             throw new Exception($"Couldn't round-trip biscuit: {formatErr}");
         }
@@ -196,8 +196,8 @@ public class BiscuitBuilderTests
             .EndBlock()
             .Seal();
 
-        var validator = new SignatureValidator(rootKey.Public);
-        if(!Biscuit.TryDeserialize(token1, validator, out var biscuit, out var formatErr))
+        var verificationKey = new VerificationKey(rootKey.Public);
+        if(!Biscuit.TryDeserialize(token1, verificationKey, out var biscuit, out var formatErr))
         {
             throw new Exception($"Couldn't round-trip biscuit: {formatErr}");
         }
@@ -229,7 +229,7 @@ public class BiscuitBuilderTests
         var rootKey = new SigningKey();
         var thirdPartyKey = new SigningKey();
 
-        var validator = new SignatureValidator(rootKey.Public);        
+        var verificationKey = new VerificationKey(rootKey.Public);        
         var parser = new Parser();
         
         var token1 = Biscuit.New(rootKey)
@@ -257,7 +257,7 @@ public class BiscuitBuilderTests
             .AddThirdPartyBlock(thirdPartyBlock)
             .Serialize();
         */
-        if(!Biscuit.TryDeserialize(token2, validator, out var biscuit, out var formatErr))
+        if(!Biscuit.TryDeserialize(token2, verificationKey, out var biscuit, out var formatErr))
         {
             throw new Exception($"Couldn't round-trip biscuit: {formatErr}");
         }

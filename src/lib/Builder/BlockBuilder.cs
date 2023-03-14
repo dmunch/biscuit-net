@@ -29,7 +29,7 @@ public class ThirdPartyBlockSigner: IBlockSigner
         signedBlock.externalSignature.publicKey = ProtoConverters.ToPublicKey(_thirdPartyBlock.PublicKey);
         signedBlock.nextKey = ProtoConverters.ToPublicKey(nextKey);
         
-        var buffer = SignatureHelper.MakeBuffer(signedBlock.Block, signedBlock.externalSignature.Signature, signedBlock.nextKey.algorithm, signedBlock.nextKey.Key);
+        var buffer = SignatureHelper.MakeBuffer(signedBlock.Block, signedBlock.externalSignature.Signature, signedBlock.nextKey);
         signedBlock.Signature = key.Sign(new ReadOnlySpan<byte>(buffer));
 
         return signedBlock;
@@ -85,7 +85,7 @@ public class BlockBuilder : IBlockSigner
         signedBlock.Block = bufferWriter.WrittenMemory.ToArray();
         signedBlock.nextKey = ProtoConverters.ToPublicKey(nextKey);
         
-        var buffer = SignatureHelper.MakeBuffer(signedBlock.Block, signedBlock.nextKey.algorithm, signedBlock.nextKey.Key);
+        var buffer = SignatureHelper.MakeBuffer(signedBlock.Block, signedBlock.nextKey);
         signedBlock.Signature = key.Sign(new ReadOnlySpan<byte>(buffer));
         
         return signedBlock;    

@@ -43,7 +43,7 @@ public class ThirdPartyBlockBuilder
         
         var payload = bufferWriter.WrittenMemory.ToArray();
         
-        var buffer = SignatureHelper.MakeBuffer(payload, (Proto.PublicKey.Algorithm) thirdPartyBlockRequest.PreviousKey.Algorithm, thirdPartyBlockRequest.PreviousKey.Key);
+        var buffer = SignatureHelper.MakeBuffer(payload, ProtoConverters.ToPublicKey(thirdPartyBlockRequest.PreviousKey));
         var signature = key.Sign(new ReadOnlySpan<byte>(buffer));
         
         return new ThirdPartyBlock(payload, signature, key.Public);    
