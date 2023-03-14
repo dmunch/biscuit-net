@@ -7,7 +7,7 @@ namespace biscuit_net.Builder;
 
 public interface IBlockSigner
 {
-    Proto.SignedBlock Sign(SymbolTable globalSymbols, SignatureCreator.NextKey nextKey, SignatureCreator signer);
+    Proto.SignedBlock Sign(SymbolTable globalSymbols, PublicKey nextKey, ISigningKey signer);
 }
 
 public class ThirdPartyBlockSigner: IBlockSigner
@@ -19,26 +19,18 @@ public class ThirdPartyBlockSigner: IBlockSigner
         _thirdPartyBlock = thirdPartyBlock;
     }
 
-    public Proto.SignedBlock Sign(SymbolTable globalSymbols, SignatureCreator.NextKey nextKey, SignatureCreator signer)
+    public Proto.SignedBlock Sign(SymbolTable globalSymbols, PublicKey nextKey, ISigningKey key)
     {
         var signedBlock = new Proto.SignedBlock();
 
         signedBlock.Block = _thirdPartyBlock.Bytes;
         signedBlock.externalSignature = new Proto.ExternalSignature();
         signedBlock.externalSignature.Signature = _thirdPartyBlock.Signature;
-        signedBlock.externalSignature.publicKey = new Proto.PublicKey() 
-        {
-             algorithm = (Proto.PublicKey.Algorithm) _thirdPartyBlock.PublicKey.Algorithm,
-             Key = _thirdPartyBlock.PublicKey.Key
-        };
-        signedBlock.nextKey = new Proto.PublicKey() 
-        {
-            algorithm = Proto.PublicKey.Algorithm.Ed25519,
-            Key = nextKey.Public
-        };
+        signedBlock.externalSignature.publicKey = ProtoConverters.ToPublicKey(_thirdPartyBlock.PublicKey);
+        signedBlock.nextKey = ProtoConverters.ToPublicKey(nextKey);
         
         var buffer = SignatureHelper.MakeBuffer(signedBlock.Block, signedBlock.externalSignature.Signature, signedBlock.nextKey.algorithm, signedBlock.nextKey.Key);
-        signedBlock.Signature = signer.Sign(new ReadOnlySpan<byte>(buffer));
+        signedBlock.Signature = key.Sign(new ReadOnlySpan<byte>(buffer));
 
         return signedBlock;
     }
@@ -83,7 +75,7 @@ public class BlockBuilder : IBlockSigner
         return blockV2;
     }
 
-    public Proto.SignedBlock Sign(SymbolTable globalSymbols, SignatureCreator.NextKey nextKey, SignatureCreator signer)
+    public Proto.SignedBlock Sign(SymbolTable globalSymbols, PublicKey nextKey, ISigningKey key)
     {
         var signedBlock = new Proto.SignedBlock();
 
@@ -91,14 +83,10 @@ public class BlockBuilder : IBlockSigner
         Serializer.Serialize(bufferWriter, ToProto(globalSymbols));
         
         signedBlock.Block = bufferWriter.WrittenMemory.ToArray();
-        signedBlock.nextKey = new Proto.PublicKey() 
-        {
-            algorithm = Proto.PublicKey.Algorithm.Ed25519,
-            Key = nextKey.Public
-        };
+        signedBlock.nextKey = ProtoConverters.ToPublicKey(nextKey);
         
         var buffer = SignatureHelper.MakeBuffer(signedBlock.Block, signedBlock.nextKey.algorithm, signedBlock.nextKey.Key);
-        signedBlock.Signature = signer.Sign(new ReadOnlySpan<byte>(buffer));
+        signedBlock.Signature = key.Sign(new ReadOnlySpan<byte>(buffer));
         
         return signedBlock;    
     }

@@ -14,20 +14,25 @@ public class SignatureValidator
 
     public byte[] Key { get; private set; }
     
-    public SignatureValidator(string publicKeyInHex) : this(Convert.FromHexString(publicKeyInHex))
+    public SignatureValidator(byte[] key) : this(new PublicKey(Algorithm.Ed25519, key))
     {
     }
-    
-    public SignatureValidator(byte[] publicKey)
+
+    public SignatureValidator(PublicKey publicKey)
     {
         _algorithm = SignatureAlgorithm.Ed25519;
-        Key = publicKey;
-        _key = NSec.Cryptography.PublicKey.Import(_algorithm, publicKey, KeyBlobFormat.RawPublicKey);
+        Key = publicKey.Key;
+        _key = NSec.Cryptography.PublicKey.Import(_algorithm, Key, KeyBlobFormat.RawPublicKey);
     }
 
     public bool Verify(ReadOnlySpan<byte> data, ReadOnlySpan<byte> signature)
         => _algorithm.Verify(_key, data, signature);
 
+    public static SignatureValidator FromHexKey(string publicKeyInHex)
+    {
+        var key = Convert.FromHexString(publicKeyInHex);
+        return new SignatureValidator(key);
+    }
 }
 
 static class SignatureHelper

@@ -11,9 +11,9 @@ public class BiscuitBuilderTests
     [Fact]
     public void TestBuilder()
     {
-        var signer = new SignatureCreator();
+        var rootKey = new SigningKey();
         
-        var bytes = Biscuit.New(signer)
+        var bytes = Biscuit.New(rootKey)
             .AuthorityBlock()
                 .Add(new F("right", "/a/file1.txt", "read"))
                 .Add(new F("right", "/a/file1.txt", "write"))
@@ -24,7 +24,7 @@ public class BiscuitBuilderTests
 
         //var bytes = builder.Serialize();
 
-        var validator = new SignatureValidator(signer.PublicKey);
+        var validator = new SignatureValidator(rootKey.Public);
         if(!Biscuit.TryDeserialize(bytes, validator, out var biscuit, out var formatErr))
         {
             throw new Exception($"Couldn't round-trip biscuit: {formatErr}");
@@ -37,11 +37,10 @@ public class BiscuitBuilderTests
     [Fact]
     public void TestBuilderRules()
     {
-        var signer = new SignatureCreator();
-        var builder = Biscuit.New(signer);
+        var rootKey = new SigningKey();
         var parser = new Parser();
         
-        var bytes = Biscuit.New(signer)
+        var bytes = Biscuit.New(rootKey)
             .AuthorityBlock()
                 .Add(new F("resource", "file1"))
                 .Add(new F("resource", "file2"))
@@ -51,7 +50,7 @@ public class BiscuitBuilderTests
             .EndBlock()
             .Serialize();
 
-        var validator = new SignatureValidator(signer.PublicKey);
+        var validator = new SignatureValidator(rootKey.Public);
         if(!Biscuit.TryDeserialize(bytes, validator, out var biscuit, out var formatErr))
         {
             throw new Exception($"Couldn't round-trip biscuit: {formatErr}");
@@ -86,16 +85,16 @@ public class BiscuitBuilderTests
     [Fact]
     public void TestBuilderChecks()
     {
-        var signer = new SignatureCreator();
+        var rootKey = new SigningKey();
         var parser = new Parser();
         
-        var bytes = Biscuit.New(signer)
+        var bytes = Biscuit.New(rootKey)
             .AuthorityBlock()
                 .Add(parser.ParseCheck("""check if resource("file4")"""))
             .EndBlock()
             .Serialize();
 
-        var validator = new SignatureValidator(signer.PublicKey);
+        var validator = new SignatureValidator(rootKey.Public);
         if(!Biscuit.TryDeserialize(bytes, validator, out var biscuit, out var formatErr))
         {
             throw new Exception($"Couldn't round-trip biscuit: {formatErr}");
@@ -108,11 +107,10 @@ public class BiscuitBuilderTests
     [Fact]
     public void TestBuilderBlocks()
     {
-        var signer = new SignatureCreator();
-        var validator = new SignatureValidator(signer.PublicKey);        
+        var rootKey = new SigningKey();         
         var parser = new Parser();
         
-        var bytes = Biscuit.New(signer)
+        var bytes = Biscuit.New(rootKey)
             .AuthorityBlock()
                 .Add(new F("resource", "file4"))
             .EndBlock()
@@ -122,6 +120,7 @@ public class BiscuitBuilderTests
             .EndBlock()
             .Serialize();
 
+        var validator = new SignatureValidator(rootKey.Public);
         if(!Biscuit.TryDeserialize(bytes, validator, out var biscuit, out var formatErr))
         {
             throw new Exception($"Couldn't round-trip biscuit: {formatErr}");
@@ -134,11 +133,10 @@ public class BiscuitBuilderTests
     [Fact]
     public void TestAttenuation()
     {
-        var signer = new SignatureCreator();
-        var validator = new SignatureValidator(signer.PublicKey);        
+        var rootKey = new SigningKey();  
         var parser = new Parser();
         
-        var token1 = Biscuit.New(signer)
+        var token1 = Biscuit.New(rootKey)
             .AuthorityBlock()
                 .Add(new F("resource", "file4"))
             .EndBlock()            
@@ -151,6 +149,7 @@ public class BiscuitBuilderTests
             .EndBlock()
             .Serialize();
         
+        var validator = new SignatureValidator(rootKey.Public);
         if(!Biscuit.TryDeserialize(token2, validator, out var biscuit, out var formatErr))
         {
             throw new Exception($"Couldn't round-trip biscuit: {formatErr}");
@@ -163,16 +162,16 @@ public class BiscuitBuilderTests
     [Fact]
     public void Test_Sealed_Token_Without_Blocks_Should_Pass_Verification()
     {
-        var signer = new SignatureCreator();
-        var validator = new SignatureValidator(signer.PublicKey);        
+        var rootKey = new SigningKey();   
         var parser = new Parser();
         
-        var token1 = Biscuit.New(signer)
+        var token1 = Biscuit.New(rootKey)
             .AuthorityBlock()
                 .Add(new F("resource", "file4"))
             .EndBlock()  
             .Seal();
 
+        var validator = new SignatureValidator(rootKey.Public);
         if(!Biscuit.TryDeserialize(token1, validator, out var biscuit, out var formatErr))
         {
             throw new Exception($"Couldn't round-trip biscuit: {formatErr}");
@@ -184,11 +183,10 @@ public class BiscuitBuilderTests
     [Fact]
     public void Test_Sealed_Token_With_Blocks_Should_Pass_Verification()
     {
-        var signer = new SignatureCreator();
-        var validator = new SignatureValidator(signer.PublicKey);        
+        var rootKey = new SigningKey();
         var parser = new Parser();
         
-        var token1 = Biscuit.New(signer)
+        var token1 = Biscuit.New(rootKey)
             .AuthorityBlock()
                 .Add(new F("resource", "file4"))
             .EndBlock()
@@ -198,6 +196,7 @@ public class BiscuitBuilderTests
             .EndBlock()
             .Seal();
 
+        var validator = new SignatureValidator(rootKey.Public);
         if(!Biscuit.TryDeserialize(token1, validator, out var biscuit, out var formatErr))
         {
             throw new Exception($"Couldn't round-trip biscuit: {formatErr}");
@@ -210,11 +209,10 @@ public class BiscuitBuilderTests
     [Fact]
     public void Test_Sealed_Cant_be_attenuated()
     {
-        var signer = new SignatureCreator();
-        var validator = new SignatureValidator(signer.PublicKey);        
+        var rootKey = new SigningKey();
         var parser = new Parser();
         
-        var token1 = Biscuit.New(signer)
+        var token1 = Biscuit.New(rootKey)
             .AuthorityBlock()
                 .Add(new F("resource", "file4"))
             .EndBlock()
@@ -222,19 +220,19 @@ public class BiscuitBuilderTests
             .ToArray();
 
         //todo better exception here 
-        Assert.Throws<System.FormatException>(() => {Biscuit.Attenuate(token1);});
+        Assert.Throws<System.ArgumentException>(() => {Biscuit.Attenuate(token1);});
     }
 
     [Fact]
     public void Test_Third_Party_Block()
     {
-        var signer = new SignatureCreator();
-        var thirdPartySigner = new SignatureCreator();
+        var rootKey = new SigningKey();
+        var thirdPartyKey = new SigningKey();
 
-        var validator = new SignatureValidator(signer.PublicKey);        
+        var validator = new SignatureValidator(rootKey.Public);        
         var parser = new Parser();
         
-        var token1 = Biscuit.New(signer)
+        var token1 = Biscuit.New(rootKey)
             .AuthorityBlock()
                 .Add(new F("resource", "file4"))
             .EndBlock()
@@ -245,7 +243,7 @@ public class BiscuitBuilderTests
                 Biscuit.NewThirdParty()
                     .Add(parser.ParseCheck("""check if resource("file4")"""))
                     .Add(parser.ParseCheck("""check if resource("file5")"""))
-                .Sign(thirdPartySigner, request)
+                .Sign(thirdPartyKey, request)
             ).Serialize();
 
         /*

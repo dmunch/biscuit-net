@@ -36,7 +36,7 @@ public class ThirdPartyBlockBuilder
         return blockV2;
     }
 
-    public ThirdPartyBlock Sign(SignatureCreator signer, ThirdPartyBlockRequest thirdPartyBlockRequest)
+    public ThirdPartyBlock Sign(ISigningKey key, ThirdPartyBlockRequest thirdPartyBlockRequest)
     {        
         var bufferWriter = new ArrayBufferWriter<byte>();
         Serializer.Serialize(bufferWriter, ToProto(thirdPartyBlockRequest.PublicKeys));
@@ -44,8 +44,8 @@ public class ThirdPartyBlockBuilder
         var payload = bufferWriter.WrittenMemory.ToArray();
         
         var buffer = SignatureHelper.MakeBuffer(payload, (Proto.PublicKey.Algorithm) thirdPartyBlockRequest.PreviousKey.Algorithm, thirdPartyBlockRequest.PreviousKey.Key);
-        var signature = signer.Sign(new ReadOnlySpan<byte>(buffer));
+        var signature = key.Sign(new ReadOnlySpan<byte>(buffer));
         
-        return new ThirdPartyBlock(payload, signature, new PublicKey(Algorithm.Ed25519, signer.PublicKey));    
+        return new ThirdPartyBlock(payload, signature, key.Public);    
     }
 }

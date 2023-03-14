@@ -10,20 +10,21 @@ public class BiscuitAttenuator : IBiscuitBuilder
     
     List<IBlockSigner> _blocks = new List<IBlockSigner>();
 
-    SignatureCreator _signatureCreator;
-            
-    
     BiscuitAttenuator(Proto.Biscuit biscuit, SymbolTable symbolTable, Proto.PublicKey nextKey)
     {
         _biscuit = biscuit;
         _symbolTable = symbolTable;
-        _signatureCreator = new SignatureCreator(biscuit.Proof.nextSecret);
         _nextKey = nextKey;
     }
 
     public static BiscuitAttenuator Attenuate(ReadOnlySpan<byte> bytes)    
     {        
         var biscuit = Serializer.Deserialize<Proto.Biscuit>((ReadOnlySpan<byte>)bytes);
+
+        if(biscuit.Proof.finalSignature != null)
+        {
+            throw new ArgumentException("Biscuit is sealed");
+        }
 
         var symbols = new SymbolTable();
         
@@ -71,17 +72,17 @@ public class BiscuitAttenuator : IBiscuitBuilder
 
     public Proto.Biscuit ToProto()
     {                
-        var nextSigner = _signatureCreator;
-        var nextKey = new SignatureCreator.NextKey(nextSigner.PublicKey, _biscuit.Proof.nextSecret);
+        var currentKey = new EphemeralSigningKey(_biscuit.Proof.nextSecret);        
+        
         foreach(var block in _blocks)
         {   
-            nextKey = _signatureCreator.GetNextKey();                     
-            _biscuit.Blocks.Add(block.Sign(_symbolTable, nextKey, nextSigner));
+            var nextKey = new EphemeralSigningKey();
+            _biscuit.Blocks.Add(block.Sign(_symbolTable, nextKey.Public, currentKey));
 
-            nextSigner = new SignatureCreator(nextKey);        
+            currentKey = nextKey;
         }
 
-        _biscuit.Proof = new Proto.Proof() { nextSecret = nextKey.Private };
+        _biscuit.Proof = new Proto.Proof() { nextSecret = currentKey.Private };
         //biscuit.rootKeyId = 1;
 
         return _biscuit;    

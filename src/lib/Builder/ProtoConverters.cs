@@ -5,6 +5,15 @@ namespace biscuit_net.Builder;
 
 public static class ProtoConverters
 {
+    static public Proto.PublicKey ToPublicKey(PublicKey publicKey)
+    {
+        return new Proto.PublicKey() 
+        {
+            algorithm = (Proto.PublicKey.Algorithm) publicKey.Algorithm,
+            Key = publicKey.Key
+        };
+    }
+    
     static public IEnumerable<FactV2> ToFactsV2(this IEnumerable<Fact> facts, SymbolTable symbols)
     {
         return facts.Select(fact => ToFactV2(fact, symbols)).ToList();

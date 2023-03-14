@@ -29,7 +29,7 @@ public class BiscuitSamplesTests
     [BiscuitSamples()]
     public void TestSuccessAndError(BiscuitSample biscuitCase)
     {
-        var validator = new SignatureValidator(biscuitCase.RootPublicKey);
+        var validator = SignatureValidator.FromHexKey(biscuitCase.RootPublicKey);
         if(!Biscuit.TryDeserialize(biscuitCase.Token, validator, out var biscuit, out var formatErr))
         {
             Assert.False(biscuitCase.Success);
@@ -54,7 +54,7 @@ public class BiscuitSamplesTests
     [BiscuitSamples()]
     public void TestWorldFacts(BiscuitSample biscuitCase)
     {
-        var validator = new SignatureValidator(biscuitCase.RootPublicKey);
+        var validator = SignatureValidator.FromHexKey(biscuitCase.RootPublicKey);
         if(!Biscuit.TryDeserialize(biscuitCase.Token, validator, out var biscuit, out var formatErr))
         {
             //ignore
@@ -72,7 +72,7 @@ public class BiscuitSamplesTests
     [BiscuitSamples()]
     public void Test_Revocation_Ids(BiscuitSample biscuitCase)
     {
-        var validator = new SignatureValidator(biscuitCase.RootPublicKey);
+        var validator = SignatureValidator.FromHexKey(biscuitCase.RootPublicKey);
         if(!Biscuit.TryDeserialize(biscuitCase.Token, validator, out var biscuit, out var formatErr))
         {
             return;

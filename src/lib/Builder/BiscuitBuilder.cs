@@ -29,9 +29,9 @@ public static class BiscuitBuilderExtensions
     public static ReadOnlySpan<byte> Seal(this IBiscuitBuilder builder) 
     {
         var biscuit = builder.ToProto();
-        var signer = new SignatureCreator(biscuit.Proof.nextSecret);
+        var ephemeralKey = new EphemeralSigningKey(biscuit.Proof.nextSecret);
 
-        var finalSignature = signer.Sign(SignatureHelper.MakeFinalSignatureBuffer(biscuit));
+        var finalSignature = ephemeralKey.Sign(SignatureHelper.MakeFinalSignatureBuffer(biscuit));
         biscuit.Proof = new Proto.Proof() { finalSignature = finalSignature };
         return biscuit.Serialize();
     }
@@ -42,12 +42,12 @@ public class BiscuitBuilder : IBiscuitBuilder
     BlockBuilder _authority;
     List<IBlockSigner> _blocks = new List<IBlockSigner>();
 
-    SignatureCreator _signatureCreator;
+    ISigningKey _rootKey;
             
-    public BiscuitBuilder(SignatureCreator signatureCreator)
+    public BiscuitBuilder(ISigningKey rootKey)
     {
         _authority = new BlockBuilder(this);
-        _signatureCreator = signatureCreator;
+        _rootKey = rootKey;
     }
 
     public BlockBuilder AuthorityBlock() => _authority;
@@ -68,22 +68,20 @@ public class BiscuitBuilder : IBiscuitBuilder
 
     public Proto.Biscuit ToProto()
     {
-        var nextKey = _signatureCreator.GetNextKey();
+        var nextKey = new EphemeralSigningKey();
         var symbols = new SymbolTable();
 
         var biscuit = new Proto.Biscuit() 
         {
-            Authority = _authority.Sign(symbols, nextKey, _signatureCreator)
+            Authority = _authority.Sign(symbols, nextKey.Public, _rootKey)
         };
         
+        var currentKey = nextKey;
         foreach(var block in _blocks)
         {
-            var nextSigner = new SignatureCreator(nextKey);
-
-            nextKey = _signatureCreator.GetNextKey();      
-
-            
-            biscuit.Blocks.Add(block.Sign(symbols, nextKey, nextSigner));
+            nextKey = new EphemeralSigningKey();
+            biscuit.Blocks.Add(block.Sign(symbols, nextKey.Public, currentKey));
+            currentKey = nextKey;
         }
 
         biscuit.Proof = new Proto.Proof() { nextSecret = nextKey.Private };

@@ -18,9 +18,9 @@ public class Biscuit
         RevocationIds = revocationIds;
     }
 
-    public static BiscuitBuilder New(SignatureCreator rootSigner)
+    public static BiscuitBuilder New(ISigningKey rootKey)
     {
-        return new BiscuitBuilder(rootSigner);
+        return new BiscuitBuilder(rootKey);
     }
 
     public static ThirdPartyBlockBuilder NewThirdParty()
