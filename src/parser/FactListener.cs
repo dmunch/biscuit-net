@@ -6,10 +6,9 @@ using Expressions;
 
 public class FactListener : ExpressionsBaseListener
 {
-    TermVisitor _termVisitor = new TermVisitor();
+    readonly TermVisitor _termVisitor = new();
     
-    public List<Fact> Facts { get; } = new List<Fact>();
-    List<Expression> _expressions = new List<Expression>();
+    public List<Fact> Facts { get; } = new();
 
     public override void ExitFact([NotNull] ExpressionsParser.FactContext context) 
     {

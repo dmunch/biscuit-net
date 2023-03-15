@@ -19,10 +19,7 @@ static class SignatureHelper
         BinaryPrimitives.WriteInt32LittleEndian(bytes.Slice(block.Length, sizeof(int)), (int)publicKey.algorithm);
         publicKey.Key.CopyTo(buffer, block.Length + sizeof(int));
 
-        if(additionalBytes != null)
-        {
-            additionalBytes.CopyTo(buffer, block.Length + sizeof(int) + publicKey.Key.Length);
-        }
+        additionalBytes?.CopyTo(buffer, block.Length + sizeof(int) + publicKey.Key.Length);
         
         return buffer;
     }

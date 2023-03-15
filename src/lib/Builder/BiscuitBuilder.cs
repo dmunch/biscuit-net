@@ -39,10 +39,10 @@ public static class BiscuitBuilderExtensions
 
 public class BiscuitBuilder : IBiscuitBuilder
 {
-    BlockBuilder _authority;
-    List<IBlockSigner> _blocks = new List<IBlockSigner>();
+    readonly BlockBuilder _authority;
+    readonly List<IBlockSigner> _blocks = new();
 
-    ISigningKey _rootKey;
+    readonly ISigningKey _rootKey;
             
     public BiscuitBuilder(ISigningKey rootKey)
     {
@@ -86,8 +86,7 @@ public class BiscuitBuilder : IBiscuitBuilder
         }
 
         biscuit.Proof = new Proto.Proof() { nextSecret = nextKey.Private };
-        //biscuit.rootKeyId = 1;
-
+        
         return biscuit;    
     }
 }

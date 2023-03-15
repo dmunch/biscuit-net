@@ -30,8 +30,8 @@ public enum Algorithm
 
 public class KeyTable
 {
-    List<PublicKey> _keys = new List<PublicKey>();
-    public IReadOnlyList<PublicKey> Keys { get => _keys.AsReadOnly(); }
+    readonly List<PublicKey> _keys = new();
+    public IReadOnlyList<PublicKey> Keys => _keys.AsReadOnly();
     public KeyTable()
     {
     }

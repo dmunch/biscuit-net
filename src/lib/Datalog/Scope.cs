@@ -7,8 +7,8 @@ public record Scope(IEnumerable<ScopeType> Types, IEnumerable<PublicKey> Keys)
     public override int GetHashCode() => HashCode.Combine(Types, Keys);
 
     public bool IsEmpty => !Types.Any() && !Keys.Any();
-    public static Scope DefaultRuleScope = new Scope(Enumerable.Empty<ScopeType>(), Enumerable.Empty<PublicKey>());
-    public static Scope DefaultBlockScope = new Scope(new [] { ScopeType.Authority }, Enumerable.Empty<PublicKey>());
+    public readonly static Scope DefaultRuleScope = new(Enumerable.Empty<ScopeType>(), Enumerable.Empty<PublicKey>());
+    public readonly static Scope DefaultBlockScope = new(new [] { ScopeType.Authority }, Enumerable.Empty<PublicKey>());
 }
 
 public enum ScopeType

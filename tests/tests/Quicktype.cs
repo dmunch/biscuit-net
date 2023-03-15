@@ -1,6 +1,9 @@
 /// This file is auto-generated from samples.json using Quicktype
 /// Some manual adjustement needed to be made to make it compile and behave as desired
 #nullable disable 
+#pragma warning disable CA1507
+#pragma warning disable IDE0090
+
 namespace QuickType
 {
     using System;

@@ -7,10 +7,10 @@ public record Error
     public Error(FailedLogic failedLogic) => FailedLogic = failedLogic;
     public Error(FailedExecution failedExecution) => Execution = failedExecution;
 
-    FailedBlockCheck? Block { get; } = null;
-    FailedAuthorizerCheck? Authorizer { get; } = null;
-    FailedLogic? FailedLogic { get; } = null;
-    FailedExecution? Execution { get; } = null;
+    public FailedBlockCheck? Block { get; } = null;
+    public FailedAuthorizerCheck? Authorizer { get; } = null;
+    public FailedLogic? FailedLogic { get; } = null;
+    public FailedExecution? Execution { get; } = null;
 }
 
 public record FailedBlockCheck(uint BlockId, int CheckId/*, RuleExpressions Rule*/);

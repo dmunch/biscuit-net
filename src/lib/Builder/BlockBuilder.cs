@@ -7,12 +7,12 @@ namespace biscuit_net.Builder;
 
 public interface IBlockSigner
 {
-    Proto.SignedBlock Sign(SymbolTable globalSymbols, KeyTable globalKeys, PublicKey nextKey, ISigningKey signer);
+    Proto.SignedBlock Sign(SymbolTable globalSymbols, KeyTable globalKeys, PublicKey nextKey, ISigningKey key);
 }
 
 public class ThirdPartyBlockSigner: IBlockSigner
 {
-    ThirdPartyBlock _thirdPartyBlock;      
+    readonly ThirdPartyBlock _thirdPartyBlock;      
 
     public ThirdPartyBlockSigner(ThirdPartyBlock thirdPartyBlock)
     {
@@ -21,14 +21,17 @@ public class ThirdPartyBlockSigner: IBlockSigner
 
     public Proto.SignedBlock Sign(SymbolTable globalSymbols, KeyTable globalKeys, PublicKey nextKey, ISigningKey key)
     {
-        var signedBlock = new Proto.SignedBlock();
+        var signedBlock = new Proto.SignedBlock
+        {
+            Block = _thirdPartyBlock.Bytes,
+            externalSignature = new Proto.ExternalSignature
+            {
+                Signature = _thirdPartyBlock.Signature,
+                publicKey = ProtoConverters.ToPublicKey(_thirdPartyBlock.PublicKey)
+            },
+            nextKey = ProtoConverters.ToPublicKey(nextKey)
+        };
 
-        signedBlock.Block = _thirdPartyBlock.Bytes;
-        signedBlock.externalSignature = new Proto.ExternalSignature();
-        signedBlock.externalSignature.Signature = _thirdPartyBlock.Signature;
-        signedBlock.externalSignature.publicKey = ProtoConverters.ToPublicKey(_thirdPartyBlock.PublicKey);
-        signedBlock.nextKey = ProtoConverters.ToPublicKey(nextKey);
-        
         var buffer = SignatureHelper.MakeBuffer(signedBlock.Block, signedBlock.externalSignature.Signature, signedBlock.nextKey);
         signedBlock.Signature = key.Sign(new ReadOnlySpan<byte>(buffer));
 
@@ -45,7 +48,7 @@ public class BlockBuilder : IBlockSigner
     public List<ScopeType> ScopeTypes { get; } = new List<ScopeType>() { ScopeType.Authority } ;
     public List<PublicKey> TrustedKeys { get; } = new List<PublicKey>();
 
-    IBiscuitBuilder _topLevelBuilder;
+    readonly IBiscuitBuilder _topLevelBuilder;
     
     public BlockBuilder(IBiscuitBuilder topLevelBuilder)
     {

@@ -23,7 +23,7 @@ public class BiscuitBuilderTests
             .Serialize();
 
         var verificationKey = new VerificationKey(rootKey.Public);
-        if(!Biscuit.TryDeserialize(bytes, verificationKey, out var biscuit, out var formatErr))
+        if (!Biscuit.TryDeserialize(bytes, verificationKey, out _, out var formatErr))
         {
             throw new Exception($"Couldn't round-trip biscuit: {formatErr}");
         }
@@ -54,8 +54,8 @@ public class BiscuitBuilderTests
             throw new Exception($"Couldn't round-trip biscuit: {formatErr}");
         }
 
-        var authorizer = Parser.Authorizer("kkk($0, $1) <- opi($0, $1); allow if true;");        
-        var success = authorizer.TryAuthorize(biscuit, out var err);
+        var authorizer = Parser.Authorizer("kkk($0, $1) <- opi($0, $1); allow if true;");
+        var success = authorizer.TryAuthorize(biscuit, out _);
 
         Assert.True(success);
 
@@ -258,9 +258,7 @@ public class BiscuitBuilderTests
     [Fact]
     public void Test_Block_Trusting_Previous_Block()
     {
-        var rootKey = new SigningKey();
-        var thirdPartyKey = new SigningKey();
-
+        var rootKey = new SigningKey();        
         var verificationKey = new VerificationKey(rootKey.Public);        
         
         var token1 = Biscuit.New(rootKey)
@@ -331,8 +329,6 @@ public class BiscuitBuilderTests
     public void Test_Rule_Trusting_Previous_Block()
     {
         var rootKey = new SigningKey();
-        var thirdPartyKey = new SigningKey();
-
         var verificationKey = new VerificationKey(rootKey.Public);        
         
         var token1 = Biscuit.New(rootKey)

@@ -20,11 +20,14 @@ public static class ProtoConverters
     }
 
     static public FactV2 ToFactV2(Fact fact, SymbolTable symbols)
-    {       
-        var factV2 = new FactV2();
-        factV2.Predicate = new PredicateV2();
-
-        factV2.Predicate.Name = symbols.LookupOrAdd(fact.Name);
+    {
+        var factV2 = new FactV2
+        {
+            Predicate = new PredicateV2
+            {
+                Name = symbols.LookupOrAdd(fact.Name)
+            }
+        };
         factV2.Predicate.Terms.AddRange(fact.Terms.Select(t => ToTermV2(t, symbols)));
 
         return factV2;
@@ -65,7 +68,6 @@ public static class ProtoConverters
         ruleV2.Bodies.AddRange(rule.Body.Select(t => ToFactV2(t, symbols).Predicate));
         ruleV2.Expressions.AddRange(rule.Constraints.Select(c => ToExpressionsV2(c, symbols)));
         
-        //TODO built rule scopes 
         ruleV2.Scopes.AddRange(ProtoConverters.ToScopes(rule.Scope.Types));                
         ruleV2.Scopes.AddRange(ProtoConverters.ToScopes(rule.Scope.Keys, keys));
 

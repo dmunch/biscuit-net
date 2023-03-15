@@ -34,8 +34,8 @@ public class BlockTrustedOriginSet
 
 public class TrustedOriginSet
 {
-    ILookup<PublicKey, Origin> _publicKeys;
-    IReadOnlyDictionary<Origin, TrustedOrigins> _trustedOrigins;
+    readonly ILookup<PublicKey, Origin> _publicKeys;
+    readonly IReadOnlyDictionary<Origin, TrustedOrigins> _trustedOrigins;
 
     TrustedOriginSet(ILookup<PublicKey, Origin> publicKeys,  IReadOnlyDictionary<Origin, TrustedOrigins> blockTrustedOrigins)
     {
@@ -160,7 +160,7 @@ public class OriginSet<T, I> where T : ICollection<I>
 {    
     public IEnumerable<I> Values => _dict.Values.SelectMany(v => v);
 
-    Dictionary<Origin, T> _dict = new Dictionary<Origin, T>();
+    readonly Dictionary<Origin, T> _dict = new();
 
     public OriginSet()
     {

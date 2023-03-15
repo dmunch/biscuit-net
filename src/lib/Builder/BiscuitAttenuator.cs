@@ -4,12 +4,12 @@ namespace biscuit_net.Builder;
 
 public class BiscuitAttenuator : IBiscuitBuilder
 {
-    Proto.Biscuit _biscuit; 
-    SymbolTable _symbolTable;
-    KeyTable _keyTable;
-    Proto.PublicKey _nextKey;
+    readonly Proto.Biscuit _biscuit; 
+    readonly SymbolTable _symbolTable;
+    readonly KeyTable _keyTable;
+    readonly Proto.PublicKey _nextKey;
     
-    List<IBlockSigner> _blocks = new List<IBlockSigner>();
+    readonly List<IBlockSigner> _blocks = new();
 
     BiscuitAttenuator(Proto.Biscuit biscuit, SymbolTable symbolTable, KeyTable keyTable, Proto.PublicKey nextKey)
     {
@@ -21,7 +21,7 @@ public class BiscuitAttenuator : IBiscuitBuilder
 
     public static BiscuitAttenuator Attenuate(ReadOnlySpan<byte> bytes)    
     {        
-        var biscuit = Serializer.Deserialize<Proto.Biscuit>((ReadOnlySpan<byte>)bytes);
+        var biscuit = Serializer.Deserialize<Proto.Biscuit>(bytes);
 
         if(biscuit.Proof.finalSignature != null)
         {
@@ -88,7 +88,6 @@ public class BiscuitAttenuator : IBiscuitBuilder
         }
 
         _biscuit.Proof = new Proto.Proof() { nextSecret = currentKey.Private };
-        //biscuit.rootKeyId = 1;
 
         return _biscuit;    
     }

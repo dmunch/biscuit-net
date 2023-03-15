@@ -2,7 +2,7 @@ namespace biscuit_net;
 
 public class SymbolTable
 {
-    List<string> _symbols = new List<string>();
+    readonly List<string> _symbols = new();
     public IReadOnlyList<string> Symbols { get => _symbols.AsReadOnly(); }
     public SymbolTable()
     {
@@ -21,7 +21,8 @@ public class SymbolTable
         }
     }
 
-    static List<string> table = new List<string>{
+    static readonly List<string> table = new()
+    {
             "read",
             "write",
             "resource",

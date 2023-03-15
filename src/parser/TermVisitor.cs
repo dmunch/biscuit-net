@@ -34,7 +34,7 @@ public class TermVisitor : ExpressionsBaseVisitor<Term>
     public override Term VisitBytesFactTerm([NotNull] ExpressionsParser.BytesFactTermContext context) 
     { 
         var text = context.BYTES().GetText();
-        var bytes = HexConvert.FromHexString(text.Substring("hex:".Length));
+        var bytes = HexConvert.FromHexString(text["hex:".Length..]);
         return new Bytes(bytes);
     }
 
@@ -49,8 +49,10 @@ public class TermVisitor : ExpressionsBaseVisitor<Term>
         var firstTerm = base.Visit(context.set().fact_term());// as Constant;
         var nextTerms = context.set().set_term().Select(st => base.Visit(st)/* as Constant*/).ToList();
 
-        var terms = new List<Term>();
-        terms.Add(firstTerm);
+        var terms = new List<Term>
+        {
+            firstTerm
+        };
         terms.AddRange(nextTerms);
         return new Set(terms);
     }

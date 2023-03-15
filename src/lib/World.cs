@@ -5,7 +5,7 @@ using Datalog;
 
 public class World
 {
-    FactSet _facts = new FactSet();
+    readonly FactSet _facts = new();
 
     public IEnumerable<Fact> Facts => _facts.Values;
     

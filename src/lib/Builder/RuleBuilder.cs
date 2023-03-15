@@ -12,9 +12,9 @@ public static class CheckBuilderExtensions
 
 public class CheckBuilder
 {
-    BlockBuilder _topLevelBuilder;
-    Check.CheckKind _kind;
-    List<Rule> _rules;
+    readonly BlockBuilder _topLevelBuilder;
+    readonly Check.CheckKind _kind;
+    readonly List<Rule> _rules;
     
     public CheckBuilder(BlockBuilder topLevelBuilder, Check.CheckKind kind)
     {
@@ -47,7 +47,7 @@ public class CheckBuilder
 
 public class CheckRuleBuilder : RuleBuilderBase
 {
-    CheckBuilder _topLevelBuilder;
+    readonly CheckBuilder _topLevelBuilder;
 
     public CheckRuleBuilder(CheckBuilder toplevelBuilder, Rule other) : base(other)
     {
@@ -63,7 +63,7 @@ public class CheckRuleBuilder : RuleBuilderBase
 
 public class BlockRuleBuilder : RuleBuilderBase
 {
-    BlockBuilder _topLevelBuilder;
+    readonly BlockBuilder _topLevelBuilder;
 
     public BlockRuleBuilder(BlockBuilder toplevelBuilder, Rule other) : base(other)
     {

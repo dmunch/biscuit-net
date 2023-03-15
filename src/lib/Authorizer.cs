@@ -3,10 +3,17 @@ using System.Diagnostics.CodeAnalysis;
 namespace biscuit_net;
 using Datalog;
 
+public class VersionException : Exception
+{
+    public VersionException(string message) : base(message)
+    {
+    }   
+}
+
 public class Authorizer
 {
     public World World { get; } = new World();
-    AuthorizerBlock _authorizerBlock = new AuthorizerBlock();
+    readonly AuthorizerBlock _authorizerBlock = new();
     
     public void Add(Fact fact) => _authorizerBlock.Add(fact);
     public void Add(Rule rule) => _authorizerBlock.Add(rule);
@@ -20,16 +27,6 @@ public class Authorizer
         Add(authorizerBlock);
     }
     
-    public void Allow()
-    {
-        Add(Policy.AllowPolicy);
-    }
-
-    public void Deny()
-    {
-        Add(Policy.DenyPolicy);
-    }
-
     public bool TryAuthorize(Biscuit b, [NotNullWhen(false)] out Error? err)
     {        
         
@@ -45,12 +42,12 @@ public class Authorizer
         }
 
         if(authority.Version < 3 || authority.Version > 4)
-            throw new Exception($"Unsupported Authority Block Version {authority.Version}");
+            throw new VersionException($"Unsupported Authority Block Version {authority.Version}");
 
-        foreach(var block in blocks)
+        foreach(var version in blocks.Select(b => b.Version))
         {
-            if(block.Version < 3 || block.Version > 4)
-                throw new Exception($"Unsupported Block Version {authority.Version}");
+            if(version < 3 || version > 4)
+                throw new VersionException($"Unsupported Block Version {version}");
         }
 
         var trustedOrigins = TrustedOriginSet.Build(authority, blocks, authorizerBlock.Scope);

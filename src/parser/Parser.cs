@@ -18,7 +18,7 @@ public class Parser
         return parser.ParseBlock(code);
     }
 
-    private readonly ExpressionsVisitor _expressionsVisitor = new ExpressionsVisitor();
+    private readonly ExpressionsVisitor _expressionsVisitor = new();
     public List<Op> Parse(string rule)
     {
         var parser = InitializeParser(rule, out _);

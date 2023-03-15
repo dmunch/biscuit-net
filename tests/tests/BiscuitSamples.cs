@@ -27,9 +27,9 @@ public class BiscuitFileSample : BiscuitSamples
 
 public class BiscuitSamples : DataAttribute
 {
-    Func<QuickType.Testcase, bool> _filter;
+    readonly Func<QuickType.Testcase, bool> _filter;
     
-    private static QuickType.Samples? _samples;
+    private static readonly QuickType.Samples? _samples;
     
     public BiscuitSamples()
     {
@@ -59,12 +59,12 @@ public class BiscuitSamples : DataAttribute
         
         return testCases
             .SelectMany(tc => MapBiscuitCases(_samples, tc))
-            .OrderBy(c => int.Parse(c.Filename.Split('_')[0].Substring("test".Length)))
+            .OrderBy(c => int.Parse(c.Filename.Split('_')[0]["test".Length..]))
             .Select(biscuitCase => new object [] {biscuitCase})
             .ToArray();
     }
 
-    public IEnumerable<BiscuitSample> MapBiscuitCases(QuickType.Samples samples, QuickType.Testcase testCase)
+    public static IEnumerable<BiscuitSample> MapBiscuitCases(QuickType.Samples samples, QuickType.Testcase testCase)
     {
         return testCase.Validations
             .Select(validation => new BiscuitSample(
@@ -83,7 +83,7 @@ public class BiscuitSamples : DataAttribute
 
         var parser = new Parser();
         var facts = new HashSet<Fact>();
-        foreach(var factStr in file.World?.Facts ?? new string[0])
+        foreach(var factStr in file.World?.Facts ?? Array.Empty<string>())
         {
             var fact = parser.ParseFact(factStr);
             facts.Add(fact);
@@ -105,7 +105,7 @@ public class BiscuitSamples : DataAttribute
         {
             var ibr = file.Result.Err.FailedLogic.InvalidBlockRule;
             var ruleId = ibr[0].Integer; //assuming this is ruleId - not clear in the specs
-            var rule = ibr[1].String;
+            /*var rule = ibr[1].String;*/
             
             error = new Error(new FailedLogic(new InvalidBlockRule((int)ruleId!/*, rule*/)));
         }

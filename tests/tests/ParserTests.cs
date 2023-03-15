@@ -167,7 +167,7 @@ public class ParserTests
     {
         var text = "resource(\"file1\"); allow if true;";
         var parser = new Parser();
-        var block = parser.ParseAuthorizer(text);
+        parser.ParseAuthorizer(text);
     }
 
     [Fact]
@@ -180,7 +180,7 @@ public class ParserTests
             allow if true;";
 
         var parser = new Parser();
-        var block = parser.ParseAuthorizer(text);
+        parser.ParseAuthorizer(text);
     }
 
 
@@ -194,7 +194,7 @@ public class ParserTests
                     allow if true;";
             
         var parser = new Parser();
-        var block = parser.ParseAuthorizer(text);
+        parser.ParseAuthorizer(text);
     }
 
     [Fact]
@@ -203,7 +203,7 @@ public class ParserTests
         var text = "deny if true; allow if false;";
             
         var parser = new Parser();
-        var block = parser.ParseAuthorizer(text);
+        parser.ParseAuthorizer(text);
     }
 
     [Fact]

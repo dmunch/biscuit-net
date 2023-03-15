@@ -55,14 +55,13 @@ public class BiscuitSamplesTests
     public void TestWorldFacts(BiscuitSample biscuitCase)
     {
         var verificationKey = new VerificationKey(Convert.FromHexString(biscuitCase.RootPublicKey));
-        if(!Biscuit.TryDeserialize(biscuitCase.Token, verificationKey, out var biscuit, out var formatErr))
+        if (!Biscuit.TryDeserialize(biscuitCase.Token, verificationKey, out _, out _))
         {
             //ignore
             return;
         }
         
         var authorizer = Parser.Authorizer(biscuitCase.Validation.AuthorizerCode);
-        var check = authorizer.TryAuthorize(biscuit, out var err);
         
         var aFacts = new HashSet<biscuit_net.Datalog.Fact>(authorizer.World.Facts);
         Assert.Equal(biscuitCase.Validation.WorldFacts, aFacts);
@@ -73,7 +72,7 @@ public class BiscuitSamplesTests
     public void Test_Revocation_Ids(BiscuitSample biscuitCase)
     {
         var verificationKey = new VerificationKey(Convert.FromHexString(biscuitCase.RootPublicKey));
-        if(!Biscuit.TryDeserialize(biscuitCase.Token, verificationKey, out var biscuit, out var formatErr))
+        if (!Biscuit.TryDeserialize(biscuitCase.Token, verificationKey, out var biscuit, out _))
         {
             return;
         }

@@ -4,10 +4,10 @@ namespace biscuit_net;
 
 public class VerificationKey
 {
-    SignatureAlgorithm _algorithm;
-    NSec.Cryptography.PublicKey _key;
+    readonly SignatureAlgorithm _algorithm;
+    readonly NSec.Cryptography.PublicKey _key;
     
-    public PublicKey PublicKey => new PublicKey(Algorithm.Ed25519, _publicKey);
+    public PublicKey PublicKey => new(Algorithm.Ed25519, _publicKey);
     readonly byte[] _publicKey;
 
     public VerificationKey(byte[] key) : this(new PublicKey(Algorithm.Ed25519, key))

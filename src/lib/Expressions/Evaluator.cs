@@ -3,6 +3,13 @@ using System.Text.RegularExpressions;
 namespace biscuit_net.Expressions;
 using Datalog;
 
+public class EvaluatorException : Exception
+{
+    public EvaluatorException(string message) : base(message) 
+    {}
+}
+
+
 public static class Evaluator
 {
     public static bool Evaluate(List<Op> ops, Func<Variable, Term> variableResolver)
@@ -109,12 +116,12 @@ public static class Evaluator
 
         if(stack.Count > 1)
         {
-            throw new Exception("Expression evaluation error");
+            throw new EvaluatorException("Expression evaluation error");
         }
         var finalBool = (Boolean)stack.Pop();
         if(finalBool == null)
         {
-            throw new Exception("Expression evaluation error");
+            throw new EvaluatorException("Expression evaluation error");
         }
 
         return finalBool.Value;

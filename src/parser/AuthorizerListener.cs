@@ -7,11 +7,11 @@ using Datalog;
 
 public class AuthorizerListener : ExpressionsBaseListener
 {
-    TermVisitor _termVisitor = new TermVisitor();
-    List<Fact> _facts = new List<Fact>();
-    List<Rule> _rules = new List<Rule>();
-    List<Policy> _policies = new List<Policy>();
-    List<Check> _checks = new List<Check>();
+    readonly TermVisitor _termVisitor = new();
+    readonly List<Fact> _facts = new();
+    readonly List<Rule> _rules = new();
+    readonly List<Policy> _policies = new();
+    readonly List<Check> _checks = new();
 
 
     public AuthorizerBlock GetAuthorizerBlock()

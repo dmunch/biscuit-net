@@ -5,6 +5,12 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <LangVersion>11.0</LangVersion>
+
+    <NoWarn>S3925, S3267, S2094, S1135</NoWarn> 
+    <!--S3925 Update this implementation of 'ISerializable' to conform to the recommended serialization pattern. -->
+    <!--S3267 Loops should be simplified with "LINQ" expressions -->
+    <!--S2094 Remove this empty record, write its code or make it an "interface". [lib]csharp(S2094)-->
+    <!--Complete the task associated to this 'TODO' comment -->
   </PropertyGroup>
     
   <ItemGroup>
@@ -12,5 +18,9 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="NSec.Cryptography" Version="22.4.0" />
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="8.54.0.64047">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
   </ItemGroup>
 </Project>

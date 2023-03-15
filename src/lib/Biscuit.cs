@@ -35,7 +35,7 @@ public class Biscuit
 
     public static bool TryDeserialize(ReadOnlySpan<byte> bytes, VerificationKey verificationKey, [NotNullWhen(true)] out Biscuit? biscuit, [NotNullWhen(false)] out FailedFormat? err)
     {        
-        var biscuitProto = Serializer.Deserialize<Proto.Biscuit>((ReadOnlySpan<byte>)bytes);
+        var biscuitProto = Serializer.Deserialize<Proto.Biscuit>(bytes);
 
         if(!biscuitProto.VerifySignatures(verificationKey, out err))
         {

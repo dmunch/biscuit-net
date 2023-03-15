@@ -6,14 +6,14 @@ using Expressions;
 
 public class RuleBodyListener : ExpressionsBaseListener
 {
-    TermVisitor _termVisitor = new TermVisitor();
-    ExpressionsVisitor _expressionsVisitor = new ExpressionsVisitor();
+    readonly TermVisitor _termVisitor = new();
+    readonly ExpressionsVisitor _expressionsVisitor = new();
 
-    List<Fact> _facts = new List<Fact>();
-    List<Expression> _expressions = new List<Expression>();
+    readonly List<Fact> _facts = new();
+    readonly List<Expression> _expressions = new();
 
-    List<ScopeType> _scopeTypes = new List<ScopeType>();
-    List<PublicKey> _publicKeys = new List<PublicKey>();
+    readonly List<ScopeType> _scopeTypes = new();
+    readonly List<PublicKey> _publicKeys = new();
 
     Fact? _head = null;
     public Rule GetRule()
