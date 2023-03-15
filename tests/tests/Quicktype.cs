@@ -1,6 +1,6 @@
 /// This file is auto-generated from samples.json using Quicktype
 /// Some manual adjustement needed to be made to make it compile and behave as desired
-
+#nullable disable 
 namespace QuickType
 {
     using System;

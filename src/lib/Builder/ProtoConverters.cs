@@ -108,7 +108,7 @@ public static class ProtoConverters
             case Expressions.Op.OpType.Binary:
                 protoOp.Binary = new OpBinary() { kind = (OpBinary.Kind) op.BinaryOp.OpKind };
                 break;
-            case Expressions.Op.OpType.Value:
+            case Expressions.Op.OpType.Value when op.Value != null:
                 protoOp.Value = ToTermV2(op.Value, symbols);
                 break;
         }

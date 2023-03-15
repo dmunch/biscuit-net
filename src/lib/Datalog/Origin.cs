@@ -49,8 +49,8 @@ public class TrustedOriginSet
 
         var publicKeys = blocks
             .Select((block, idx) => new {block, idx = idx + 1})
-            .Where(b => b.block.SignedBy != null)
-            .ToLookup(b => b.block.SignedBy, b => (uint) b.idx);
+            .Where(b => b.block.SignedBy is not null)
+            .ToLookup(b => b.block.SignedBy!, b => (uint) b.idx);
 
         //populate block scopes 
         trustedOrigins[Datalog.Origins.Authority] = Origins(Datalog.Origins.Authority, authority.Scope, publicKeys);

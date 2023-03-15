@@ -30,8 +30,6 @@ public class ParserTests
     [InlineData("check if 2020-12-04T09:46:41Z > 2019-12-04T09:46:41Z;")]
     [InlineData("check if 2019-12-04T09:46:41Z <= 2020-12-04T09:46:41Z;")]
     [InlineData("check if 2020-12-04T09:46:41Z >= 2020-12-04T09:46:41Z;")]
-    [InlineData("check if 2020-12-04T09:46:41Z >= 2019-12-04T09:46:41Z;")]
-    [InlineData("check if 2020-12-04T09:46:41Z >= 2020-12-04T09:46:41Z;")]
     [InlineData("check if 2020-12-04T09:46:41Z == 2020-12-04T09:46:41Z;")]
     [InlineData("check if hex:12ab == hex:12ab;")]
     [InlineData("check if [1, 2].contains(2);")]    
@@ -216,7 +214,7 @@ public class ParserTests
         var parser = new Parser();
         var block = parser.ParseAuthorizer(text);
 
-        Assert.Equal(1, block.Rules.Count());
+        Assert.Single(block.Rules);
 
         var rule = block.Rules.First();
         

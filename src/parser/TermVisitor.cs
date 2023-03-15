@@ -46,8 +46,8 @@ public class TermVisitor : ExpressionsBaseVisitor<Term>
             return new Set(new List<Term>());
         }
 
-        var firstTerm = base.Visit(context.set().fact_term()) as Constant;
-        var nextTerms = context.set().set_term().Select(st => base.Visit(st) as Constant).ToList();
+        var firstTerm = base.Visit(context.set().fact_term());// as Constant;
+        var nextTerms = context.set().set_term().Select(st => base.Visit(st)/* as Constant*/).ToList();
 
         var terms = new List<Term>();
         terms.Add(firstTerm);
