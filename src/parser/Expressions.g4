@@ -13,6 +13,9 @@ signature_alg: 'ed25519';
 authorizer: (authorizer_element)*;
 authorizer_element: ( policy | check | fact | rule_ ) ';';
 
+block: (block_element)*;
+block_element: ( check | fact | rule_ ) ';';
+
 fact: NAME '(' fact_term (',' fact_term)* ')';
 rule_: predicate  '<-' rule_body;
 check: 'check' kind=('if' | 'all') rule_body ('or' rule_body)*;

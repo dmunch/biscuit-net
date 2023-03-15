@@ -2,7 +2,6 @@ using biscuit_net;
 using biscuit_net.Datalog;
 using biscuit_net.Parser;
 using biscuit_net.Builder;
-using F = biscuit_net.Datalog.Fact;
 
 namespace tests;
 
@@ -14,15 +13,14 @@ public class BiscuitBuilderTests
         var rootKey = new SigningKey();
         
         var bytes = Biscuit.New(rootKey)
-            .AuthorityBlock()
-                .Add(new F("right", "/a/file1.txt", "read"))
-                .Add(new F("right", "/a/file1.txt", "write"))
-                .Add(new F("right", "/a/file2.txt", "read"))
-                .Add(new F("right", "/b/file2.txt", "write"))
-            .EndBlock()
+                .AuthorityBlock("""
+                    right("/a/file1.txt", "read");
+                    right("/a/file1.txt", "write");
+                    right("/a/file2.txt", "read");
+                    right("/a/file2.txt", "write");
+                """)
+                .EndBlock()
             .Serialize();
-
-        //var bytes = builder.Serialize();
 
         var verificationKey = new VerificationKey(rootKey.Public);
         if(!Biscuit.TryDeserialize(bytes, verificationKey, out var biscuit, out var formatErr))
@@ -38,15 +36,15 @@ public class BiscuitBuilderTests
     public void TestBuilderRules()
     {
         var rootKey = new SigningKey();
-        var parser = new Parser();
         
         var bytes = Biscuit.New(rootKey)
-            .AuthorityBlock()
-                .Add(new F("resource", "file1"))
-                .Add(new F("resource", "file2"))
-                .Add(new F("operation", "read"))
-                .Add(new F("operation", "write"))
-                .Add(parser.ParseRule("opi($0, $1) <- resource($0), operation($1)"))
+            .AuthorityBlock("""
+                    resource("file1");
+                    resource("file2");
+                    operation("read");
+                    operation("write");
+                    opi($0, $1) <- resource($0), operation($1);
+                """)
             .EndBlock()
             .Serialize();
 
@@ -63,7 +61,7 @@ public class BiscuitBuilderTests
 
         //after authorization, world should contain the facts from the tokens authority facts, 
         //tokens authority rules and the authorizer rules
-        var assertBlock = parser.ParseAuthorizer("""
+        var assertBlock = Parser.Block("""
             resource("file1");
             resource("file2");
             operation("read");
@@ -86,11 +84,9 @@ public class BiscuitBuilderTests
     public void TestBuilderChecks()
     {
         var rootKey = new SigningKey();
-        var parser = new Parser();
         
         var bytes = Biscuit.New(rootKey)
-            .AuthorityBlock()
-                .Add(parser.ParseCheck("""check if resource("file4")"""))
+            .AuthorityBlock("""check if resource("file4");""")
             .EndBlock()
             .Serialize();
 
@@ -108,16 +104,14 @@ public class BiscuitBuilderTests
     public void TestBuilderBlocks()
     {
         var rootKey = new SigningKey();         
-        var parser = new Parser();
         
         var bytes = Biscuit.New(rootKey)
-            .AuthorityBlock()
-                .Add(new F("resource", "file4"))
+            .AuthorityBlock("""resource("file4");""")
             .EndBlock()
-            .AddBlock()
-                .Add(parser.ParseCheck("""check if resource("file4")"""))
-                .Add(parser.ParseCheck("""check if resource("file5")"""))
-            .EndBlock()
+            .AddBlock("""
+                check if resource("file4");
+                check if resource("file5");
+            """).EndBlock()
             .Serialize();
 
         var verificationKey = new VerificationKey(rootKey.Public);
@@ -134,18 +128,17 @@ public class BiscuitBuilderTests
     public void TestAttenuation()
     {
         var rootKey = new SigningKey();  
-        var parser = new Parser();
         
         var token1 = Biscuit.New(rootKey)
             .AuthorityBlock()
-                .Add(new F("resource", "file4"))
+                .Add("resource", "file4")
             .EndBlock()            
             .Serialize();
 
         var token2 = Biscuit.Attenuate(token1)
             .AddBlock()
-                .Add(parser.ParseCheck("""check if resource("file4")"""))
-                .Add(parser.ParseCheck("""check if resource("file5")"""))
+                .Add("""check if resource("file4")""")
+                .Add("""check if resource("file5")""")
             .EndBlock()
             .Serialize();
         
@@ -163,11 +156,10 @@ public class BiscuitBuilderTests
     public void Test_Sealed_Token_Without_Blocks_Should_Pass_Verification()
     {
         var rootKey = new SigningKey();   
-        var parser = new Parser();
         
         var token1 = Biscuit.New(rootKey)
             .AuthorityBlock()
-                .Add(new F("resource", "file4"))
+                .Add("resource", "file4")
             .EndBlock()  
             .Seal();
 
@@ -184,15 +176,14 @@ public class BiscuitBuilderTests
     public void Test_Sealed_Token_With_Blocks_Should_Pass_Verification()
     {
         var rootKey = new SigningKey();
-        var parser = new Parser();
         
         var token1 = Biscuit.New(rootKey)
             .AuthorityBlock()
-                .Add(new F("resource", "file4"))
+                .Add("resource", "file4")
             .EndBlock()
             .AddBlock()
-                .Add(parser.ParseCheck("""check if resource("file4")"""))
-                .Add(parser.ParseCheck("""check if resource("file5")"""))
+                .Add("""check if resource("file4")""")
+                .Add("""check if resource("file5")""")
             .EndBlock()
             .Seal();
 
@@ -210,11 +201,10 @@ public class BiscuitBuilderTests
     public void Test_Sealed_Cant_be_attenuated()
     {
         var rootKey = new SigningKey();
-        var parser = new Parser();
         
         var token1 = Biscuit.New(rootKey)
             .AuthorityBlock()
-                .Add(new F("resource", "file4"))
+                .Add("resource", "file4")
             .EndBlock()
             .Seal()
             .ToArray();
@@ -230,19 +220,18 @@ public class BiscuitBuilderTests
         var thirdPartyKey = new SigningKey();
 
         var verificationKey = new VerificationKey(rootKey.Public);        
-        var parser = new Parser();
         
         var token1 = Biscuit.New(rootKey)
             .AuthorityBlock()
-                .Add(new F("resource", "file4"))
+                .Add("resource", "file4")
             .EndBlock()
             .Serialize();
 
         var token2 = Biscuit.Attenuate(token1)
             .AddThirdPartyBlock(request => 
                 Biscuit.NewThirdParty()
-                    .Add(parser.ParseCheck("""check if resource("file4")"""))
-                    .Add(parser.ParseCheck("""check if resource("file5")"""))
+                    .Add("""check if resource("file4")""")
+                    .Add("""check if resource("file5")""")
                 .Sign(thirdPartyKey, request)
             ).Serialize();
 

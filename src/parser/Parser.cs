@@ -11,6 +11,12 @@ public class Parser
         var parser = new Parser();
         return new Authorizer(parser.ParseAuthorizer(code));
     }
+    
+    public static Block Block(string code)
+    {
+        var parser = new Parser();
+        return parser.ParseBlock(code);
+    }
 
     private readonly ExpressionsVisitor _expressionsVisitor = new ExpressionsVisitor();
     public List<Op> Parse(string rule)
@@ -59,6 +65,16 @@ public class Parser
         ParseTreeWalker.Default.Walk(listener, parser.authorizer());
         
         return listener.GetAuthorizerBlock();
+    }
+
+    public Block ParseBlock(string block)
+    {
+        var parser = InitializeParser(block, out _);
+
+        var listener = new AuthorizerListener();
+        ParseTreeWalker.Default.Walk(listener, parser.block());
+        
+        return listener.GetBlock();
     }
 
     ExpressionsParser InitializeParser(string code, out ErrorListener errorListener)

@@ -126,6 +126,30 @@ public partial class ExpressionsBaseListener : IExpressionsListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitAuthorizer_element([NotNull] ExpressionsParser.Authorizer_elementContext context) { }
 	/// <summary>
+	/// Enter a parse tree produced by <see cref="ExpressionsParser.block"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterBlock([NotNull] ExpressionsParser.BlockContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="ExpressionsParser.block"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitBlock([NotNull] ExpressionsParser.BlockContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="ExpressionsParser.block_element"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterBlock_element([NotNull] ExpressionsParser.Block_elementContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="ExpressionsParser.block_element"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitBlock_element([NotNull] ExpressionsParser.Block_elementContext context) { }
+	/// <summary>
 	/// Enter a parse tree produced by <see cref="ExpressionsParser.fact"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>

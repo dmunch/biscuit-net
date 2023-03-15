@@ -107,6 +107,26 @@ public interface IExpressionsListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitAuthorizer_element([NotNull] ExpressionsParser.Authorizer_elementContext context);
 	/// <summary>
+	/// Enter a parse tree produced by <see cref="ExpressionsParser.block"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterBlock([NotNull] ExpressionsParser.BlockContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="ExpressionsParser.block"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitBlock([NotNull] ExpressionsParser.BlockContext context);
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="ExpressionsParser.block_element"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterBlock_element([NotNull] ExpressionsParser.Block_elementContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="ExpressionsParser.block_element"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitBlock_element([NotNull] ExpressionsParser.Block_elementContext context);
+	/// <summary>
 	/// Enter a parse tree produced by <see cref="ExpressionsParser.fact"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>

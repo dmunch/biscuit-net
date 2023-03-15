@@ -41,6 +41,16 @@ public class AuthorizerListener : ExpressionsBaseListener
         return authorizerBlock;
     }
 
+    public Block GetBlock()
+    {
+        return new Block(
+            _facts.ToList(),
+            _rules.ToList(),
+            _checks.ToList(),
+            3
+        );
+    }
+
     public override void ExitFact([NotNull] ExpressionsParser.FactContext context) 
     {
         var terms = context.fact_term();

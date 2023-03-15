@@ -77,6 +77,18 @@ public interface IExpressionsVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitAuthorizer_element([NotNull] ExpressionsParser.Authorizer_elementContext context);
 	/// <summary>
+	/// Visit a parse tree produced by <see cref="ExpressionsParser.block"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitBlock([NotNull] ExpressionsParser.BlockContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="ExpressionsParser.block_element"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitBlock_element([NotNull] ExpressionsParser.Block_elementContext context);
+	/// <summary>
 	/// Visit a parse tree produced by <see cref="ExpressionsParser.fact"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
