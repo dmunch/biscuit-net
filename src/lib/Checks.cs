@@ -12,6 +12,9 @@ public record Check(IEnumerable<Rule> Rules, Check.CheckKind Kind)
         One,
         All
     }
+
+    public virtual bool Equals(Check? other) => Kind == other?.Kind && Rules.SequenceEqual(other.Rules);
+    public override int GetHashCode() => HashCode.Combine(Kind, Rules.Aggregate(0, HashCode.Combine));
 }
 
 public static class Checks

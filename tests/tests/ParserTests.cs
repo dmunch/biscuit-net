@@ -89,18 +89,29 @@ public class ParserTests
     public void Should_Parse_Check_With_Or()
     {
         var parser = new Parser();
-        var check = parser.ParseCheck("check if must_be_present($0) or must_be_present($0)");
+        var check = parser.ParseCheck("check if must_be_present($0) or must_be_present($1)");
 
-        Assert.Equal(new Rule(
-            new Fact("check1"), 
-            new []
-            {
-                new Fact("must_be_present", new Variable("0")),
-                new Fact("must_be_present", new Variable("0"))
-            }, 
-            Enumerable.Empty<Expression>(),
-            Scope.DefaultBlockScope
-        ), check.Rules.First());
+        Assert.Equal(new Check(new[]{
+            new Rule(
+                new Fact("check1"), 
+                new []
+                {
+                    new Fact("must_be_present", new Variable("0"))
+                }, 
+                Enumerable.Empty<Expression>(),
+                Scope.DefaultBlockScope
+            ),
+            new Rule(
+                new Fact("check1"), 
+                new []
+                {
+                    new Fact("must_be_present", new Variable("1"))
+                }, 
+                Enumerable.Empty<Expression>(),
+                Scope.DefaultBlockScope
+            )
+        }, Check.CheckKind.One)
+        , check);
     }
 
     [Fact]
