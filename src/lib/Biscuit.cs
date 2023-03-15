@@ -59,13 +59,17 @@ public class Biscuit
             revocationIds[blockIdx + 1] = GetRevocationId(block);
         }
         
-        biscuit = new Biscuit(authority, blocks.AsReadOnly(), revocationIds.AsReadOnly());
+        biscuit = new Biscuit(authority, Array.AsReadOnly(blocks), Array.AsReadOnly(revocationIds));
         
         err = null; return true;
     }
 
     public static string GetRevocationId(Proto.SignedBlock signedBlock) 
+#if NET5_0_OR_GREATER
         => Convert.ToHexString(signedBlock.Signature).ToLowerInvariant();
+#else
+        => BitConverter.ToString(signedBlock.Signature).Replace("-", string.Empty).ToLowerInvariant();
+#endif
 
     public static Block FromProto(Proto.SignedBlock signedBlock, SymbolTable symbols, KeyTable keys)
     {

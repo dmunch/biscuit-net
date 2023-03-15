@@ -30,7 +30,11 @@ public static class Unification
         }
             
         // Attempt to unify their terms one-by-one, building the substitution by accumulation.
+#if NET5_0_OR_GREATER
         foreach (var (t1, t2) in a1.Terms.Zip(a2.Terms))
+#else
+        foreach (var (t1, t2) in a1.Terms.Zip(a2.Terms, (t1, t2) => (t1, t2)))
+#endif
         {
             if (!TryUnify(t1, t2, env))
             {

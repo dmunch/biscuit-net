@@ -5,11 +5,21 @@ public record PublicKey(Algorithm Algorithm, byte[] Key)
     public virtual bool Equals(PublicKey? other) => Algorithm == other?.Algorithm && Key.SequenceEqual(other.Key);
     
     public override int GetHashCode() 
-    {
+    {        
+#if NET6_0_OR_GREATER    
         var hashCode = new HashCode();
         hashCode.Add(Algorithm);
         hashCode.AddBytes(Key);
         return hashCode.ToHashCode();
+#else
+        int hash = 17;
+        hash = hash * 19 + (int)Algorithm;
+        for (int i = 0, l = Key.Length; i < l; ++i)
+        {
+            hash = hash * 19 + Key[i];            
+        }
+        return hash;
+#endif
     }
 }
 

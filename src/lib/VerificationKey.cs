@@ -31,10 +31,4 @@ public class VerificationKey
 
     public bool Verify(ReadOnlySpan<byte> data, ReadOnlySpan<byte> signature)
         => _algorithm.Verify(_key, data, signature);
-
-    public static VerificationKey FromHexKey(string publicKeyInHex)
-    {
-        var key = Convert.FromHexString(publicKeyInHex);
-        return new VerificationKey(key);
-    }
 }

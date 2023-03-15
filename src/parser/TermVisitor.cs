@@ -34,7 +34,7 @@ public class TermVisitor : ExpressionsBaseVisitor<Term>
     public override Term VisitBytesFactTerm([NotNull] ExpressionsParser.BytesFactTermContext context) 
     { 
         var text = context.BYTES().GetText();
-        var bytes = Convert.FromHexString(text.Substring("hex:".Length));
+        var bytes = HexConvert.FromHexString(text.Substring("hex:".Length));
         return new Bytes(bytes);
     }
 

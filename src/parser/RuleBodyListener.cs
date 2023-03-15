@@ -77,7 +77,7 @@ public class RuleBodyListener : ExpressionsBaseListener
     public override void ExitOriginElementPublicKey([NotNull] ExpressionsParser.OriginElementPublicKeyContext context)
     {
         var bytes = context.PUBLICKEYBYTES().GetText().TrimStart('/');
-        var publicKey = new PublicKey(Algorithm.Ed25519, Convert.FromHexString(bytes));
+        var publicKey = new PublicKey(Algorithm.Ed25519, HexConvert.FromHexString(bytes));
         _publicKeys.Add(publicKey);
     }
 }
