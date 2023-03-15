@@ -24,8 +24,8 @@ public class ThirdPartyBlockBuilder
         var keys = new KeyTable(previousKeys);
 
         blockV2.FactsV2s.AddRange(ProtoConverters.ToFactsV2(Facts, symbols));
-        blockV2.RulesV2s.AddRange(ProtoConverters.ToRulesV2(Rules, symbols));
-        blockV2.ChecksV2s.AddRange(ProtoConverters.ToChecksV2(Checks, symbols));
+        blockV2.RulesV2s.AddRange(ProtoConverters.ToRulesV2(Rules, symbols, keys));
+        blockV2.ChecksV2s.AddRange(ProtoConverters.ToChecksV2(Checks, symbols, keys));
         
         blockV2.Symbols.AddRange(symbols.Symbols);
 

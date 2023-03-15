@@ -58,8 +58,7 @@ public class BlockBuilder : IBlockSigner
 
     public BlockBuilder Trusts(ScopeType scopeType) { ScopeTypes.Add(scopeType); return this; }
     public BlockBuilder Trusts(PublicKey publicKey) { TrustedKeys.Add(publicKey); return this; }
-    public BlockBuilder Trusts(ThirdPartyBlock thirdPartyBlock) => Trusts(thirdPartyBlock.PublicKey);
-
+    
     public IBiscuitBuilder EndBlock() => _topLevelBuilder;
 
     Proto.Block ToProto(SymbolTable globalSymbols, KeyTable globalKeys)
@@ -68,25 +67,21 @@ public class BlockBuilder : IBlockSigner
 
         var symbols = globalSymbols;
         var symbolsBefore = symbols.Symbols.ToList(); //deep copy 
-
-        blockV2.FactsV2s.AddRange(ProtoConverters.ToFactsV2(Facts, symbols));
-        blockV2.RulesV2s.AddRange(ProtoConverters.ToRulesV2(Rules, symbols));
-        blockV2.ChecksV2s.AddRange(ProtoConverters.ToChecksV2(Checks, symbols));
-        
-        blockV2.Symbols.AddRange(symbols.Symbols.Except(symbolsBefore)); //add symbol delta, not all symbols
-
-        blockV2.Version = 3;
-
-        blockV2.Scopes.AddRange(ProtoConverters.ToScopes(ScopeTypes));
-
         var keys = globalKeys;
         var keysBefore = keys.Keys.ToList(); //deep copy 
 
+        blockV2.Version = 3;
+        blockV2.FactsV2s.AddRange(ProtoConverters.ToFactsV2(Facts, symbols));
+        blockV2.RulesV2s.AddRange(ProtoConverters.ToRulesV2(Rules, symbols, keys));
+        blockV2.ChecksV2s.AddRange(ProtoConverters.ToChecksV2(Checks, symbols, keys));
+        
+        
+        blockV2.Scopes.AddRange(ProtoConverters.ToScopes(ScopeTypes));
         blockV2.Scopes.AddRange(ProtoConverters.ToScopes(TrustedKeys, keys));
 
+        blockV2.Symbols.AddRange(symbols.Symbols.Except(symbolsBefore)); //add symbol delta, not all symbols    
         blockV2.publicKeys.AddRange(keys.Keys.Except(keysBefore).Select(key => ProtoConverters.ToPublicKey(key))); //add key delta, not all keys
         
-
         return blockV2;
     }
 

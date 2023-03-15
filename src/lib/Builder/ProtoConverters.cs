@@ -53,12 +53,12 @@ public static class ProtoConverters
         return new TermV2() { Set = termSet }; 
     }
 
-    static public IEnumerable<RuleV2> ToRulesV2(IEnumerable<Rule> rules, SymbolTable symbols)
+    static public IEnumerable<RuleV2> ToRulesV2(IEnumerable<Rule> rules, SymbolTable symbols, KeyTable keys)
     {
-        return rules.Select(rule => ToRuleV2(rule, symbols)).ToList();
+        return rules.Select(rule => ToRuleV2(rule, symbols, keys)).ToList();
     }
 
-    static public RuleV2 ToRuleV2(Rule rule, SymbolTable symbols)
+    static public RuleV2 ToRuleV2(Rule rule, SymbolTable symbols, KeyTable keys)
     {
         var ruleV2 = new RuleV2();
         ruleV2.Head = ToFactV2(rule.Head, symbols).Predicate;
@@ -66,22 +66,23 @@ public static class ProtoConverters
         ruleV2.Expressions.AddRange(rule.Constraints.Select(c => ToExpressionsV2(c, symbols)));
         
         //TODO built rule scopes 
-        //ruleV2.Scopes.Add(new Proto.Scope() { scopeType = Proto.Scope.ScopeType.Authority });
-        
+        ruleV2.Scopes.AddRange(ProtoConverters.ToScopes(rule.Scope.Types));                
+        ruleV2.Scopes.AddRange(ProtoConverters.ToScopes(rule.Scope.Keys, keys));
+
         return ruleV2;
     }
 
-    static public IEnumerable<CheckV2> ToChecksV2(IEnumerable<Check> checks, SymbolTable symbols)
+    static public IEnumerable<CheckV2> ToChecksV2(IEnumerable<Check> checks, SymbolTable symbols, KeyTable keys)
     {
-        return checks.Select(check => ToCheckV2(check, symbols)).ToList();
+        return checks.Select(check => ToCheckV2(check, symbols, keys)).ToList();
     }
 
-    static public CheckV2 ToCheckV2(Check check, SymbolTable symbols)
+    static public CheckV2 ToCheckV2(Check check, SymbolTable symbols, KeyTable keys)
     {
         var checkV2 = new CheckV2();
 
         checkV2.kind = (CheckV2.Kind) check.Kind;
-        checkV2.Queries.AddRange(ToRulesV2(check.Rules, symbols));
+        checkV2.Queries.AddRange(ToRulesV2(check.Rules, symbols, keys));
         
         return checkV2;
     }
