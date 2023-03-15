@@ -65,7 +65,8 @@ public static class ProtoConverters
         ruleV2.Bodies.AddRange(rule.Body.Select(t => ToFactV2(t, symbols).Predicate));
         ruleV2.Expressions.AddRange(rule.Constraints.Select(c => ToExpressionsV2(c, symbols)));
         
-        ruleV2.Scopes.Add(new Proto.Scope() { scopeType = Proto.Scope.ScopeType.Authority });
+        //TODO built rule scopes 
+        //ruleV2.Scopes.Add(new Proto.Scope() { scopeType = Proto.Scope.ScopeType.Authority });
         
         return ruleV2;
     }
@@ -114,4 +115,34 @@ public static class ProtoConverters
         return protoOp;
     }
 
+
+    static public IEnumerable<Proto.Scope> ToScopes(IEnumerable<ScopeType> scopeTypes)
+    {
+        var scopes = new List<Proto.Scope>();
+        foreach(var scopeType in scopeTypes)
+        {
+            var scope = new Proto.Scope()
+            {
+                scopeType = (Proto.Scope.ScopeType) scopeType
+            };
+            
+            scopes.Add(scope);
+        }
+        return scopes;
+    }
+
+    static public IEnumerable<Proto.Scope> ToScopes(IEnumerable<PublicKey> publicKeys, KeyTable keys)
+    {
+        var scopes = new List<Proto.Scope>();
+        foreach(var trustedKey in publicKeys)
+        {
+            var scope = new Proto.Scope()
+            {
+                publicKey = keys.LookupOrAdd(trustedKey)
+            };
+            
+            scopes.Add(scope);
+        }        
+        return scopes;
+    }
 }

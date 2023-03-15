@@ -6,14 +6,16 @@ public class BiscuitAttenuator : IBiscuitBuilder
 {
     Proto.Biscuit _biscuit; 
     SymbolTable _symbolTable;
+    KeyTable _keyTable;
     Proto.PublicKey _nextKey;
     
     List<IBlockSigner> _blocks = new List<IBlockSigner>();
 
-    BiscuitAttenuator(Proto.Biscuit biscuit, SymbolTable symbolTable, Proto.PublicKey nextKey)
+    BiscuitAttenuator(Proto.Biscuit biscuit, SymbolTable symbolTable, KeyTable keyTable, Proto.PublicKey nextKey)
     {
         _biscuit = biscuit;
         _symbolTable = symbolTable;
+        _keyTable = keyTable;
         _nextKey = nextKey;
     }
 
@@ -27,10 +29,12 @@ public class BiscuitAttenuator : IBiscuitBuilder
         }
 
         var symbols = new SymbolTable();
+        var keys = new KeyTable();
         
 
         var authority = Serializer.Deserialize<Proto.Block>((ReadOnlySpan<byte>)biscuit.Authority.Block);
         symbols.AddSymbols(authority.Symbols);
+        keys.Add(authority.publicKeys.Select(Converters.ToPublicKey));
         var nextKey = biscuit.Authority.nextKey;
         
 
@@ -38,10 +42,11 @@ public class BiscuitAttenuator : IBiscuitBuilder
         {
             var block = Serializer.Deserialize<Proto.Block>( (ReadOnlySpan<byte>) signedBlock.Block);        
             symbols.AddSymbols(block.Symbols);
+            keys.Add(block.publicKeys.Select(Converters.ToPublicKey));
             nextKey = signedBlock.nextKey;
         }
 
-        return new BiscuitAttenuator(biscuit, symbols, nextKey);
+        return new BiscuitAttenuator(biscuit, symbols, keys, nextKey);
     }
 
     public BlockBuilder AddBlock()
@@ -77,7 +82,7 @@ public class BiscuitAttenuator : IBiscuitBuilder
         foreach(var block in _blocks)
         {   
             var nextKey = new EphemeralSigningKey();
-            _biscuit.Blocks.Add(block.Sign(_symbolTable, nextKey.Public, currentKey));
+            _biscuit.Blocks.Add(block.Sign(_symbolTable, _keyTable, nextKey.Public, currentKey));
 
             currentKey = nextKey;
         }

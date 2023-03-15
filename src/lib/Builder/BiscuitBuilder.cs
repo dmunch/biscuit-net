@@ -70,17 +70,18 @@ public class BiscuitBuilder : IBiscuitBuilder
     {
         var nextKey = new EphemeralSigningKey();
         var symbols = new SymbolTable();
+        var keys = new KeyTable();
 
         var biscuit = new Proto.Biscuit() 
         {
-            Authority = _authority.Sign(symbols, nextKey.Public, _rootKey)
+            Authority = _authority.Sign(symbols, keys, nextKey.Public, _rootKey)
         };
         
         var currentKey = nextKey;
         foreach(var block in _blocks)
         {
             nextKey = new EphemeralSigningKey();
-            biscuit.Blocks.Add(block.Sign(symbols, nextKey.Public, currentKey));
+            biscuit.Blocks.Add(block.Sign(symbols, keys, nextKey.Public, currentKey));
             currentKey = nextKey;
         }
 

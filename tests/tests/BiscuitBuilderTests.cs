@@ -254,4 +254,76 @@ public class BiscuitBuilderTests
         Assert.True(Parser.Authorizer("""resource("file5"); allow if true;""").TryAuthorize(biscuit, out _));
         Assert.False(Parser.Authorizer("""resource("file6"); allow if true;""").TryAuthorize(biscuit, out _));
     }
+
+    [Fact]
+    public void Test_Trusting_Third_Party_Block()
+    {
+        var rootKey = new SigningKey();
+        var thirdPartyKey = new SigningKey();
+
+        var verificationKey = new VerificationKey(rootKey.Public);        
+        
+        var token1 = Biscuit.New(rootKey)
+            .AuthorityBlock()
+                .Add("resource", "file4")                
+            .EndBlock()
+            .AddBlock()
+                .Trusts(thirdPartyKey.Public)
+                .Add("""check if resource("file5");""")
+            .EndBlock()
+            .Serialize();
+
+        if(!Biscuit.TryDeserialize(token1, verificationKey, out var biscuit1, out var formatErr1))
+        {
+            throw new Exception($"Couldn't round-trip biscuit: {formatErr1}");
+        }
+
+        //check in block 1 should fail, since fact resource("file5") isn't there yet
+        Assert.False(Parser.Authorizer("""allow if true;""").TryAuthorize(biscuit1, out _));
+
+        //add the third party block, which block 1 trusts
+        var token2 = Biscuit.Attenuate(token1)
+            .AddThirdPartyBlock(request => 
+                Biscuit.NewThirdParty()
+                    .Add("""resource("file5");""")
+                .Sign(thirdPartyKey, request)
+            )
+            .Serialize();
+        
+        if(!Biscuit.TryDeserialize(token2, verificationKey, out var biscuit2, out var formatErr2))
+        {
+            throw new Exception($"Couldn't round-trip biscuit: {formatErr2}");
+        }
+
+        //check in block 1 passes now, since fact is in third party block 
+        Assert.True(Parser.Authorizer("""allow if true;""").TryAuthorize(biscuit2, out _));
+    }
+
+    [Fact]
+    public void Test_Trusting_Previous_Block()
+    {
+        var rootKey = new SigningKey();
+        var thirdPartyKey = new SigningKey();
+
+        var verificationKey = new VerificationKey(rootKey.Public);        
+        
+        var token1 = Biscuit.New(rootKey)
+            .AuthorityBlock()
+            .EndBlock()
+            .AddBlock()
+                .Add("""resource("file5");""")
+            .EndBlock()
+            .AddBlock()
+                .Trusts(ScopeType.Previous)
+                .Add("""check if resource("file5");""")
+            .EndBlock()
+            .Serialize();
+
+        if(!Biscuit.TryDeserialize(token1, verificationKey, out var biscuit1, out var formatErr1))
+        {
+            throw new Exception($"Couldn't round-trip biscuit: {formatErr1}");
+        }
+
+        Assert.True(Parser.Authorizer("""allow if true;""").TryAuthorize(biscuit1, out _));
+    }
 }

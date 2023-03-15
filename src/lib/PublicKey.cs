@@ -20,7 +20,8 @@ public enum Algorithm
 
 public class KeyTable
 {
-    List<PublicKey> _keys = new List<PublicKey>();    
+    List<PublicKey> _keys = new List<PublicKey>();
+    public IReadOnlyList<PublicKey> Keys { get => _keys.AsReadOnly(); }
     public KeyTable()
     {
     }
@@ -44,5 +45,17 @@ public class KeyTable
     public PublicKey Lookup(long pos)
     {
         return _keys[(int)pos];
+    }
+
+     public uint LookupOrAdd(PublicKey key)
+    {        
+        if(_keys.Contains(key))
+        {
+            return (uint) _keys.IndexOf(key);
+        }
+
+        //we add the key
+        _keys.Add(key);
+        return (uint) _keys.Count - 1;
     }
 }

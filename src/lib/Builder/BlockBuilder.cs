@@ -7,7 +7,7 @@ namespace biscuit_net.Builder;
 
 public interface IBlockSigner
 {
-    Proto.SignedBlock Sign(SymbolTable globalSymbols, PublicKey nextKey, ISigningKey signer);
+    Proto.SignedBlock Sign(SymbolTable globalSymbols, KeyTable globalKeys, PublicKey nextKey, ISigningKey signer);
 }
 
 public class ThirdPartyBlockSigner: IBlockSigner
@@ -19,7 +19,7 @@ public class ThirdPartyBlockSigner: IBlockSigner
         _thirdPartyBlock = thirdPartyBlock;
     }
 
-    public Proto.SignedBlock Sign(SymbolTable globalSymbols, PublicKey nextKey, ISigningKey key)
+    public Proto.SignedBlock Sign(SymbolTable globalSymbols, KeyTable globalKeys, PublicKey nextKey, ISigningKey key)
     {
         var signedBlock = new Proto.SignedBlock();
 
@@ -42,6 +42,9 @@ public class BlockBuilder : IBlockSigner
     public List<Rule> Rules { get; } = new List<Rule>();
     public List<Check> Checks { get; } = new List<Check>();
 
+    public List<ScopeType> ScopeTypes { get; } = new List<ScopeType>() { ScopeType.Authority } ;
+    public List<PublicKey> TrustedKeys { get; } = new List<PublicKey>();
+
     IBiscuitBuilder _topLevelBuilder;
     
     public BlockBuilder(IBiscuitBuilder topLevelBuilder)
@@ -53,9 +56,13 @@ public class BlockBuilder : IBlockSigner
     public BlockBuilder Add(Rule rule) { Rules.Add(rule); return this; }
     public BlockBuilder Add(Check check) { Checks.Add(check); return this; } 
 
+    public BlockBuilder Trusts(ScopeType scopeType) { ScopeTypes.Add(scopeType); return this; }
+    public BlockBuilder Trusts(PublicKey publicKey) { TrustedKeys.Add(publicKey); return this; }
+    public BlockBuilder Trusts(ThirdPartyBlock thirdPartyBlock) => Trusts(thirdPartyBlock.PublicKey);
+
     public IBiscuitBuilder EndBlock() => _topLevelBuilder;
 
-    Proto.Block ToProto(SymbolTable globalSymbols)
+    Proto.Block ToProto(SymbolTable globalSymbols, KeyTable globalKeys)
     {
         var blockV2 = new Proto.Block();
 
@@ -70,17 +77,25 @@ public class BlockBuilder : IBlockSigner
 
         blockV2.Version = 3;
 
-        blockV2.Scopes.Add(new Proto.Scope() { scopeType = Proto.Scope.ScopeType.Authority });
+        blockV2.Scopes.AddRange(ProtoConverters.ToScopes(ScopeTypes));
+
+        var keys = globalKeys;
+        var keysBefore = keys.Keys.ToList(); //deep copy 
+
+        blockV2.Scopes.AddRange(ProtoConverters.ToScopes(TrustedKeys, keys));
+
+        blockV2.publicKeys.AddRange(keys.Keys.Except(keysBefore).Select(key => ProtoConverters.ToPublicKey(key))); //add key delta, not all keys
+        
 
         return blockV2;
     }
 
-    public Proto.SignedBlock Sign(SymbolTable globalSymbols, PublicKey nextKey, ISigningKey key)
+    public Proto.SignedBlock Sign(SymbolTable globalSymbols, KeyTable globalKeys, PublicKey nextKey, ISigningKey key)
     {
         var signedBlock = new Proto.SignedBlock();
 
         var bufferWriter = new ArrayBufferWriter<byte>();
-        Serializer.Serialize(bufferWriter, ToProto(globalSymbols));
+        Serializer.Serialize(bufferWriter, ToProto(globalSymbols, globalKeys));
         
         signedBlock.Block = bufferWriter.WrittenMemory.ToArray();
         signedBlock.nextKey = ProtoConverters.ToPublicKey(nextKey);
