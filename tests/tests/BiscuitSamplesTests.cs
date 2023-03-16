@@ -55,14 +55,15 @@ public class BiscuitSamplesTests
     public void TestWorldFacts(BiscuitSample biscuitCase)
     {
         var verificationKey = new VerificationKey(Convert.FromHexString(biscuitCase.RootPublicKey));
-        if (!Biscuit.TryDeserialize(biscuitCase.Token, verificationKey, out _, out _))
+        if (!Biscuit.TryDeserialize(biscuitCase.Token, verificationKey, out var biscuit, out _))
         {
             //ignore
             return;
         }
         
         var authorizer = Parser.Authorizer(biscuitCase.Validation.AuthorizerCode);
-        
+        authorizer.TryAuthorize(biscuit, out _);
+
         var aFacts = new HashSet<biscuit_net.Datalog.Fact>(authorizer.World.Facts);
         Assert.Equal(biscuitCase.Validation.WorldFacts, aFacts);
     }

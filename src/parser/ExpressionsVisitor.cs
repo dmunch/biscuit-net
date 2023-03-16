@@ -5,7 +5,7 @@ using biscuit_net.Expressions;
 
 public class ExpressionsVisitor : ExpressionsBaseVisitor<List<Op>>
 {
-    readonly TermVisitor _termVisitor = new TermVisitor();
+    readonly TermVisitor _termVisitor = new();
     
     public override List<Op> VisitExpressionParentheses([NotNull] ExpressionsParser.ExpressionParenthesesContext context) 
     {

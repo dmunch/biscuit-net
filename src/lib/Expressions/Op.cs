@@ -3,7 +3,7 @@ using Datalog;
 
 public record Expression(List<Op> Ops);
 
-public record struct Op
+public readonly record struct Op
 {
     public Op()
     {

@@ -85,7 +85,7 @@ public sealed record Date(ulong Value) : Constant
         var unixTimeStamp = EpochTime(timestamp - (2^62));
 
         // Unix timestamp is seconds past epoch
-        DateTime dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+        DateTime dateTime = new(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
         dateTime = dateTime.AddSeconds( unixTimeStamp ).ToLocalTime();
         return dateTime;
     }
@@ -117,7 +117,7 @@ public sealed record Date(ulong Value) : Constant
     // http://www.ietf.org/timezones/data/leap-seconds.list
     // http://hpiers.obspm.fr/eop-pc/earthor/utc/UTC.html
     // http://maia.usno.navy.mil/leapsec.html
-    static ulong[] leapSeconds = new ulong[] {
+    static readonly ulong[] leapSeconds = new ulong[] {
         // subtract 2208988800 to convert from NTP datetime to unix seconds
         // then add number of previous leap seconds to get TAI-since-unix-epoch
         1483228836,

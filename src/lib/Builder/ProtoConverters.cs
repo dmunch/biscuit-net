@@ -63,8 +63,10 @@ public static class ProtoConverters
 
     static public RuleV2 ToRuleV2(Rule rule, SymbolTable symbols, KeyTable keys)
     {
-        var ruleV2 = new RuleV2();
-        ruleV2.Head = ToFactV2(rule.Head, symbols).Predicate;
+        var ruleV2 = new RuleV2
+        {
+            Head = ToFactV2(rule.Head, symbols).Predicate
+        };
         ruleV2.Bodies.AddRange(rule.Body.Select(t => ToFactV2(t, symbols).Predicate));
         ruleV2.Expressions.AddRange(rule.Constraints.Select(c => ToExpressionsV2(c, symbols)));
         
@@ -81,9 +83,10 @@ public static class ProtoConverters
 
     static public CheckV2 ToCheckV2(Check check, SymbolTable symbols, KeyTable keys)
     {
-        var checkV2 = new CheckV2();
-
-        checkV2.kind = (CheckV2.Kind) check.Kind;
+        var checkV2 = new CheckV2
+        {
+            kind = (CheckV2.Kind)check.Kind
+        };
         checkV2.Queries.AddRange(ToRulesV2(check.Rules, symbols, keys));
         
         return checkV2;

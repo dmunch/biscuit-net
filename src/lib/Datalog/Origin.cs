@@ -66,7 +66,7 @@ public class TrustedOriginSet
         return new TrustedOriginSet(publicKeys, trustedOrigins);
     }
 
-    public BlockTrustedOriginSet With(Origin blockId) => new BlockTrustedOriginSet(blockId, this);
+    public BlockTrustedOriginSet With(Origin blockId) => new(blockId, this);
 
     public TrustedOrigins Origins(Origin blockId)
     {

@@ -50,7 +50,7 @@ public class Authorizer
                 throw new VersionException($"Unsupported Block Version {version}");
         }
 
-        var trustedOrigins = TrustedOriginSet.Build(authority, blocks, authorizerBlock.Scope);
+        var trustedOrigins = TrustedOriginSet.Build(authority, blocks, Scope.DefaultBlockScope);
 
         world.AddFacts(authority, blocks, authorizerBlock);
         if(!world.RunRules(authority, blocks, authorizerBlock, trustedOrigins, out err))

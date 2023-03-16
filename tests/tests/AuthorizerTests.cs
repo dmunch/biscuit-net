@@ -44,8 +44,7 @@ public class AuthorizerTests
                     new F("owner", "$0", "$1")
                 )
             },
-            new Check[] {
-            },
+            Array.Empty<Check>(),
             3            
         );
 
@@ -69,7 +68,7 @@ public class AuthorizerTests
                 .Add(Policy.AllowPolicy);
 
             var world = new World();
-            return Authorizer.TryAuthorize(biscuit.Authority, biscuit.Blocks, world, authorizerBlock, out var error);
+            return Authorizer.TryAuthorize(biscuit.Authority, biscuit.Blocks, world, authorizerBlock, out _);
 
         }
         Assert.True(Verify("alice", "file1", "write"));
@@ -127,8 +126,7 @@ public class AuthorizerTests
                     new F("owner", "$0", "$1")
                 )
             },
-            new Check[] {
-            },
+            Array.Empty<Check>(),
             3
         );
 

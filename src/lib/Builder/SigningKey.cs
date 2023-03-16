@@ -12,7 +12,7 @@ public class SigningKey : ISigningKey
 {
     readonly SignatureAlgorithm _algorithm =  SignatureAlgorithm.Ed25519;   
     readonly NSec.Cryptography.Key _key;
-    public PublicKey Public => new PublicKey(Algorithm.Ed25519, _key.PublicKey.Export(KeyBlobFormat.RawPublicKey));
+    public PublicKey Public => new(Algorithm.Ed25519, _key.PublicKey.Export(KeyBlobFormat.RawPublicKey));
     public SigningKey()
     {
         _key = NSec.Cryptography.Key.Create(_algorithm);        
@@ -28,7 +28,7 @@ public class EphemeralSigningKey : ISigningKey
     readonly NSec.Cryptography.Key _key;
     
     public byte[] Private => _key.Export(KeyBlobFormat.RawPrivateKey);
-    public PublicKey Public => new PublicKey(Algorithm.Ed25519, _key.PublicKey.Export(KeyBlobFormat.RawPublicKey));
+    public PublicKey Public => new(Algorithm.Ed25519, _key.PublicKey.Export(KeyBlobFormat.RawPublicKey));
 
     public EphemeralSigningKey()
     {

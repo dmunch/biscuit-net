@@ -12,12 +12,7 @@ public class AuthorizerBlock
     public IEnumerable<Rule> Rules { get => _rules; }
     public IEnumerable<Check> Checks { get => _checks; }
     public IEnumerable<Policy> Policies { get => _policies; }
-        
-
-    public static Scope Scope { get => Scope.DefaultBlockScope; }
-    public static PublicKey? SignedBy => null;
-    public static uint Version => 4;
-
+    
     public AuthorizerBlock Add(Fact fact) { _facts.Add(fact); return this; }
     public AuthorizerBlock Add(Rule rule) { _rules.Add(rule); return this; }
     public AuthorizerBlock Add(Check check) { _checks.Add(check); return this; }
