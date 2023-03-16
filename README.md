@@ -9,6 +9,25 @@ biscuit-net is an implementation of [Biscuit](https://github.com/biscuit-auth/bi
 - [biscuit specification](https://github.com/biscuit-auth/biscuit)
 - [biscuit-rust](https://github.com/biscuit-auth/biscuit-rust) for some more technical details.
 
+
+## Biscuit introduction 
+
+Taken from [biscuit-rust](https://github.com/biscuit-auth/biscuit-rust): 
+
+Biscuit is an authorization token for microservices architectures with the following properties:
+
+- decentralized validation: any node could validate the token only with public information;
+- offline delegation: a new, valid token can be created from another one by attenuating its rights, by its holder, without communicating with anyone;
+- capabilities based: authorization in microservices should be tied to rights related to the request, instead of relying to an identity that might not make sense to the verifier;
+- flexible rights managements: the token uses a logic language to specify attenuation and add bounds on ambient data;
+- small enough to fit anywhere (cookies, etc).
+
+Non goals:
+
+- This is not a new authentication protocol. Biscuit tokens can be used as opaque tokens delivered by other systems such as OAuth.
+- Revocation: while tokens come with expiration dates, revocation requires external state management.
+
+
 ## Basic Usage
 
 ### Create a biscuit
@@ -71,7 +90,7 @@ Biscuit.Attenuate(token);
 
 ## Third-party blocks
 
-You can learn more about third-party blocks in the relevant section of the Biscuit [specifiction](https://github.com/biscuit-auth/biscuit/blob/master/SPECIFICATIONS.md#appending-a-third-party-block)
+You can learn more about third-party blocks in the relevant section of the Biscuit [specifiction](https://github.com/biscuit-auth/biscuit/blob/master/SPECIFICATIONS.md#appending-a-third-party-block), or in this [blog Post.](https://www.biscuitsec.org/blog/third-party-blocks-why-how-when-who/)
 
 ### Adding a third-party block
 
@@ -128,6 +147,26 @@ var token1 = Biscuit.New(rootKey)
         .EndCheck()
     .EndBlock()
     .Serialize();
+```
+
+## Project Structure
+
+The most interesting bits of this implementation are:
+- [Datalog Interpreter](src/lib/Datalog)
+- [ANTLR](https://www.antlr.org/) based parser [grammar](src/Parser/Datalog.g4)
+- [Ed2559](src/lib/Ed25519.cs) cryptography, using [NSec/libsodium](https://nsec.rocks/)
+
+## NuGet Prereleases
+
+NuGet preleases are currently available on Github Packages. To consume them, your project needs to configure an additional NuGet source like follows.
+
+```sh
+# create a new project-specif nuget.config, if you don't already have one
+dotnet new nugetconfig  
+# add the GitHub nuget source 
+dotnet nuget add source https://nuget.pkg.github.com/dmunch/index.json   
+# install biscuit_net.Parser, which pulls in the other packages as dependies and is required for the examples to work 
+dotnet add package biscuit_net.Parser
 ```
 
 ## License
