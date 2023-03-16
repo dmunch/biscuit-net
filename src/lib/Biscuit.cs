@@ -18,9 +18,9 @@ public class Biscuit
         RevocationIds = revocationIds;
     }
 
-    public static BiscuitBuilder New(ISigningKey rootKey)
+    public static BiscuitBuilder New(ISigningKey signingKey)
     {
-        return new BiscuitBuilder(rootKey);
+        return new BiscuitBuilder(signingKey);
     }
 
     public static ThirdPartyBlockBuilder NewThirdParty()
@@ -33,7 +33,7 @@ public class Biscuit
         return BiscuitAttenuator.Attenuate(bytes);
     }
 
-    public static bool TryDeserialize(ReadOnlySpan<byte> bytes, VerificationKey verificationKey, [NotNullWhen(true)] out Biscuit? biscuit, [NotNullWhen(false)] out FailedFormat? err)
+    public static bool TryDeserialize(ReadOnlySpan<byte> bytes, IVerificationKey verificationKey, [NotNullWhen(true)] out Biscuit? biscuit, [NotNullWhen(false)] out FailedFormat? err)
     {        
         var biscuitProto = Serializer.Deserialize<Proto.Biscuit>(bytes);
 

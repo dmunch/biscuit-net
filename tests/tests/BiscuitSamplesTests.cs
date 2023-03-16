@@ -29,7 +29,7 @@ public class BiscuitSamplesTests
     [BiscuitSamples()]
     public void TestSuccessAndError(BiscuitSample biscuitCase)
     {
-        var verificationKey = new VerificationKey(Convert.FromHexString(biscuitCase.RootPublicKey));
+        var verificationKey = new Ed25519.VerificationKey(Convert.FromHexString(biscuitCase.RootPublicKey));
         if(!Biscuit.TryDeserialize(biscuitCase.Token, verificationKey, out var biscuit, out var formatErr))
         {
             Assert.False(biscuitCase.Success);
@@ -54,7 +54,7 @@ public class BiscuitSamplesTests
     [BiscuitSamples()]
     public void TestWorldFacts(BiscuitSample biscuitCase)
     {
-        var verificationKey = new VerificationKey(Convert.FromHexString(biscuitCase.RootPublicKey));
+        var verificationKey = new Ed25519.VerificationKey(Convert.FromHexString(biscuitCase.RootPublicKey));
         if (!Biscuit.TryDeserialize(biscuitCase.Token, verificationKey, out var biscuit, out _))
         {
             //ignore
@@ -72,7 +72,7 @@ public class BiscuitSamplesTests
     [BiscuitSamples()]
     public void Test_Revocation_Ids(BiscuitSample biscuitCase)
     {
-        var verificationKey = new VerificationKey(Convert.FromHexString(biscuitCase.RootPublicKey));
+        var verificationKey = new Ed25519.VerificationKey(Convert.FromHexString(biscuitCase.RootPublicKey));
         if (!Biscuit.TryDeserialize(biscuitCase.Token, verificationKey, out var biscuit, out _))
         {
             return;

@@ -1,5 +1,4 @@
-﻿using biscuit_net.Proto;
-using ProtoBuf;
+﻿using ProtoBuf;
 using System.Buffers;
 
 namespace biscuit_net.Builder;
@@ -9,6 +8,7 @@ public interface IBiscuitBuilder
     BlockBuilder AddBlock();
     IBiscuitBuilder AddThirdPartyBlock(ThirdPartyBlock thirdPartyBlock);
     Proto.Biscuit ToProto();    
+    ICryptoProvider CryptoProvider { get; }
 }
 
 public static class BiscuitBuilderExtensions
@@ -29,7 +29,7 @@ public static class BiscuitBuilderExtensions
     public static ReadOnlySpan<byte> Seal(this IBiscuitBuilder builder) 
     {
         var biscuit = builder.ToProto();
-        var ephemeralKey = new EphemeralSigningKey(biscuit.Proof.nextSecret);
+        var ephemeralKey = builder.CryptoProvider.CreateEphemeral(biscuit.Proof.nextSecret);
 
         var finalSignature = ephemeralKey.Sign(SignatureHelper.MakeFinalSignatureBuffer(biscuit));
         biscuit.Proof = new Proto.Proof() { finalSignature = finalSignature };
@@ -42,6 +42,7 @@ public class BiscuitBuilder : IBiscuitBuilder
     readonly BlockBuilder _authority;
     readonly List<IBlockSigner> _blocks = new();
 
+    
     readonly ISigningKey _rootKey;
             
     public BiscuitBuilder(ISigningKey rootKey)
@@ -51,6 +52,7 @@ public class BiscuitBuilder : IBiscuitBuilder
     }
 
     public BlockBuilder AuthorityBlock() => _authority;
+    public ICryptoProvider CryptoProvider => _rootKey.CreateProvider();
     
     public BlockBuilder AddBlock()
     {
@@ -68,7 +70,8 @@ public class BiscuitBuilder : IBiscuitBuilder
 
     public Proto.Biscuit ToProto()
     {
-        var nextKey = new EphemeralSigningKey();
+        var cryptoProvider = _rootKey.CreateProvider();
+        var nextKey =cryptoProvider.CreateEphemeral();
         var symbols = new SymbolTable();
         var keys = new KeyTable();
 
@@ -80,7 +83,7 @@ public class BiscuitBuilder : IBiscuitBuilder
         var currentKey = nextKey;
         foreach(var block in _blocks)
         {
-            nextKey = new EphemeralSigningKey();
+            nextKey = cryptoProvider.CreateEphemeral();
             biscuit.Blocks.Add(block.Sign(symbols, keys, nextKey.Public, currentKey));
             currentKey = nextKey;
         }

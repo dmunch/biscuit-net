@@ -8,7 +8,8 @@ public class BiscuitAttenuator : IBiscuitBuilder
     readonly SymbolTable _symbolTable;
     readonly KeyTable _keyTable;
     readonly Proto.PublicKey _nextKey;
-    
+    public ICryptoProvider CryptoProvider { get; }
+
     readonly List<IBlockSigner> _blocks = new();
 
     BiscuitAttenuator(Proto.Biscuit biscuit, SymbolTable symbolTable, KeyTable keyTable, Proto.PublicKey nextKey)
@@ -17,9 +18,11 @@ public class BiscuitAttenuator : IBiscuitBuilder
         _symbolTable = symbolTable;
         _keyTable = keyTable;
         _nextKey = nextKey;
+
+        CryptoProvider = ICryptoProvider.Create((Algorithm) nextKey.algorithm);
     }
 
-    public static BiscuitAttenuator Attenuate(ReadOnlySpan<byte> bytes)    
+    public static BiscuitAttenuator Attenuate(ReadOnlySpan<byte> bytes)
     {        
         var biscuit = Serializer.Deserialize<Proto.Biscuit>(bytes);
 
@@ -77,11 +80,11 @@ public class BiscuitAttenuator : IBiscuitBuilder
 
     public Proto.Biscuit ToProto()
     {                
-        var currentKey = new EphemeralSigningKey(_biscuit.Proof.nextSecret);        
+        var currentKey = CryptoProvider.CreateEphemeral(_biscuit.Proof.nextSecret);        
         
         foreach(var block in _blocks)
         {   
-            var nextKey = new EphemeralSigningKey();
+            var nextKey = CryptoProvider.CreateEphemeral();
             _biscuit.Blocks.Add(block.Sign(_symbolTable, _keyTable, nextKey.Public, currentKey));
 
             currentKey = nextKey;

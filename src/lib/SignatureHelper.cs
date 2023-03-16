@@ -39,7 +39,7 @@ static class SignatureHelper
         return buffer;
     }
 
-    static bool VerifySignature(this Proto.SignedBlock signedBlock, VerificationKey verificationKey, [NotNullWhen(false)] out int? invalidSignatureSize)
+    static bool VerifySignature(this Proto.SignedBlock signedBlock, IVerificationKey verificationKey, [NotNullWhen(false)] out int? invalidSignatureSize)
     {
         if(signedBlock.Signature.Length != 64)
         {
@@ -60,28 +60,28 @@ static class SignatureHelper
         }
         
         var externalBuffer = MakeBuffer(signedBlock.Block, ProtoConverters.ToPublicKey(verificationKey.PublicKey));
-        var externalverificationKey = new VerificationKey(signedBlock.externalSignature.publicKey.Key);
+        var externalverificationKey = ICryptoProvider.CreateVerificationKey(signedBlock.externalSignature.publicKey);
 
         return    verificationKey.Verify(buffer, signedBlock.Signature)
                && externalverificationKey.Verify(externalBuffer, signedBlock.externalSignature.Signature);
 
     }
 
-    static bool VerifySignatures(this Proto.Biscuit biscuitProto, VerificationKey verificationKey, [NotNullWhen(false)] out int? invalidSignatureSize)
+    static bool VerifySignatures(this Proto.Biscuit biscuitProto, IVerificationKey verificationKey, [NotNullWhen(false)] out int? invalidSignatureSize)
     {
         if(!biscuitProto.Authority.VerifySignature(verificationKey, out invalidSignatureSize))
         {
             return false;
         }
 
-        var nextverificationKey = new VerificationKey(biscuitProto.Authority.nextKey);
+        var nextverificationKey = ICryptoProvider.CreateVerificationKey(biscuitProto.Authority.nextKey);
         foreach(var block in biscuitProto.Blocks)
         {
             if(!block.VerifySignature(nextverificationKey, out invalidSignatureSize))
             {
                 return false;
             }
-            nextverificationKey = new VerificationKey(block.nextKey);
+            nextverificationKey = ICryptoProvider.CreateVerificationKey(block.nextKey);
         }
 
         return true;
@@ -91,7 +91,7 @@ static class SignatureHelper
     {
         //verify proof 
         var publicKey = (biscuitProto.Blocks.LastOrDefault() ?? biscuitProto.Authority).nextKey;
-        var verificationKey = new VerificationKey(publicKey);
+        var verificationKey = ICryptoProvider.CreateVerificationKey(publicKey);
         
         if(biscuitProto.Proof.finalSignature != null)
         {
@@ -102,15 +102,17 @@ static class SignatureHelper
         } 
         else if(biscuitProto.Proof.nextSecret != null) 
         {
-            var key = new EphemeralSigningKey(biscuitProto.Proof.nextSecret);
+            //TODO why is the nextSecret algorithm not specified??
+            var cryptoProvider = ICryptoProvider.Create(Algorithm.Ed25519);
+            var key = cryptoProvider.CreateEphemeral(biscuitProto.Proof.nextSecret);
             return verificationKey.PublicKey == key.Public;
         } 
 
-        //proof field has been tampered with          
+        //proof field has been tampered with
         return false;        
     }
 
-    public static bool VerifySignatures(this Proto.Biscuit biscuitProto, VerificationKey verificationKey, [NotNullWhen(false)] out FailedFormat? err)
+    public static bool VerifySignatures(this Proto.Biscuit biscuitProto, IVerificationKey verificationKey, [NotNullWhen(false)] out FailedFormat? err)
     {
         if(!biscuitProto.VerifySignatures(verificationKey, out int? invalidSignatureSize))
         {

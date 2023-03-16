@@ -10,7 +10,7 @@ public class BiscuitBuilderTests
     [Fact]
     public void TestBuilder()
     {
-        var rootKey = new SigningKey();
+        var rootKey = Ed25519.NewSigningKey();
         
         var bytes = Biscuit.New(rootKey)
                 .AuthorityBlock("""
@@ -22,7 +22,7 @@ public class BiscuitBuilderTests
                 .EndBlock()
             .Serialize();
 
-        var verificationKey = new VerificationKey(rootKey.Public);
+        var verificationKey = new Ed25519.VerificationKey(rootKey.Public);
         if (!Biscuit.TryDeserialize(bytes, verificationKey, out _, out var formatErr))
         {
             throw new Exception($"Couldn't round-trip biscuit: {formatErr}");
@@ -35,7 +35,7 @@ public class BiscuitBuilderTests
     [Fact]
     public void TestBuilderRules()
     {
-        var rootKey = new SigningKey();
+        var rootKey = Ed25519.NewSigningKey();
         
         var bytes = Biscuit.New(rootKey)
             .AuthorityBlock("""
@@ -48,7 +48,7 @@ public class BiscuitBuilderTests
             .EndBlock()
             .Serialize();
 
-        var verificationKey = new VerificationKey(rootKey.Public);
+        var verificationKey = new Ed25519.VerificationKey(rootKey.Public);
         if(!Biscuit.TryDeserialize(bytes, verificationKey, out var biscuit, out var formatErr))
         {
             throw new Exception($"Couldn't round-trip biscuit: {formatErr}");
@@ -83,14 +83,14 @@ public class BiscuitBuilderTests
     [Fact]
     public void TestBuilderChecks()
     {
-        var rootKey = new SigningKey();
+        var rootKey = Ed25519.NewSigningKey();
         
         var bytes = Biscuit.New(rootKey)
             .AuthorityBlock("""check if resource("file4");""")
             .EndBlock()
             .Serialize();
 
-        var verificationKey = new VerificationKey(rootKey.Public);
+        var verificationKey = new Ed25519.VerificationKey(rootKey.Public);
         if(!Biscuit.TryDeserialize(bytes, verificationKey, out var biscuit, out var formatErr))
         {
             throw new Exception($"Couldn't round-trip biscuit: {formatErr}");
@@ -103,7 +103,7 @@ public class BiscuitBuilderTests
     [Fact]
     public void TestBuilderBlocks()
     {
-        var rootKey = new SigningKey();         
+        var rootKey = Ed25519.NewSigningKey();
         
         var bytes = Biscuit.New(rootKey)
             .AuthorityBlock("""resource("file4");""")
@@ -114,7 +114,7 @@ public class BiscuitBuilderTests
             """).EndBlock()
             .Serialize();
 
-        var verificationKey = new VerificationKey(rootKey.Public);
+        var verificationKey = new Ed25519.VerificationKey(rootKey.Public);
         if(!Biscuit.TryDeserialize(bytes, verificationKey, out var biscuit, out var formatErr))
         {
             throw new Exception($"Couldn't round-trip biscuit: {formatErr}");
@@ -127,7 +127,7 @@ public class BiscuitBuilderTests
     [Fact]
     public void TestAttenuation()
     {
-        var rootKey = new SigningKey();  
+        var rootKey = Ed25519.NewSigningKey();
         
         var token1 = Biscuit.New(rootKey)
             .AuthorityBlock()
@@ -142,7 +142,7 @@ public class BiscuitBuilderTests
             .EndBlock()
             .Serialize();
         
-        var verificationKey = new VerificationKey(rootKey.Public);
+        var verificationKey = new Ed25519.VerificationKey(rootKey.Public);
         if(!Biscuit.TryDeserialize(token2, verificationKey, out var biscuit, out var formatErr))
         {
             throw new Exception($"Couldn't round-trip biscuit: {formatErr}");
@@ -155,7 +155,7 @@ public class BiscuitBuilderTests
     [Fact]
     public void Test_Sealed_Token_Without_Blocks_Should_Pass_Verification()
     {
-        var rootKey = new SigningKey();   
+        var rootKey = Ed25519.NewSigningKey();
         
         var token1 = Biscuit.New(rootKey)
             .AuthorityBlock()
@@ -163,7 +163,7 @@ public class BiscuitBuilderTests
             .EndBlock()  
             .Seal();
 
-        var verificationKey = new VerificationKey(rootKey.Public);
+        var verificationKey = new Ed25519.VerificationKey(rootKey.Public);
         if(!Biscuit.TryDeserialize(token1, verificationKey, out var biscuit, out var formatErr))
         {
             throw new Exception($"Couldn't round-trip biscuit: {formatErr}");
@@ -175,7 +175,7 @@ public class BiscuitBuilderTests
     [Fact]
     public void Test_Sealed_Token_With_Blocks_Should_Pass_Verification()
     {
-        var rootKey = new SigningKey();
+        var rootKey = Ed25519.NewSigningKey();
         
         var token1 = Biscuit.New(rootKey)
             .AuthorityBlock()
@@ -187,7 +187,7 @@ public class BiscuitBuilderTests
             .EndBlock()
             .Seal();
 
-        var verificationKey = new VerificationKey(rootKey.Public);
+        var verificationKey = new Ed25519.VerificationKey(rootKey.Public);
         if(!Biscuit.TryDeserialize(token1, verificationKey, out var biscuit, out var formatErr))
         {
             throw new Exception($"Couldn't round-trip biscuit: {formatErr}");
@@ -200,7 +200,7 @@ public class BiscuitBuilderTests
     [Fact]
     public void Test_Sealed_Cant_be_attenuated()
     {
-        var rootKey = new SigningKey();
+        var rootKey = Ed25519.NewSigningKey();
         
         var token1 = Biscuit.New(rootKey)
             .AuthorityBlock()
@@ -216,10 +216,10 @@ public class BiscuitBuilderTests
     [Fact]
     public void Test_Third_Party_Block()
     {
-        var rootKey = new SigningKey();
-        var thirdPartyKey = new SigningKey();
+        var rootKey = Ed25519.NewSigningKey();
+        var thirdPartyKey = Ed25519.NewSigningKey();
 
-        var verificationKey = new VerificationKey(rootKey.Public);        
+        var verificationKey = new Ed25519.VerificationKey(rootKey.Public);        
         
         var token1 = Biscuit.New(rootKey)
             .AuthorityBlock()
@@ -258,8 +258,8 @@ public class BiscuitBuilderTests
     [Fact]
     public void Test_Block_Trusting_Previous_Block()
     {
-        var rootKey = new SigningKey();        
-        var verificationKey = new VerificationKey(rootKey.Public);        
+        var rootKey = Ed25519.NewSigningKey();       
+        var verificationKey = new Ed25519.VerificationKey(rootKey.Public);        
         
         var token1 = Biscuit.New(rootKey)
             .AuthorityBlock()
@@ -284,10 +284,10 @@ public class BiscuitBuilderTests
     [Fact]
     public void Test_Block_Trusting_Third_Party_Block()
     {
-        var rootKey = new SigningKey();
-        var thirdPartyKey = new SigningKey();
+        var rootKey = Ed25519.NewSigningKey();
+        var thirdPartyKey = Ed25519.NewSigningKey();
 
-        var verificationKey = new VerificationKey(rootKey.Public);        
+        var verificationKey = new Ed25519.VerificationKey(rootKey.Public);        
         
         var token1 = Biscuit.New(rootKey)
             .AuthorityBlock()
@@ -328,8 +328,8 @@ public class BiscuitBuilderTests
     [Fact]
     public void Test_Rule_Trusting_Previous_Block()
     {
-        var rootKey = new SigningKey();
-        var verificationKey = new VerificationKey(rootKey.Public);        
+        var rootKey = Ed25519.NewSigningKey();
+        var verificationKey = new Ed25519.VerificationKey(rootKey.Public);        
         
         var token1 = Biscuit.New(rootKey)
             .AuthorityBlock()
@@ -357,10 +357,10 @@ public class BiscuitBuilderTests
     [Fact]
     public void Test_Rule_Trusting_Third_Party_Block()
     {
-        var rootKey = new SigningKey();
-        var thirdPartyKey = new SigningKey();
+        var rootKey = Ed25519.NewSigningKey();
+        var thirdPartyKey = Ed25519.NewSigningKey();
 
-        var verificationKey = new VerificationKey(rootKey.Public);        
+        var verificationKey = new Ed25519.VerificationKey(rootKey.Public);        
         
         var token1 = Biscuit.New(rootKey)
             .AuthorityBlock()
