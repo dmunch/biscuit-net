@@ -229,11 +229,16 @@ public class BiscuitBuilderTests
 
         var token2 = Biscuit.Attenuate(token1)
             .AddThirdPartyBlock(request => 
+                //the request would usually be send to a third-party over the wire
+                //the third party processes the requests, builds a third-party block, signs
+                //it, it sends it back.
+                //for the sake of the example, everything here happens in-process
                 Biscuit.NewThirdParty()
                     .Add("""check if resource("file4")""")
                     .Add("""check if resource("file5")""")
                 .Sign(thirdPartyKey, request)
-            ).Serialize();
+            )
+            .Serialize();
 
         /*
         var thirdPartySigner = new SignatureCreator();
@@ -287,18 +292,19 @@ public class BiscuitBuilderTests
         var rootKey = Ed25519.NewSigningKey();
         var thirdPartyKey = Ed25519.NewSigningKey();
 
-        var verificationKey = new Ed25519.VerificationKey(rootKey.Public);        
-        
         var token1 = Biscuit.New(rootKey)
             .AuthorityBlock()
                 .Add("resource", "file4")                
             .EndBlock()
             .AddBlock()
+                //this block trusts any blocks signed by the thirdPartyKey
+                //even if these blocks have been appended only later-on 
                 .Trusts(thirdPartyKey.Public)
                 .Add("""check if resource("file5");""")
             .EndBlock()
             .Serialize();
 
+        var verificationKey = new Ed25519.VerificationKey(rootKey.Public);                
         if(!Biscuit.TryDeserialize(token1, verificationKey, out var biscuit1, out var formatErr1))
         {
             throw new Exception($"Couldn't round-trip biscuit: {formatErr1}");
@@ -368,6 +374,8 @@ public class BiscuitBuilderTests
             .AddBlock()                
                 .AddCheck(Check.CheckKind.One)
                     .AddRule("""resource("file5")""")
+                        //while the overall block only trusts authority and the authorizer
+                        //this rule also trusts blocks signed by the thirdPartyKey
                         .Trusts(thirdPartyKey.Public)
                     .EndRule()
                 .EndCheck()
