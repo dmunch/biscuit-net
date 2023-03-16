@@ -4,7 +4,7 @@ namespace biscuit_net.Parser;
 using Datalog;
 using Expressions;
 
-public class RuleBodyListener : ExpressionsBaseListener
+public class RuleBodyListener : DatalogBaseListener
 {
     readonly TermVisitor _termVisitor = new();
     readonly ExpressionsVisitor _expressionsVisitor = new();
@@ -36,12 +36,12 @@ public class RuleBodyListener : ExpressionsBaseListener
         );
     }
 
-    public override void ExitRule_([NotNull] ExpressionsParser.Rule_Context context) 
+    public override void ExitRule_([NotNull] DatalogParser.Rule_Context context) 
     {
         _head = PredicateToFact(context.predicate());
     }
     
-    Fact PredicateToFact([NotNull] ExpressionsParser.PredicateContext context) 
+    Fact PredicateToFact([NotNull] DatalogParser.PredicateContext context) 
     {
         var termContexts = context.term();
         var name = context.NAME().GetText();
@@ -51,7 +51,7 @@ public class RuleBodyListener : ExpressionsBaseListener
         return new Fact(name, terms);
     }
 
-    public override void ExitRule_body_element([NotNull] ExpressionsParser.Rule_body_elementContext context) 
+    public override void ExitRule_body_element([NotNull] DatalogParser.Rule_body_elementContext context) 
     {
         if(context.expression() != null)
         {
@@ -64,17 +64,17 @@ public class RuleBodyListener : ExpressionsBaseListener
         }
     }
 
-    public override void ExitOriginElementAuthority([NotNull] ExpressionsParser.OriginElementAuthorityContext context)
+    public override void ExitOriginElementAuthority([NotNull] DatalogParser.OriginElementAuthorityContext context)
     {
         _scopeTypes.Add(ScopeType.Authority);
     }
 
-    public override void ExitOriginElementPrevious([NotNull] ExpressionsParser.OriginElementPreviousContext context)
+    public override void ExitOriginElementPrevious([NotNull] DatalogParser.OriginElementPreviousContext context)
     {
         _scopeTypes.Add(ScopeType.Previous);
     } 
 
-    public override void ExitOriginElementPublicKey([NotNull] ExpressionsParser.OriginElementPublicKeyContext context)
+    public override void ExitOriginElementPublicKey([NotNull] DatalogParser.OriginElementPublicKeyContext context)
     {
         var bytes = context.PUBLICKEYBYTES().GetText().TrimStart('/');
         var publicKey = new PublicKey(Algorithm.Ed25519, HexConvert.FromHexString(bytes));

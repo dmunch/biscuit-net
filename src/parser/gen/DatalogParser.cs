@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-// Generated from Expressions.g4 by ANTLR 4.11.1
+// Generated from Datalog.g4 by ANTLR 4.11.1
 
 // Unreachable code detected
 #pragma warning disable 0162
@@ -32,7 +32,7 @@ using DFA = Antlr4.Runtime.Dfa.DFA;
 
 [System.CodeDom.Compiler.GeneratedCode("ANTLR", "4.11.1")]
 [System.CLSCompliant(false)]
-public partial class ExpressionsParser : Parser {
+public partial class DatalogParser : Parser {
 	protected static DFA[] decisionToDFA;
 	protected static PredictionContextCache sharedContextCache = new PredictionContextCache();
 	public const int
@@ -78,22 +78,22 @@ public partial class ExpressionsParser : Parser {
 		}
 	}
 
-	public override string GrammarFileName { get { return "Expressions.g4"; } }
+	public override string GrammarFileName { get { return "Datalog.g4"; } }
 
 	public override string[] RuleNames { get { return ruleNames; } }
 
 	public override int[] SerializedAtn { get { return _serializedATN; } }
 
-	static ExpressionsParser() {
+	static DatalogParser() {
 		decisionToDFA = new DFA[_ATN.NumberOfDecisions];
 		for (int i = 0; i < _ATN.NumberOfDecisions; i++) {
 			decisionToDFA[i] = new DFA(_ATN.GetDecisionState(i), i);
 		}
 	}
 
-		public ExpressionsParser(ITokenStream input) : this(input, Console.Out, Console.Error) { }
+		public DatalogParser(ITokenStream input) : this(input, Console.Out, Console.Error) { }
 
-		public ExpressionsParser(ITokenStream input, TextWriter output, TextWriter errorOutput)
+		public DatalogParser(ITokenStream input, TextWriter output, TextWriter errorOutput)
 		: base(input, output, errorOutput)
 	{
 		Interpreter = new ParserATNSimulator(this, _ATN, decisionToDFA, sharedContextCache);
@@ -113,17 +113,17 @@ public partial class ExpressionsParser : Parser {
 		public override int RuleIndex { get { return RULE_origin_clause; } }
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void EnterRule(IParseTreeListener listener) {
-			IExpressionsListener typedListener = listener as IExpressionsListener;
+			IDatalogListener typedListener = listener as IDatalogListener;
 			if (typedListener != null) typedListener.EnterOrigin_clause(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void ExitRule(IParseTreeListener listener) {
-			IExpressionsListener typedListener = listener as IExpressionsListener;
+			IDatalogListener typedListener = listener as IDatalogListener;
 			if (typedListener != null) typedListener.ExitOrigin_clause(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IExpressionsVisitor<TResult> typedVisitor = visitor as IExpressionsVisitor<TResult>;
+			IDatalogVisitor<TResult> typedVisitor = visitor as IDatalogVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitOrigin_clause(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -186,17 +186,17 @@ public partial class ExpressionsParser : Parser {
 		public OriginElementAuthorityContext(Origin_elementContext context) { CopyFrom(context); }
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void EnterRule(IParseTreeListener listener) {
-			IExpressionsListener typedListener = listener as IExpressionsListener;
+			IDatalogListener typedListener = listener as IDatalogListener;
 			if (typedListener != null) typedListener.EnterOriginElementAuthority(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void ExitRule(IParseTreeListener listener) {
-			IExpressionsListener typedListener = listener as IExpressionsListener;
+			IDatalogListener typedListener = listener as IDatalogListener;
 			if (typedListener != null) typedListener.ExitOriginElementAuthority(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IExpressionsVisitor<TResult> typedVisitor = visitor as IExpressionsVisitor<TResult>;
+			IDatalogVisitor<TResult> typedVisitor = visitor as IDatalogVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitOriginElementAuthority(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -205,21 +205,21 @@ public partial class ExpressionsParser : Parser {
 		[System.Diagnostics.DebuggerNonUserCode] public Signature_algContext signature_alg() {
 			return GetRuleContext<Signature_algContext>(0);
 		}
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode PUBLICKEYBYTES() { return GetToken(ExpressionsParser.PUBLICKEYBYTES, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode PUBLICKEYBYTES() { return GetToken(DatalogParser.PUBLICKEYBYTES, 0); }
 		public OriginElementPublicKeyContext(Origin_elementContext context) { CopyFrom(context); }
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void EnterRule(IParseTreeListener listener) {
-			IExpressionsListener typedListener = listener as IExpressionsListener;
+			IDatalogListener typedListener = listener as IDatalogListener;
 			if (typedListener != null) typedListener.EnterOriginElementPublicKey(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void ExitRule(IParseTreeListener listener) {
-			IExpressionsListener typedListener = listener as IExpressionsListener;
+			IDatalogListener typedListener = listener as IDatalogListener;
 			if (typedListener != null) typedListener.ExitOriginElementPublicKey(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IExpressionsVisitor<TResult> typedVisitor = visitor as IExpressionsVisitor<TResult>;
+			IDatalogVisitor<TResult> typedVisitor = visitor as IDatalogVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitOriginElementPublicKey(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -228,17 +228,17 @@ public partial class ExpressionsParser : Parser {
 		public OriginElementPreviousContext(Origin_elementContext context) { CopyFrom(context); }
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void EnterRule(IParseTreeListener listener) {
-			IExpressionsListener typedListener = listener as IExpressionsListener;
+			IDatalogListener typedListener = listener as IDatalogListener;
 			if (typedListener != null) typedListener.EnterOriginElementPrevious(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void ExitRule(IParseTreeListener listener) {
-			IExpressionsListener typedListener = listener as IExpressionsListener;
+			IDatalogListener typedListener = listener as IDatalogListener;
 			if (typedListener != null) typedListener.ExitOriginElementPrevious(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IExpressionsVisitor<TResult> typedVisitor = visitor as IExpressionsVisitor<TResult>;
+			IDatalogVisitor<TResult> typedVisitor = visitor as IDatalogVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitOriginElementPrevious(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -301,17 +301,17 @@ public partial class ExpressionsParser : Parser {
 		public override int RuleIndex { get { return RULE_signature_alg; } }
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void EnterRule(IParseTreeListener listener) {
-			IExpressionsListener typedListener = listener as IExpressionsListener;
+			IDatalogListener typedListener = listener as IDatalogListener;
 			if (typedListener != null) typedListener.EnterSignature_alg(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void ExitRule(IParseTreeListener listener) {
-			IExpressionsListener typedListener = listener as IExpressionsListener;
+			IDatalogListener typedListener = listener as IDatalogListener;
 			if (typedListener != null) typedListener.ExitSignature_alg(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IExpressionsVisitor<TResult> typedVisitor = visitor as IExpressionsVisitor<TResult>;
+			IDatalogVisitor<TResult> typedVisitor = visitor as IDatalogVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitSignature_alg(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -353,17 +353,17 @@ public partial class ExpressionsParser : Parser {
 		public override int RuleIndex { get { return RULE_authorizer; } }
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void EnterRule(IParseTreeListener listener) {
-			IExpressionsListener typedListener = listener as IExpressionsListener;
+			IDatalogListener typedListener = listener as IDatalogListener;
 			if (typedListener != null) typedListener.EnterAuthorizer(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void ExitRule(IParseTreeListener listener) {
-			IExpressionsListener typedListener = listener as IExpressionsListener;
+			IDatalogListener typedListener = listener as IDatalogListener;
 			if (typedListener != null) typedListener.ExitAuthorizer(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IExpressionsVisitor<TResult> typedVisitor = visitor as IExpressionsVisitor<TResult>;
+			IDatalogVisitor<TResult> typedVisitor = visitor as IDatalogVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitAuthorizer(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -424,17 +424,17 @@ public partial class ExpressionsParser : Parser {
 		public override int RuleIndex { get { return RULE_authorizer_element; } }
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void EnterRule(IParseTreeListener listener) {
-			IExpressionsListener typedListener = listener as IExpressionsListener;
+			IDatalogListener typedListener = listener as IDatalogListener;
 			if (typedListener != null) typedListener.EnterAuthorizer_element(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void ExitRule(IParseTreeListener listener) {
-			IExpressionsListener typedListener = listener as IExpressionsListener;
+			IDatalogListener typedListener = listener as IDatalogListener;
 			if (typedListener != null) typedListener.ExitAuthorizer_element(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IExpressionsVisitor<TResult> typedVisitor = visitor as IExpressionsVisitor<TResult>;
+			IDatalogVisitor<TResult> typedVisitor = visitor as IDatalogVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitAuthorizer_element(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -504,17 +504,17 @@ public partial class ExpressionsParser : Parser {
 		public override int RuleIndex { get { return RULE_block; } }
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void EnterRule(IParseTreeListener listener) {
-			IExpressionsListener typedListener = listener as IExpressionsListener;
+			IDatalogListener typedListener = listener as IDatalogListener;
 			if (typedListener != null) typedListener.EnterBlock(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void ExitRule(IParseTreeListener listener) {
-			IExpressionsListener typedListener = listener as IExpressionsListener;
+			IDatalogListener typedListener = listener as IDatalogListener;
 			if (typedListener != null) typedListener.ExitBlock(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IExpressionsVisitor<TResult> typedVisitor = visitor as IExpressionsVisitor<TResult>;
+			IDatalogVisitor<TResult> typedVisitor = visitor as IDatalogVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitBlock(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -572,17 +572,17 @@ public partial class ExpressionsParser : Parser {
 		public override int RuleIndex { get { return RULE_block_element; } }
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void EnterRule(IParseTreeListener listener) {
-			IExpressionsListener typedListener = listener as IExpressionsListener;
+			IDatalogListener typedListener = listener as IDatalogListener;
 			if (typedListener != null) typedListener.EnterBlock_element(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void ExitRule(IParseTreeListener listener) {
-			IExpressionsListener typedListener = listener as IExpressionsListener;
+			IDatalogListener typedListener = listener as IDatalogListener;
 			if (typedListener != null) typedListener.ExitBlock_element(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IExpressionsVisitor<TResult> typedVisitor = visitor as IExpressionsVisitor<TResult>;
+			IDatalogVisitor<TResult> typedVisitor = visitor as IDatalogVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitBlock_element(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -633,7 +633,7 @@ public partial class ExpressionsParser : Parser {
 	}
 
 	public partial class FactContext : ParserRuleContext {
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode NAME() { return GetToken(ExpressionsParser.NAME, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode NAME() { return GetToken(DatalogParser.NAME, 0); }
 		[System.Diagnostics.DebuggerNonUserCode] public Fact_termContext[] fact_term() {
 			return GetRuleContexts<Fact_termContext>();
 		}
@@ -647,17 +647,17 @@ public partial class ExpressionsParser : Parser {
 		public override int RuleIndex { get { return RULE_fact; } }
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void EnterRule(IParseTreeListener listener) {
-			IExpressionsListener typedListener = listener as IExpressionsListener;
+			IDatalogListener typedListener = listener as IDatalogListener;
 			if (typedListener != null) typedListener.EnterFact(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void ExitRule(IParseTreeListener listener) {
-			IExpressionsListener typedListener = listener as IExpressionsListener;
+			IDatalogListener typedListener = listener as IDatalogListener;
 			if (typedListener != null) typedListener.ExitFact(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IExpressionsVisitor<TResult> typedVisitor = visitor as IExpressionsVisitor<TResult>;
+			IDatalogVisitor<TResult> typedVisitor = visitor as IDatalogVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitFact(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -722,17 +722,17 @@ public partial class ExpressionsParser : Parser {
 		public override int RuleIndex { get { return RULE_rule_; } }
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void EnterRule(IParseTreeListener listener) {
-			IExpressionsListener typedListener = listener as IExpressionsListener;
+			IDatalogListener typedListener = listener as IDatalogListener;
 			if (typedListener != null) typedListener.EnterRule_(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void ExitRule(IParseTreeListener listener) {
-			IExpressionsListener typedListener = listener as IExpressionsListener;
+			IDatalogListener typedListener = listener as IDatalogListener;
 			if (typedListener != null) typedListener.ExitRule_(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IExpressionsVisitor<TResult> typedVisitor = visitor as IExpressionsVisitor<TResult>;
+			IDatalogVisitor<TResult> typedVisitor = visitor as IDatalogVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitRule_(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -779,17 +779,17 @@ public partial class ExpressionsParser : Parser {
 		public override int RuleIndex { get { return RULE_check; } }
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void EnterRule(IParseTreeListener listener) {
-			IExpressionsListener typedListener = listener as IExpressionsListener;
+			IDatalogListener typedListener = listener as IDatalogListener;
 			if (typedListener != null) typedListener.EnterCheck(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void ExitRule(IParseTreeListener listener) {
-			IExpressionsListener typedListener = listener as IExpressionsListener;
+			IDatalogListener typedListener = listener as IDatalogListener;
 			if (typedListener != null) typedListener.ExitCheck(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IExpressionsVisitor<TResult> typedVisitor = visitor as IExpressionsVisitor<TResult>;
+			IDatalogVisitor<TResult> typedVisitor = visitor as IDatalogVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitCheck(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -861,17 +861,17 @@ public partial class ExpressionsParser : Parser {
 		public override int RuleIndex { get { return RULE_policy; } }
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void EnterRule(IParseTreeListener listener) {
-			IExpressionsListener typedListener = listener as IExpressionsListener;
+			IDatalogListener typedListener = listener as IDatalogListener;
 			if (typedListener != null) typedListener.EnterPolicy(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void ExitRule(IParseTreeListener listener) {
-			IExpressionsListener typedListener = listener as IExpressionsListener;
+			IDatalogListener typedListener = listener as IDatalogListener;
 			if (typedListener != null) typedListener.ExitPolicy(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IExpressionsVisitor<TResult> typedVisitor = visitor as IExpressionsVisitor<TResult>;
+			IDatalogVisitor<TResult> typedVisitor = visitor as IDatalogVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitPolicy(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -945,17 +945,17 @@ public partial class ExpressionsParser : Parser {
 		public override int RuleIndex { get { return RULE_rule_body; } }
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void EnterRule(IParseTreeListener listener) {
-			IExpressionsListener typedListener = listener as IExpressionsListener;
+			IDatalogListener typedListener = listener as IDatalogListener;
 			if (typedListener != null) typedListener.EnterRule_body(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void ExitRule(IParseTreeListener listener) {
-			IExpressionsListener typedListener = listener as IExpressionsListener;
+			IDatalogListener typedListener = listener as IDatalogListener;
 			if (typedListener != null) typedListener.ExitRule_body(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IExpressionsVisitor<TResult> typedVisitor = visitor as IExpressionsVisitor<TResult>;
+			IDatalogVisitor<TResult> typedVisitor = visitor as IDatalogVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitRule_body(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -1024,17 +1024,17 @@ public partial class ExpressionsParser : Parser {
 		public override int RuleIndex { get { return RULE_rule_body_element; } }
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void EnterRule(IParseTreeListener listener) {
-			IExpressionsListener typedListener = listener as IExpressionsListener;
+			IDatalogListener typedListener = listener as IDatalogListener;
 			if (typedListener != null) typedListener.EnterRule_body_element(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void ExitRule(IParseTreeListener listener) {
-			IExpressionsListener typedListener = listener as IExpressionsListener;
+			IDatalogListener typedListener = listener as IDatalogListener;
 			if (typedListener != null) typedListener.ExitRule_body_element(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IExpressionsVisitor<TResult> typedVisitor = visitor as IExpressionsVisitor<TResult>;
+			IDatalogVisitor<TResult> typedVisitor = visitor as IDatalogVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitRule_body_element(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -1086,7 +1086,7 @@ public partial class ExpressionsParser : Parser {
 	}
 
 	public partial class PredicateContext : ParserRuleContext {
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode NAME() { return GetToken(ExpressionsParser.NAME, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode NAME() { return GetToken(DatalogParser.NAME, 0); }
 		[System.Diagnostics.DebuggerNonUserCode] public TermContext[] term() {
 			return GetRuleContexts<TermContext>();
 		}
@@ -1100,17 +1100,17 @@ public partial class ExpressionsParser : Parser {
 		public override int RuleIndex { get { return RULE_predicate; } }
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void EnterRule(IParseTreeListener listener) {
-			IExpressionsListener typedListener = listener as IExpressionsListener;
+			IDatalogListener typedListener = listener as IDatalogListener;
 			if (typedListener != null) typedListener.EnterPredicate(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void ExitRule(IParseTreeListener listener) {
-			IExpressionsListener typedListener = listener as IExpressionsListener;
+			IDatalogListener typedListener = listener as IDatalogListener;
 			if (typedListener != null) typedListener.ExitPredicate(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IExpressionsVisitor<TResult> typedVisitor = visitor as IExpressionsVisitor<TResult>;
+			IDatalogVisitor<TResult> typedVisitor = visitor as IDatalogVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitPredicate(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -1184,17 +1184,17 @@ public partial class ExpressionsParser : Parser {
 		public ExpressionAddContext(ExpressionContext context) { CopyFrom(context); }
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void EnterRule(IParseTreeListener listener) {
-			IExpressionsListener typedListener = listener as IExpressionsListener;
+			IDatalogListener typedListener = listener as IDatalogListener;
 			if (typedListener != null) typedListener.EnterExpressionAdd(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void ExitRule(IParseTreeListener listener) {
-			IExpressionsListener typedListener = listener as IExpressionsListener;
+			IDatalogListener typedListener = listener as IDatalogListener;
 			if (typedListener != null) typedListener.ExitExpressionAdd(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IExpressionsVisitor<TResult> typedVisitor = visitor as IExpressionsVisitor<TResult>;
+			IDatalogVisitor<TResult> typedVisitor = visitor as IDatalogVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitExpressionAdd(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -1210,17 +1210,17 @@ public partial class ExpressionsParser : Parser {
 		public ExpressionLogicContext(ExpressionContext context) { CopyFrom(context); }
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void EnterRule(IParseTreeListener listener) {
-			IExpressionsListener typedListener = listener as IExpressionsListener;
+			IDatalogListener typedListener = listener as IDatalogListener;
 			if (typedListener != null) typedListener.EnterExpressionLogic(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void ExitRule(IParseTreeListener listener) {
-			IExpressionsListener typedListener = listener as IExpressionsListener;
+			IDatalogListener typedListener = listener as IDatalogListener;
 			if (typedListener != null) typedListener.ExitExpressionLogic(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IExpressionsVisitor<TResult> typedVisitor = visitor as IExpressionsVisitor<TResult>;
+			IDatalogVisitor<TResult> typedVisitor = visitor as IDatalogVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitExpressionLogic(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -1232,17 +1232,17 @@ public partial class ExpressionsParser : Parser {
 		public ExpressionUnaryContext(ExpressionContext context) { CopyFrom(context); }
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void EnterRule(IParseTreeListener listener) {
-			IExpressionsListener typedListener = listener as IExpressionsListener;
+			IDatalogListener typedListener = listener as IDatalogListener;
 			if (typedListener != null) typedListener.EnterExpressionUnary(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void ExitRule(IParseTreeListener listener) {
-			IExpressionsListener typedListener = listener as IExpressionsListener;
+			IDatalogListener typedListener = listener as IDatalogListener;
 			if (typedListener != null) typedListener.ExitExpressionUnary(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IExpressionsVisitor<TResult> typedVisitor = visitor as IExpressionsVisitor<TResult>;
+			IDatalogVisitor<TResult> typedVisitor = visitor as IDatalogVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitExpressionUnary(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -1254,17 +1254,17 @@ public partial class ExpressionsParser : Parser {
 		public ExpressionParenthesesContext(ExpressionContext context) { CopyFrom(context); }
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void EnterRule(IParseTreeListener listener) {
-			IExpressionsListener typedListener = listener as IExpressionsListener;
+			IDatalogListener typedListener = listener as IDatalogListener;
 			if (typedListener != null) typedListener.EnterExpressionParentheses(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void ExitRule(IParseTreeListener listener) {
-			IExpressionsListener typedListener = listener as IExpressionsListener;
+			IDatalogListener typedListener = listener as IDatalogListener;
 			if (typedListener != null) typedListener.ExitExpressionParentheses(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IExpressionsVisitor<TResult> typedVisitor = visitor as IExpressionsVisitor<TResult>;
+			IDatalogVisitor<TResult> typedVisitor = visitor as IDatalogVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitExpressionParentheses(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -1280,17 +1280,17 @@ public partial class ExpressionsParser : Parser {
 		public ExpressionCompContext(ExpressionContext context) { CopyFrom(context); }
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void EnterRule(IParseTreeListener listener) {
-			IExpressionsListener typedListener = listener as IExpressionsListener;
+			IDatalogListener typedListener = listener as IDatalogListener;
 			if (typedListener != null) typedListener.EnterExpressionComp(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void ExitRule(IParseTreeListener listener) {
-			IExpressionsListener typedListener = listener as IExpressionsListener;
+			IDatalogListener typedListener = listener as IDatalogListener;
 			if (typedListener != null) typedListener.ExitExpressionComp(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IExpressionsVisitor<TResult> typedVisitor = visitor as IExpressionsVisitor<TResult>;
+			IDatalogVisitor<TResult> typedVisitor = visitor as IDatalogVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitExpressionComp(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -1299,7 +1299,7 @@ public partial class ExpressionsParser : Parser {
 		[System.Diagnostics.DebuggerNonUserCode] public ExpressionContext expression() {
 			return GetRuleContext<ExpressionContext>(0);
 		}
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode METHOD_INVOCATION() { return GetToken(ExpressionsParser.METHOD_INVOCATION, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode METHOD_INVOCATION() { return GetToken(DatalogParser.METHOD_INVOCATION, 0); }
 		[System.Diagnostics.DebuggerNonUserCode] public TermContext[] term() {
 			return GetRuleContexts<TermContext>();
 		}
@@ -1309,17 +1309,17 @@ public partial class ExpressionsParser : Parser {
 		public ExpressionMethodContext(ExpressionContext context) { CopyFrom(context); }
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void EnterRule(IParseTreeListener listener) {
-			IExpressionsListener typedListener = listener as IExpressionsListener;
+			IDatalogListener typedListener = listener as IDatalogListener;
 			if (typedListener != null) typedListener.EnterExpressionMethod(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void ExitRule(IParseTreeListener listener) {
-			IExpressionsListener typedListener = listener as IExpressionsListener;
+			IDatalogListener typedListener = listener as IDatalogListener;
 			if (typedListener != null) typedListener.ExitExpressionMethod(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IExpressionsVisitor<TResult> typedVisitor = visitor as IExpressionsVisitor<TResult>;
+			IDatalogVisitor<TResult> typedVisitor = visitor as IDatalogVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitExpressionMethod(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -1331,17 +1331,17 @@ public partial class ExpressionsParser : Parser {
 		public ExpressionTermContext(ExpressionContext context) { CopyFrom(context); }
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void EnterRule(IParseTreeListener listener) {
-			IExpressionsListener typedListener = listener as IExpressionsListener;
+			IDatalogListener typedListener = listener as IDatalogListener;
 			if (typedListener != null) typedListener.EnterExpressionTerm(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void ExitRule(IParseTreeListener listener) {
-			IExpressionsListener typedListener = listener as IExpressionsListener;
+			IDatalogListener typedListener = listener as IDatalogListener;
 			if (typedListener != null) typedListener.ExitExpressionTerm(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IExpressionsVisitor<TResult> typedVisitor = visitor as IExpressionsVisitor<TResult>;
+			IDatalogVisitor<TResult> typedVisitor = visitor as IDatalogVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitExpressionTerm(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -1357,37 +1357,37 @@ public partial class ExpressionsParser : Parser {
 		public ExpressionMultContext(ExpressionContext context) { CopyFrom(context); }
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void EnterRule(IParseTreeListener listener) {
-			IExpressionsListener typedListener = listener as IExpressionsListener;
+			IDatalogListener typedListener = listener as IDatalogListener;
 			if (typedListener != null) typedListener.EnterExpressionMult(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void ExitRule(IParseTreeListener listener) {
-			IExpressionsListener typedListener = listener as IExpressionsListener;
+			IDatalogListener typedListener = listener as IDatalogListener;
 			if (typedListener != null) typedListener.ExitExpressionMult(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IExpressionsVisitor<TResult> typedVisitor = visitor as IExpressionsVisitor<TResult>;
+			IDatalogVisitor<TResult> typedVisitor = visitor as IDatalogVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitExpressionMult(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
 	public partial class ExpressionVariableContext : ExpressionContext {
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode VARIABLE() { return GetToken(ExpressionsParser.VARIABLE, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode VARIABLE() { return GetToken(DatalogParser.VARIABLE, 0); }
 		public ExpressionVariableContext(ExpressionContext context) { CopyFrom(context); }
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void EnterRule(IParseTreeListener listener) {
-			IExpressionsListener typedListener = listener as IExpressionsListener;
+			IDatalogListener typedListener = listener as IDatalogListener;
 			if (typedListener != null) typedListener.EnterExpressionVariable(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void ExitRule(IParseTreeListener listener) {
-			IExpressionsListener typedListener = listener as IExpressionsListener;
+			IDatalogListener typedListener = listener as IDatalogListener;
 			if (typedListener != null) typedListener.ExitExpressionVariable(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IExpressionsVisitor<TResult> typedVisitor = visitor as IExpressionsVisitor<TResult>;
+			IDatalogVisitor<TResult> typedVisitor = visitor as IDatalogVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitExpressionVariable(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -1621,7 +1621,7 @@ public partial class ExpressionsParser : Parser {
 		[System.Diagnostics.DebuggerNonUserCode] public Fact_termContext fact_term() {
 			return GetRuleContext<Fact_termContext>(0);
 		}
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode VARIABLE() { return GetToken(ExpressionsParser.VARIABLE, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode VARIABLE() { return GetToken(DatalogParser.VARIABLE, 0); }
 		public TermContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
 		{
@@ -1629,17 +1629,17 @@ public partial class ExpressionsParser : Parser {
 		public override int RuleIndex { get { return RULE_term; } }
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void EnterRule(IParseTreeListener listener) {
-			IExpressionsListener typedListener = listener as IExpressionsListener;
+			IDatalogListener typedListener = listener as IDatalogListener;
 			if (typedListener != null) typedListener.EnterTerm(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void ExitRule(IParseTreeListener listener) {
-			IExpressionsListener typedListener = listener as IExpressionsListener;
+			IDatalogListener typedListener = listener as IDatalogListener;
 			if (typedListener != null) typedListener.ExitTerm(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IExpressionsVisitor<TResult> typedVisitor = visitor as IExpressionsVisitor<TResult>;
+			IDatalogVisitor<TResult> typedVisitor = visitor as IDatalogVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitTerm(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -1706,17 +1706,17 @@ public partial class ExpressionsParser : Parser {
 		public SetFactTermContext(Fact_termContext context) { CopyFrom(context); }
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void EnterRule(IParseTreeListener listener) {
-			IExpressionsListener typedListener = listener as IExpressionsListener;
+			IDatalogListener typedListener = listener as IDatalogListener;
 			if (typedListener != null) typedListener.EnterSetFactTerm(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void ExitRule(IParseTreeListener listener) {
-			IExpressionsListener typedListener = listener as IExpressionsListener;
+			IDatalogListener typedListener = listener as IDatalogListener;
 			if (typedListener != null) typedListener.ExitSetFactTerm(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IExpressionsVisitor<TResult> typedVisitor = visitor as IExpressionsVisitor<TResult>;
+			IDatalogVisitor<TResult> typedVisitor = visitor as IDatalogVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitSetFactTerm(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -1728,17 +1728,17 @@ public partial class ExpressionsParser : Parser {
 		public SetTermContext(Fact_termContext context) { CopyFrom(context); }
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void EnterRule(IParseTreeListener listener) {
-			IExpressionsListener typedListener = listener as IExpressionsListener;
+			IDatalogListener typedListener = listener as IDatalogListener;
 			if (typedListener != null) typedListener.EnterSetTerm(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void ExitRule(IParseTreeListener listener) {
-			IExpressionsListener typedListener = listener as IExpressionsListener;
+			IDatalogListener typedListener = listener as IDatalogListener;
 			if (typedListener != null) typedListener.ExitSetTerm(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IExpressionsVisitor<TResult> typedVisitor = visitor as IExpressionsVisitor<TResult>;
+			IDatalogVisitor<TResult> typedVisitor = visitor as IDatalogVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitSetTerm(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -1800,101 +1800,101 @@ public partial class ExpressionsParser : Parser {
 		}
 	}
 	public partial class StringFactTermContext : Set_termContext {
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode STRING() { return GetToken(ExpressionsParser.STRING, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode STRING() { return GetToken(DatalogParser.STRING, 0); }
 		public StringFactTermContext(Set_termContext context) { CopyFrom(context); }
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void EnterRule(IParseTreeListener listener) {
-			IExpressionsListener typedListener = listener as IExpressionsListener;
+			IDatalogListener typedListener = listener as IDatalogListener;
 			if (typedListener != null) typedListener.EnterStringFactTerm(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void ExitRule(IParseTreeListener listener) {
-			IExpressionsListener typedListener = listener as IExpressionsListener;
+			IDatalogListener typedListener = listener as IDatalogListener;
 			if (typedListener != null) typedListener.ExitStringFactTerm(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IExpressionsVisitor<TResult> typedVisitor = visitor as IExpressionsVisitor<TResult>;
+			IDatalogVisitor<TResult> typedVisitor = visitor as IDatalogVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitStringFactTerm(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
 	public partial class BytesFactTermContext : Set_termContext {
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode BYTES() { return GetToken(ExpressionsParser.BYTES, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode BYTES() { return GetToken(DatalogParser.BYTES, 0); }
 		public BytesFactTermContext(Set_termContext context) { CopyFrom(context); }
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void EnterRule(IParseTreeListener listener) {
-			IExpressionsListener typedListener = listener as IExpressionsListener;
+			IDatalogListener typedListener = listener as IDatalogListener;
 			if (typedListener != null) typedListener.EnterBytesFactTerm(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void ExitRule(IParseTreeListener listener) {
-			IExpressionsListener typedListener = listener as IExpressionsListener;
+			IDatalogListener typedListener = listener as IDatalogListener;
 			if (typedListener != null) typedListener.ExitBytesFactTerm(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IExpressionsVisitor<TResult> typedVisitor = visitor as IExpressionsVisitor<TResult>;
+			IDatalogVisitor<TResult> typedVisitor = visitor as IDatalogVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitBytesFactTerm(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
 	public partial class BooleanFactTermContext : Set_termContext {
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode BOOLEAN() { return GetToken(ExpressionsParser.BOOLEAN, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode BOOLEAN() { return GetToken(DatalogParser.BOOLEAN, 0); }
 		public BooleanFactTermContext(Set_termContext context) { CopyFrom(context); }
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void EnterRule(IParseTreeListener listener) {
-			IExpressionsListener typedListener = listener as IExpressionsListener;
+			IDatalogListener typedListener = listener as IDatalogListener;
 			if (typedListener != null) typedListener.EnterBooleanFactTerm(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void ExitRule(IParseTreeListener listener) {
-			IExpressionsListener typedListener = listener as IExpressionsListener;
+			IDatalogListener typedListener = listener as IDatalogListener;
 			if (typedListener != null) typedListener.ExitBooleanFactTerm(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IExpressionsVisitor<TResult> typedVisitor = visitor as IExpressionsVisitor<TResult>;
+			IDatalogVisitor<TResult> typedVisitor = visitor as IDatalogVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitBooleanFactTerm(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
 	public partial class DateFactTermContext : Set_termContext {
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode DATE() { return GetToken(ExpressionsParser.DATE, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode DATE() { return GetToken(DatalogParser.DATE, 0); }
 		public DateFactTermContext(Set_termContext context) { CopyFrom(context); }
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void EnterRule(IParseTreeListener listener) {
-			IExpressionsListener typedListener = listener as IExpressionsListener;
+			IDatalogListener typedListener = listener as IDatalogListener;
 			if (typedListener != null) typedListener.EnterDateFactTerm(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void ExitRule(IParseTreeListener listener) {
-			IExpressionsListener typedListener = listener as IExpressionsListener;
+			IDatalogListener typedListener = listener as IDatalogListener;
 			if (typedListener != null) typedListener.ExitDateFactTerm(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IExpressionsVisitor<TResult> typedVisitor = visitor as IExpressionsVisitor<TResult>;
+			IDatalogVisitor<TResult> typedVisitor = visitor as IDatalogVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitDateFactTerm(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
 	public partial class NumberFactTermContext : Set_termContext {
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode NUMBER() { return GetToken(ExpressionsParser.NUMBER, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode NUMBER() { return GetToken(DatalogParser.NUMBER, 0); }
 		public NumberFactTermContext(Set_termContext context) { CopyFrom(context); }
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void EnterRule(IParseTreeListener listener) {
-			IExpressionsListener typedListener = listener as IExpressionsListener;
+			IDatalogListener typedListener = listener as IDatalogListener;
 			if (typedListener != null) typedListener.EnterNumberFactTerm(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void ExitRule(IParseTreeListener listener) {
-			IExpressionsListener typedListener = listener as IExpressionsListener;
+			IDatalogListener typedListener = listener as IDatalogListener;
 			if (typedListener != null) typedListener.ExitNumberFactTerm(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IExpressionsVisitor<TResult> typedVisitor = visitor as IExpressionsVisitor<TResult>;
+			IDatalogVisitor<TResult> typedVisitor = visitor as IDatalogVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitNumberFactTerm(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -1980,17 +1980,17 @@ public partial class ExpressionsParser : Parser {
 		public override int RuleIndex { get { return RULE_set; } }
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void EnterRule(IParseTreeListener listener) {
-			IExpressionsListener typedListener = listener as IExpressionsListener;
+			IDatalogListener typedListener = listener as IDatalogListener;
 			if (typedListener != null) typedListener.EnterSet(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void ExitRule(IParseTreeListener listener) {
-			IExpressionsListener typedListener = listener as IExpressionsListener;
+			IDatalogListener typedListener = listener as IDatalogListener;
 			if (typedListener != null) typedListener.ExitSet(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IExpressionsVisitor<TResult> typedVisitor = visitor as IExpressionsVisitor<TResult>;
+			IDatalogVisitor<TResult> typedVisitor = visitor as IDatalogVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitSet(this);
 			else return visitor.VisitChildren(this);
 		}

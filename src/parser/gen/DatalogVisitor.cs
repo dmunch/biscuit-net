@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-// Generated from Expressions.g4 by ANTLR 4.11.1
+// Generated from Datalog.g4 by ANTLR 4.11.1
 
 // Unreachable code detected
 #pragma warning disable 0162
@@ -25,233 +25,233 @@ using IToken = Antlr4.Runtime.IToken;
 
 /// <summary>
 /// This interface defines a complete generic visitor for a parse tree produced
-/// by <see cref="ExpressionsParser"/>.
+/// by <see cref="DatalogParser"/>.
 /// </summary>
 /// <typeparam name="Result">The return type of the visit operation.</typeparam>
 [System.CodeDom.Compiler.GeneratedCode("ANTLR", "4.11.1")]
 [System.CLSCompliant(false)]
-public interface IExpressionsVisitor<Result> : IParseTreeVisitor<Result> {
+public interface IDatalogVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="ExpressionsParser.origin_clause"/>.
+	/// Visit a parse tree produced by <see cref="DatalogParser.origin_clause"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitOrigin_clause([NotNull] ExpressionsParser.Origin_clauseContext context);
+	Result VisitOrigin_clause([NotNull] DatalogParser.Origin_clauseContext context);
 	/// <summary>
 	/// Visit a parse tree produced by the <c>originElementAuthority</c>
-	/// labeled alternative in <see cref="ExpressionsParser.origin_element"/>.
+	/// labeled alternative in <see cref="DatalogParser.origin_element"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitOriginElementAuthority([NotNull] ExpressionsParser.OriginElementAuthorityContext context);
+	Result VisitOriginElementAuthority([NotNull] DatalogParser.OriginElementAuthorityContext context);
 	/// <summary>
 	/// Visit a parse tree produced by the <c>originElementPrevious</c>
-	/// labeled alternative in <see cref="ExpressionsParser.origin_element"/>.
+	/// labeled alternative in <see cref="DatalogParser.origin_element"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitOriginElementPrevious([NotNull] ExpressionsParser.OriginElementPreviousContext context);
+	Result VisitOriginElementPrevious([NotNull] DatalogParser.OriginElementPreviousContext context);
 	/// <summary>
 	/// Visit a parse tree produced by the <c>originElementPublicKey</c>
-	/// labeled alternative in <see cref="ExpressionsParser.origin_element"/>.
+	/// labeled alternative in <see cref="DatalogParser.origin_element"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitOriginElementPublicKey([NotNull] ExpressionsParser.OriginElementPublicKeyContext context);
+	Result VisitOriginElementPublicKey([NotNull] DatalogParser.OriginElementPublicKeyContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="ExpressionsParser.signature_alg"/>.
+	/// Visit a parse tree produced by <see cref="DatalogParser.signature_alg"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitSignature_alg([NotNull] ExpressionsParser.Signature_algContext context);
+	Result VisitSignature_alg([NotNull] DatalogParser.Signature_algContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="ExpressionsParser.authorizer"/>.
+	/// Visit a parse tree produced by <see cref="DatalogParser.authorizer"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitAuthorizer([NotNull] ExpressionsParser.AuthorizerContext context);
+	Result VisitAuthorizer([NotNull] DatalogParser.AuthorizerContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="ExpressionsParser.authorizer_element"/>.
+	/// Visit a parse tree produced by <see cref="DatalogParser.authorizer_element"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitAuthorizer_element([NotNull] ExpressionsParser.Authorizer_elementContext context);
+	Result VisitAuthorizer_element([NotNull] DatalogParser.Authorizer_elementContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="ExpressionsParser.block"/>.
+	/// Visit a parse tree produced by <see cref="DatalogParser.block"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitBlock([NotNull] ExpressionsParser.BlockContext context);
+	Result VisitBlock([NotNull] DatalogParser.BlockContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="ExpressionsParser.block_element"/>.
+	/// Visit a parse tree produced by <see cref="DatalogParser.block_element"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitBlock_element([NotNull] ExpressionsParser.Block_elementContext context);
+	Result VisitBlock_element([NotNull] DatalogParser.Block_elementContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="ExpressionsParser.fact"/>.
+	/// Visit a parse tree produced by <see cref="DatalogParser.fact"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitFact([NotNull] ExpressionsParser.FactContext context);
+	Result VisitFact([NotNull] DatalogParser.FactContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="ExpressionsParser.rule_"/>.
+	/// Visit a parse tree produced by <see cref="DatalogParser.rule_"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitRule_([NotNull] ExpressionsParser.Rule_Context context);
+	Result VisitRule_([NotNull] DatalogParser.Rule_Context context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="ExpressionsParser.check"/>.
+	/// Visit a parse tree produced by <see cref="DatalogParser.check"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitCheck([NotNull] ExpressionsParser.CheckContext context);
+	Result VisitCheck([NotNull] DatalogParser.CheckContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="ExpressionsParser.policy"/>.
+	/// Visit a parse tree produced by <see cref="DatalogParser.policy"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitPolicy([NotNull] ExpressionsParser.PolicyContext context);
+	Result VisitPolicy([NotNull] DatalogParser.PolicyContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="ExpressionsParser.rule_body"/>.
+	/// Visit a parse tree produced by <see cref="DatalogParser.rule_body"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitRule_body([NotNull] ExpressionsParser.Rule_bodyContext context);
+	Result VisitRule_body([NotNull] DatalogParser.Rule_bodyContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="ExpressionsParser.rule_body_element"/>.
+	/// Visit a parse tree produced by <see cref="DatalogParser.rule_body_element"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitRule_body_element([NotNull] ExpressionsParser.Rule_body_elementContext context);
+	Result VisitRule_body_element([NotNull] DatalogParser.Rule_body_elementContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="ExpressionsParser.predicate"/>.
+	/// Visit a parse tree produced by <see cref="DatalogParser.predicate"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitPredicate([NotNull] ExpressionsParser.PredicateContext context);
+	Result VisitPredicate([NotNull] DatalogParser.PredicateContext context);
 	/// <summary>
 	/// Visit a parse tree produced by the <c>expressionAdd</c>
-	/// labeled alternative in <see cref="ExpressionsParser.expression"/>.
+	/// labeled alternative in <see cref="DatalogParser.expression"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitExpressionAdd([NotNull] ExpressionsParser.ExpressionAddContext context);
+	Result VisitExpressionAdd([NotNull] DatalogParser.ExpressionAddContext context);
 	/// <summary>
 	/// Visit a parse tree produced by the <c>expressionLogic</c>
-	/// labeled alternative in <see cref="ExpressionsParser.expression"/>.
+	/// labeled alternative in <see cref="DatalogParser.expression"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitExpressionLogic([NotNull] ExpressionsParser.ExpressionLogicContext context);
+	Result VisitExpressionLogic([NotNull] DatalogParser.ExpressionLogicContext context);
 	/// <summary>
 	/// Visit a parse tree produced by the <c>expressionUnary</c>
-	/// labeled alternative in <see cref="ExpressionsParser.expression"/>.
+	/// labeled alternative in <see cref="DatalogParser.expression"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitExpressionUnary([NotNull] ExpressionsParser.ExpressionUnaryContext context);
+	Result VisitExpressionUnary([NotNull] DatalogParser.ExpressionUnaryContext context);
 	/// <summary>
 	/// Visit a parse tree produced by the <c>expressionParentheses</c>
-	/// labeled alternative in <see cref="ExpressionsParser.expression"/>.
+	/// labeled alternative in <see cref="DatalogParser.expression"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitExpressionParentheses([NotNull] ExpressionsParser.ExpressionParenthesesContext context);
+	Result VisitExpressionParentheses([NotNull] DatalogParser.ExpressionParenthesesContext context);
 	/// <summary>
 	/// Visit a parse tree produced by the <c>expressionComp</c>
-	/// labeled alternative in <see cref="ExpressionsParser.expression"/>.
+	/// labeled alternative in <see cref="DatalogParser.expression"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitExpressionComp([NotNull] ExpressionsParser.ExpressionCompContext context);
+	Result VisitExpressionComp([NotNull] DatalogParser.ExpressionCompContext context);
 	/// <summary>
 	/// Visit a parse tree produced by the <c>expressionMethod</c>
-	/// labeled alternative in <see cref="ExpressionsParser.expression"/>.
+	/// labeled alternative in <see cref="DatalogParser.expression"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitExpressionMethod([NotNull] ExpressionsParser.ExpressionMethodContext context);
+	Result VisitExpressionMethod([NotNull] DatalogParser.ExpressionMethodContext context);
 	/// <summary>
 	/// Visit a parse tree produced by the <c>expressionTerm</c>
-	/// labeled alternative in <see cref="ExpressionsParser.expression"/>.
+	/// labeled alternative in <see cref="DatalogParser.expression"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitExpressionTerm([NotNull] ExpressionsParser.ExpressionTermContext context);
+	Result VisitExpressionTerm([NotNull] DatalogParser.ExpressionTermContext context);
 	/// <summary>
 	/// Visit a parse tree produced by the <c>expressionMult</c>
-	/// labeled alternative in <see cref="ExpressionsParser.expression"/>.
+	/// labeled alternative in <see cref="DatalogParser.expression"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitExpressionMult([NotNull] ExpressionsParser.ExpressionMultContext context);
+	Result VisitExpressionMult([NotNull] DatalogParser.ExpressionMultContext context);
 	/// <summary>
 	/// Visit a parse tree produced by the <c>expressionVariable</c>
-	/// labeled alternative in <see cref="ExpressionsParser.expression"/>.
+	/// labeled alternative in <see cref="DatalogParser.expression"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitExpressionVariable([NotNull] ExpressionsParser.ExpressionVariableContext context);
+	Result VisitExpressionVariable([NotNull] DatalogParser.ExpressionVariableContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="ExpressionsParser.term"/>.
+	/// Visit a parse tree produced by <see cref="DatalogParser.term"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitTerm([NotNull] ExpressionsParser.TermContext context);
+	Result VisitTerm([NotNull] DatalogParser.TermContext context);
 	/// <summary>
 	/// Visit a parse tree produced by the <c>setTerm</c>
-	/// labeled alternative in <see cref="ExpressionsParser.fact_term"/>.
+	/// labeled alternative in <see cref="DatalogParser.fact_term"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitSetTerm([NotNull] ExpressionsParser.SetTermContext context);
+	Result VisitSetTerm([NotNull] DatalogParser.SetTermContext context);
 	/// <summary>
 	/// Visit a parse tree produced by the <c>setFactTerm</c>
-	/// labeled alternative in <see cref="ExpressionsParser.fact_term"/>.
+	/// labeled alternative in <see cref="DatalogParser.fact_term"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitSetFactTerm([NotNull] ExpressionsParser.SetFactTermContext context);
+	Result VisitSetFactTerm([NotNull] DatalogParser.SetFactTermContext context);
 	/// <summary>
 	/// Visit a parse tree produced by the <c>booleanFactTerm</c>
-	/// labeled alternative in <see cref="ExpressionsParser.set_term"/>.
+	/// labeled alternative in <see cref="DatalogParser.set_term"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitBooleanFactTerm([NotNull] ExpressionsParser.BooleanFactTermContext context);
+	Result VisitBooleanFactTerm([NotNull] DatalogParser.BooleanFactTermContext context);
 	/// <summary>
 	/// Visit a parse tree produced by the <c>stringFactTerm</c>
-	/// labeled alternative in <see cref="ExpressionsParser.set_term"/>.
+	/// labeled alternative in <see cref="DatalogParser.set_term"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitStringFactTerm([NotNull] ExpressionsParser.StringFactTermContext context);
+	Result VisitStringFactTerm([NotNull] DatalogParser.StringFactTermContext context);
 	/// <summary>
 	/// Visit a parse tree produced by the <c>numberFactTerm</c>
-	/// labeled alternative in <see cref="ExpressionsParser.set_term"/>.
+	/// labeled alternative in <see cref="DatalogParser.set_term"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitNumberFactTerm([NotNull] ExpressionsParser.NumberFactTermContext context);
+	Result VisitNumberFactTerm([NotNull] DatalogParser.NumberFactTermContext context);
 	/// <summary>
 	/// Visit a parse tree produced by the <c>bytesFactTerm</c>
-	/// labeled alternative in <see cref="ExpressionsParser.set_term"/>.
+	/// labeled alternative in <see cref="DatalogParser.set_term"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitBytesFactTerm([NotNull] ExpressionsParser.BytesFactTermContext context);
+	Result VisitBytesFactTerm([NotNull] DatalogParser.BytesFactTermContext context);
 	/// <summary>
 	/// Visit a parse tree produced by the <c>dateFactTerm</c>
-	/// labeled alternative in <see cref="ExpressionsParser.set_term"/>.
+	/// labeled alternative in <see cref="DatalogParser.set_term"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitDateFactTerm([NotNull] ExpressionsParser.DateFactTermContext context);
+	Result VisitDateFactTerm([NotNull] DatalogParser.DateFactTermContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="ExpressionsParser.set"/>.
+	/// Visit a parse tree produced by <see cref="DatalogParser.set"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitSet([NotNull] ExpressionsParser.SetContext context);
+	Result VisitSet([NotNull] DatalogParser.SetContext context);
 }

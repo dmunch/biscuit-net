@@ -5,7 +5,7 @@ namespace biscuit_net.Parser;
 using Antlr4.Runtime.Tree;
 using Datalog;
 
-public class AuthorizerListener : ExpressionsBaseListener
+public class AuthorizerListener : DatalogBaseListener
 {
     readonly TermVisitor _termVisitor = new();
     readonly List<Fact> _facts = new();
@@ -51,7 +51,7 @@ public class AuthorizerListener : ExpressionsBaseListener
         );
     }
 
-    public override void ExitFact([NotNull] ExpressionsParser.FactContext context) 
+    public override void ExitFact([NotNull] DatalogParser.FactContext context) 
     {
         var terms = context.fact_term();
         var name = context.NAME().GetText();
@@ -61,7 +61,7 @@ public class AuthorizerListener : ExpressionsBaseListener
         _facts.Add(new Fact(name, Facts));
     }
 
-    public override void ExitRule_([NotNull] ExpressionsParser.Rule_Context context)
+    public override void ExitRule_([NotNull] DatalogParser.Rule_Context context)
     {
         var ruleBodyListener = new RuleBodyListener();
         ParseTreeWalker.Default.Walk(ruleBodyListener, context);
@@ -69,7 +69,7 @@ public class AuthorizerListener : ExpressionsBaseListener
         _rules.Add(ruleBodyListener.GetRule());
     }
 
-    public override void ExitPolicy([NotNull] ExpressionsParser.PolicyContext context)
+    public override void ExitPolicy([NotNull] DatalogParser.PolicyContext context)
     {
         var kind = context.kind.Text switch 
         {
@@ -83,7 +83,7 @@ public class AuthorizerListener : ExpressionsBaseListener
         _policies.Add(policy);
     }
 
-    public override void ExitCheck([NotNull] ExpressionsParser.CheckContext context)
+    public override void ExitCheck([NotNull] DatalogParser.CheckContext context)
     {
         var kind = context.kind.Text switch 
         {
@@ -98,7 +98,7 @@ public class AuthorizerListener : ExpressionsBaseListener
         _checks.Add(check);
     }
 
-    static List<Rule> GetHeadlessRules(Fact head, IEnumerable<ExpressionsParser.Rule_bodyContext> ruleBodyContexts)
+    static List<Rule> GetHeadlessRules(Fact head, IEnumerable<DatalogParser.Rule_bodyContext> ruleBodyContexts)
     {
         var rules = new List<Rule>();
         foreach(var ruleBodyContext in ruleBodyContexts) 

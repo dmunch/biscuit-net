@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-// Generated from Expressions.g4 by ANTLR 4.11.1
+// Generated from Datalog.g4 by ANTLR 4.11.1
 
 // Unreachable code detected
 #pragma warning disable 0162
@@ -27,460 +27,460 @@ using IToken = Antlr4.Runtime.IToken;
 using ParserRuleContext = Antlr4.Runtime.ParserRuleContext;
 
 /// <summary>
-/// This class provides an empty implementation of <see cref="IExpressionsListener"/>,
+/// This class provides an empty implementation of <see cref="IDatalogListener"/>,
 /// which can be extended to create a listener which only needs to handle a subset
 /// of the available methods.
 /// </summary>
 [System.CodeDom.Compiler.GeneratedCode("ANTLR", "4.11.1")]
 [System.Diagnostics.DebuggerNonUserCode]
 [System.CLSCompliant(false)]
-public partial class ExpressionsBaseListener : IExpressionsListener {
+public partial class DatalogBaseListener : IDatalogListener {
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="ExpressionsParser.origin_clause"/>.
+	/// Enter a parse tree produced by <see cref="DatalogParser.origin_clause"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterOrigin_clause([NotNull] ExpressionsParser.Origin_clauseContext context) { }
+	public virtual void EnterOrigin_clause([NotNull] DatalogParser.Origin_clauseContext context) { }
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="ExpressionsParser.origin_clause"/>.
+	/// Exit a parse tree produced by <see cref="DatalogParser.origin_clause"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitOrigin_clause([NotNull] ExpressionsParser.Origin_clauseContext context) { }
+	public virtual void ExitOrigin_clause([NotNull] DatalogParser.Origin_clauseContext context) { }
 	/// <summary>
 	/// Enter a parse tree produced by the <c>originElementAuthority</c>
-	/// labeled alternative in <see cref="ExpressionsParser.origin_element"/>.
+	/// labeled alternative in <see cref="DatalogParser.origin_element"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterOriginElementAuthority([NotNull] ExpressionsParser.OriginElementAuthorityContext context) { }
+	public virtual void EnterOriginElementAuthority([NotNull] DatalogParser.OriginElementAuthorityContext context) { }
 	/// <summary>
 	/// Exit a parse tree produced by the <c>originElementAuthority</c>
-	/// labeled alternative in <see cref="ExpressionsParser.origin_element"/>.
+	/// labeled alternative in <see cref="DatalogParser.origin_element"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitOriginElementAuthority([NotNull] ExpressionsParser.OriginElementAuthorityContext context) { }
+	public virtual void ExitOriginElementAuthority([NotNull] DatalogParser.OriginElementAuthorityContext context) { }
 	/// <summary>
 	/// Enter a parse tree produced by the <c>originElementPrevious</c>
-	/// labeled alternative in <see cref="ExpressionsParser.origin_element"/>.
+	/// labeled alternative in <see cref="DatalogParser.origin_element"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterOriginElementPrevious([NotNull] ExpressionsParser.OriginElementPreviousContext context) { }
+	public virtual void EnterOriginElementPrevious([NotNull] DatalogParser.OriginElementPreviousContext context) { }
 	/// <summary>
 	/// Exit a parse tree produced by the <c>originElementPrevious</c>
-	/// labeled alternative in <see cref="ExpressionsParser.origin_element"/>.
+	/// labeled alternative in <see cref="DatalogParser.origin_element"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitOriginElementPrevious([NotNull] ExpressionsParser.OriginElementPreviousContext context) { }
+	public virtual void ExitOriginElementPrevious([NotNull] DatalogParser.OriginElementPreviousContext context) { }
 	/// <summary>
 	/// Enter a parse tree produced by the <c>originElementPublicKey</c>
-	/// labeled alternative in <see cref="ExpressionsParser.origin_element"/>.
+	/// labeled alternative in <see cref="DatalogParser.origin_element"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterOriginElementPublicKey([NotNull] ExpressionsParser.OriginElementPublicKeyContext context) { }
+	public virtual void EnterOriginElementPublicKey([NotNull] DatalogParser.OriginElementPublicKeyContext context) { }
 	/// <summary>
 	/// Exit a parse tree produced by the <c>originElementPublicKey</c>
-	/// labeled alternative in <see cref="ExpressionsParser.origin_element"/>.
+	/// labeled alternative in <see cref="DatalogParser.origin_element"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitOriginElementPublicKey([NotNull] ExpressionsParser.OriginElementPublicKeyContext context) { }
+	public virtual void ExitOriginElementPublicKey([NotNull] DatalogParser.OriginElementPublicKeyContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="ExpressionsParser.signature_alg"/>.
+	/// Enter a parse tree produced by <see cref="DatalogParser.signature_alg"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterSignature_alg([NotNull] ExpressionsParser.Signature_algContext context) { }
+	public virtual void EnterSignature_alg([NotNull] DatalogParser.Signature_algContext context) { }
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="ExpressionsParser.signature_alg"/>.
+	/// Exit a parse tree produced by <see cref="DatalogParser.signature_alg"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitSignature_alg([NotNull] ExpressionsParser.Signature_algContext context) { }
+	public virtual void ExitSignature_alg([NotNull] DatalogParser.Signature_algContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="ExpressionsParser.authorizer"/>.
+	/// Enter a parse tree produced by <see cref="DatalogParser.authorizer"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterAuthorizer([NotNull] ExpressionsParser.AuthorizerContext context) { }
+	public virtual void EnterAuthorizer([NotNull] DatalogParser.AuthorizerContext context) { }
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="ExpressionsParser.authorizer"/>.
+	/// Exit a parse tree produced by <see cref="DatalogParser.authorizer"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitAuthorizer([NotNull] ExpressionsParser.AuthorizerContext context) { }
+	public virtual void ExitAuthorizer([NotNull] DatalogParser.AuthorizerContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="ExpressionsParser.authorizer_element"/>.
+	/// Enter a parse tree produced by <see cref="DatalogParser.authorizer_element"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterAuthorizer_element([NotNull] ExpressionsParser.Authorizer_elementContext context) { }
+	public virtual void EnterAuthorizer_element([NotNull] DatalogParser.Authorizer_elementContext context) { }
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="ExpressionsParser.authorizer_element"/>.
+	/// Exit a parse tree produced by <see cref="DatalogParser.authorizer_element"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitAuthorizer_element([NotNull] ExpressionsParser.Authorizer_elementContext context) { }
+	public virtual void ExitAuthorizer_element([NotNull] DatalogParser.Authorizer_elementContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="ExpressionsParser.block"/>.
+	/// Enter a parse tree produced by <see cref="DatalogParser.block"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterBlock([NotNull] ExpressionsParser.BlockContext context) { }
+	public virtual void EnterBlock([NotNull] DatalogParser.BlockContext context) { }
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="ExpressionsParser.block"/>.
+	/// Exit a parse tree produced by <see cref="DatalogParser.block"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitBlock([NotNull] ExpressionsParser.BlockContext context) { }
+	public virtual void ExitBlock([NotNull] DatalogParser.BlockContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="ExpressionsParser.block_element"/>.
+	/// Enter a parse tree produced by <see cref="DatalogParser.block_element"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterBlock_element([NotNull] ExpressionsParser.Block_elementContext context) { }
+	public virtual void EnterBlock_element([NotNull] DatalogParser.Block_elementContext context) { }
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="ExpressionsParser.block_element"/>.
+	/// Exit a parse tree produced by <see cref="DatalogParser.block_element"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitBlock_element([NotNull] ExpressionsParser.Block_elementContext context) { }
+	public virtual void ExitBlock_element([NotNull] DatalogParser.Block_elementContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="ExpressionsParser.fact"/>.
+	/// Enter a parse tree produced by <see cref="DatalogParser.fact"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterFact([NotNull] ExpressionsParser.FactContext context) { }
+	public virtual void EnterFact([NotNull] DatalogParser.FactContext context) { }
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="ExpressionsParser.fact"/>.
+	/// Exit a parse tree produced by <see cref="DatalogParser.fact"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitFact([NotNull] ExpressionsParser.FactContext context) { }
+	public virtual void ExitFact([NotNull] DatalogParser.FactContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="ExpressionsParser.rule_"/>.
+	/// Enter a parse tree produced by <see cref="DatalogParser.rule_"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterRule_([NotNull] ExpressionsParser.Rule_Context context) { }
+	public virtual void EnterRule_([NotNull] DatalogParser.Rule_Context context) { }
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="ExpressionsParser.rule_"/>.
+	/// Exit a parse tree produced by <see cref="DatalogParser.rule_"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitRule_([NotNull] ExpressionsParser.Rule_Context context) { }
+	public virtual void ExitRule_([NotNull] DatalogParser.Rule_Context context) { }
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="ExpressionsParser.check"/>.
+	/// Enter a parse tree produced by <see cref="DatalogParser.check"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterCheck([NotNull] ExpressionsParser.CheckContext context) { }
+	public virtual void EnterCheck([NotNull] DatalogParser.CheckContext context) { }
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="ExpressionsParser.check"/>.
+	/// Exit a parse tree produced by <see cref="DatalogParser.check"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitCheck([NotNull] ExpressionsParser.CheckContext context) { }
+	public virtual void ExitCheck([NotNull] DatalogParser.CheckContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="ExpressionsParser.policy"/>.
+	/// Enter a parse tree produced by <see cref="DatalogParser.policy"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterPolicy([NotNull] ExpressionsParser.PolicyContext context) { }
+	public virtual void EnterPolicy([NotNull] DatalogParser.PolicyContext context) { }
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="ExpressionsParser.policy"/>.
+	/// Exit a parse tree produced by <see cref="DatalogParser.policy"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitPolicy([NotNull] ExpressionsParser.PolicyContext context) { }
+	public virtual void ExitPolicy([NotNull] DatalogParser.PolicyContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="ExpressionsParser.rule_body"/>.
+	/// Enter a parse tree produced by <see cref="DatalogParser.rule_body"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterRule_body([NotNull] ExpressionsParser.Rule_bodyContext context) { }
+	public virtual void EnterRule_body([NotNull] DatalogParser.Rule_bodyContext context) { }
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="ExpressionsParser.rule_body"/>.
+	/// Exit a parse tree produced by <see cref="DatalogParser.rule_body"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitRule_body([NotNull] ExpressionsParser.Rule_bodyContext context) { }
+	public virtual void ExitRule_body([NotNull] DatalogParser.Rule_bodyContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="ExpressionsParser.rule_body_element"/>.
+	/// Enter a parse tree produced by <see cref="DatalogParser.rule_body_element"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterRule_body_element([NotNull] ExpressionsParser.Rule_body_elementContext context) { }
+	public virtual void EnterRule_body_element([NotNull] DatalogParser.Rule_body_elementContext context) { }
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="ExpressionsParser.rule_body_element"/>.
+	/// Exit a parse tree produced by <see cref="DatalogParser.rule_body_element"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitRule_body_element([NotNull] ExpressionsParser.Rule_body_elementContext context) { }
+	public virtual void ExitRule_body_element([NotNull] DatalogParser.Rule_body_elementContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="ExpressionsParser.predicate"/>.
+	/// Enter a parse tree produced by <see cref="DatalogParser.predicate"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterPredicate([NotNull] ExpressionsParser.PredicateContext context) { }
+	public virtual void EnterPredicate([NotNull] DatalogParser.PredicateContext context) { }
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="ExpressionsParser.predicate"/>.
+	/// Exit a parse tree produced by <see cref="DatalogParser.predicate"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitPredicate([NotNull] ExpressionsParser.PredicateContext context) { }
+	public virtual void ExitPredicate([NotNull] DatalogParser.PredicateContext context) { }
 	/// <summary>
 	/// Enter a parse tree produced by the <c>expressionAdd</c>
-	/// labeled alternative in <see cref="ExpressionsParser.expression"/>.
+	/// labeled alternative in <see cref="DatalogParser.expression"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterExpressionAdd([NotNull] ExpressionsParser.ExpressionAddContext context) { }
+	public virtual void EnterExpressionAdd([NotNull] DatalogParser.ExpressionAddContext context) { }
 	/// <summary>
 	/// Exit a parse tree produced by the <c>expressionAdd</c>
-	/// labeled alternative in <see cref="ExpressionsParser.expression"/>.
+	/// labeled alternative in <see cref="DatalogParser.expression"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitExpressionAdd([NotNull] ExpressionsParser.ExpressionAddContext context) { }
+	public virtual void ExitExpressionAdd([NotNull] DatalogParser.ExpressionAddContext context) { }
 	/// <summary>
 	/// Enter a parse tree produced by the <c>expressionLogic</c>
-	/// labeled alternative in <see cref="ExpressionsParser.expression"/>.
+	/// labeled alternative in <see cref="DatalogParser.expression"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterExpressionLogic([NotNull] ExpressionsParser.ExpressionLogicContext context) { }
+	public virtual void EnterExpressionLogic([NotNull] DatalogParser.ExpressionLogicContext context) { }
 	/// <summary>
 	/// Exit a parse tree produced by the <c>expressionLogic</c>
-	/// labeled alternative in <see cref="ExpressionsParser.expression"/>.
+	/// labeled alternative in <see cref="DatalogParser.expression"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitExpressionLogic([NotNull] ExpressionsParser.ExpressionLogicContext context) { }
+	public virtual void ExitExpressionLogic([NotNull] DatalogParser.ExpressionLogicContext context) { }
 	/// <summary>
 	/// Enter a parse tree produced by the <c>expressionUnary</c>
-	/// labeled alternative in <see cref="ExpressionsParser.expression"/>.
+	/// labeled alternative in <see cref="DatalogParser.expression"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterExpressionUnary([NotNull] ExpressionsParser.ExpressionUnaryContext context) { }
+	public virtual void EnterExpressionUnary([NotNull] DatalogParser.ExpressionUnaryContext context) { }
 	/// <summary>
 	/// Exit a parse tree produced by the <c>expressionUnary</c>
-	/// labeled alternative in <see cref="ExpressionsParser.expression"/>.
+	/// labeled alternative in <see cref="DatalogParser.expression"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitExpressionUnary([NotNull] ExpressionsParser.ExpressionUnaryContext context) { }
+	public virtual void ExitExpressionUnary([NotNull] DatalogParser.ExpressionUnaryContext context) { }
 	/// <summary>
 	/// Enter a parse tree produced by the <c>expressionParentheses</c>
-	/// labeled alternative in <see cref="ExpressionsParser.expression"/>.
+	/// labeled alternative in <see cref="DatalogParser.expression"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterExpressionParentheses([NotNull] ExpressionsParser.ExpressionParenthesesContext context) { }
+	public virtual void EnterExpressionParentheses([NotNull] DatalogParser.ExpressionParenthesesContext context) { }
 	/// <summary>
 	/// Exit a parse tree produced by the <c>expressionParentheses</c>
-	/// labeled alternative in <see cref="ExpressionsParser.expression"/>.
+	/// labeled alternative in <see cref="DatalogParser.expression"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitExpressionParentheses([NotNull] ExpressionsParser.ExpressionParenthesesContext context) { }
+	public virtual void ExitExpressionParentheses([NotNull] DatalogParser.ExpressionParenthesesContext context) { }
 	/// <summary>
 	/// Enter a parse tree produced by the <c>expressionComp</c>
-	/// labeled alternative in <see cref="ExpressionsParser.expression"/>.
+	/// labeled alternative in <see cref="DatalogParser.expression"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterExpressionComp([NotNull] ExpressionsParser.ExpressionCompContext context) { }
+	public virtual void EnterExpressionComp([NotNull] DatalogParser.ExpressionCompContext context) { }
 	/// <summary>
 	/// Exit a parse tree produced by the <c>expressionComp</c>
-	/// labeled alternative in <see cref="ExpressionsParser.expression"/>.
+	/// labeled alternative in <see cref="DatalogParser.expression"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitExpressionComp([NotNull] ExpressionsParser.ExpressionCompContext context) { }
+	public virtual void ExitExpressionComp([NotNull] DatalogParser.ExpressionCompContext context) { }
 	/// <summary>
 	/// Enter a parse tree produced by the <c>expressionMethod</c>
-	/// labeled alternative in <see cref="ExpressionsParser.expression"/>.
+	/// labeled alternative in <see cref="DatalogParser.expression"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterExpressionMethod([NotNull] ExpressionsParser.ExpressionMethodContext context) { }
+	public virtual void EnterExpressionMethod([NotNull] DatalogParser.ExpressionMethodContext context) { }
 	/// <summary>
 	/// Exit a parse tree produced by the <c>expressionMethod</c>
-	/// labeled alternative in <see cref="ExpressionsParser.expression"/>.
+	/// labeled alternative in <see cref="DatalogParser.expression"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitExpressionMethod([NotNull] ExpressionsParser.ExpressionMethodContext context) { }
+	public virtual void ExitExpressionMethod([NotNull] DatalogParser.ExpressionMethodContext context) { }
 	/// <summary>
 	/// Enter a parse tree produced by the <c>expressionTerm</c>
-	/// labeled alternative in <see cref="ExpressionsParser.expression"/>.
+	/// labeled alternative in <see cref="DatalogParser.expression"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterExpressionTerm([NotNull] ExpressionsParser.ExpressionTermContext context) { }
+	public virtual void EnterExpressionTerm([NotNull] DatalogParser.ExpressionTermContext context) { }
 	/// <summary>
 	/// Exit a parse tree produced by the <c>expressionTerm</c>
-	/// labeled alternative in <see cref="ExpressionsParser.expression"/>.
+	/// labeled alternative in <see cref="DatalogParser.expression"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitExpressionTerm([NotNull] ExpressionsParser.ExpressionTermContext context) { }
+	public virtual void ExitExpressionTerm([NotNull] DatalogParser.ExpressionTermContext context) { }
 	/// <summary>
 	/// Enter a parse tree produced by the <c>expressionMult</c>
-	/// labeled alternative in <see cref="ExpressionsParser.expression"/>.
+	/// labeled alternative in <see cref="DatalogParser.expression"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterExpressionMult([NotNull] ExpressionsParser.ExpressionMultContext context) { }
+	public virtual void EnterExpressionMult([NotNull] DatalogParser.ExpressionMultContext context) { }
 	/// <summary>
 	/// Exit a parse tree produced by the <c>expressionMult</c>
-	/// labeled alternative in <see cref="ExpressionsParser.expression"/>.
+	/// labeled alternative in <see cref="DatalogParser.expression"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitExpressionMult([NotNull] ExpressionsParser.ExpressionMultContext context) { }
+	public virtual void ExitExpressionMult([NotNull] DatalogParser.ExpressionMultContext context) { }
 	/// <summary>
 	/// Enter a parse tree produced by the <c>expressionVariable</c>
-	/// labeled alternative in <see cref="ExpressionsParser.expression"/>.
+	/// labeled alternative in <see cref="DatalogParser.expression"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterExpressionVariable([NotNull] ExpressionsParser.ExpressionVariableContext context) { }
+	public virtual void EnterExpressionVariable([NotNull] DatalogParser.ExpressionVariableContext context) { }
 	/// <summary>
 	/// Exit a parse tree produced by the <c>expressionVariable</c>
-	/// labeled alternative in <see cref="ExpressionsParser.expression"/>.
+	/// labeled alternative in <see cref="DatalogParser.expression"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitExpressionVariable([NotNull] ExpressionsParser.ExpressionVariableContext context) { }
+	public virtual void ExitExpressionVariable([NotNull] DatalogParser.ExpressionVariableContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="ExpressionsParser.term"/>.
+	/// Enter a parse tree produced by <see cref="DatalogParser.term"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterTerm([NotNull] ExpressionsParser.TermContext context) { }
+	public virtual void EnterTerm([NotNull] DatalogParser.TermContext context) { }
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="ExpressionsParser.term"/>.
+	/// Exit a parse tree produced by <see cref="DatalogParser.term"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitTerm([NotNull] ExpressionsParser.TermContext context) { }
+	public virtual void ExitTerm([NotNull] DatalogParser.TermContext context) { }
 	/// <summary>
 	/// Enter a parse tree produced by the <c>setTerm</c>
-	/// labeled alternative in <see cref="ExpressionsParser.fact_term"/>.
+	/// labeled alternative in <see cref="DatalogParser.fact_term"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterSetTerm([NotNull] ExpressionsParser.SetTermContext context) { }
+	public virtual void EnterSetTerm([NotNull] DatalogParser.SetTermContext context) { }
 	/// <summary>
 	/// Exit a parse tree produced by the <c>setTerm</c>
-	/// labeled alternative in <see cref="ExpressionsParser.fact_term"/>.
+	/// labeled alternative in <see cref="DatalogParser.fact_term"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitSetTerm([NotNull] ExpressionsParser.SetTermContext context) { }
+	public virtual void ExitSetTerm([NotNull] DatalogParser.SetTermContext context) { }
 	/// <summary>
 	/// Enter a parse tree produced by the <c>setFactTerm</c>
-	/// labeled alternative in <see cref="ExpressionsParser.fact_term"/>.
+	/// labeled alternative in <see cref="DatalogParser.fact_term"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterSetFactTerm([NotNull] ExpressionsParser.SetFactTermContext context) { }
+	public virtual void EnterSetFactTerm([NotNull] DatalogParser.SetFactTermContext context) { }
 	/// <summary>
 	/// Exit a parse tree produced by the <c>setFactTerm</c>
-	/// labeled alternative in <see cref="ExpressionsParser.fact_term"/>.
+	/// labeled alternative in <see cref="DatalogParser.fact_term"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitSetFactTerm([NotNull] ExpressionsParser.SetFactTermContext context) { }
+	public virtual void ExitSetFactTerm([NotNull] DatalogParser.SetFactTermContext context) { }
 	/// <summary>
 	/// Enter a parse tree produced by the <c>booleanFactTerm</c>
-	/// labeled alternative in <see cref="ExpressionsParser.set_term"/>.
+	/// labeled alternative in <see cref="DatalogParser.set_term"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterBooleanFactTerm([NotNull] ExpressionsParser.BooleanFactTermContext context) { }
+	public virtual void EnterBooleanFactTerm([NotNull] DatalogParser.BooleanFactTermContext context) { }
 	/// <summary>
 	/// Exit a parse tree produced by the <c>booleanFactTerm</c>
-	/// labeled alternative in <see cref="ExpressionsParser.set_term"/>.
+	/// labeled alternative in <see cref="DatalogParser.set_term"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitBooleanFactTerm([NotNull] ExpressionsParser.BooleanFactTermContext context) { }
+	public virtual void ExitBooleanFactTerm([NotNull] DatalogParser.BooleanFactTermContext context) { }
 	/// <summary>
 	/// Enter a parse tree produced by the <c>stringFactTerm</c>
-	/// labeled alternative in <see cref="ExpressionsParser.set_term"/>.
+	/// labeled alternative in <see cref="DatalogParser.set_term"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterStringFactTerm([NotNull] ExpressionsParser.StringFactTermContext context) { }
+	public virtual void EnterStringFactTerm([NotNull] DatalogParser.StringFactTermContext context) { }
 	/// <summary>
 	/// Exit a parse tree produced by the <c>stringFactTerm</c>
-	/// labeled alternative in <see cref="ExpressionsParser.set_term"/>.
+	/// labeled alternative in <see cref="DatalogParser.set_term"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitStringFactTerm([NotNull] ExpressionsParser.StringFactTermContext context) { }
+	public virtual void ExitStringFactTerm([NotNull] DatalogParser.StringFactTermContext context) { }
 	/// <summary>
 	/// Enter a parse tree produced by the <c>numberFactTerm</c>
-	/// labeled alternative in <see cref="ExpressionsParser.set_term"/>.
+	/// labeled alternative in <see cref="DatalogParser.set_term"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterNumberFactTerm([NotNull] ExpressionsParser.NumberFactTermContext context) { }
+	public virtual void EnterNumberFactTerm([NotNull] DatalogParser.NumberFactTermContext context) { }
 	/// <summary>
 	/// Exit a parse tree produced by the <c>numberFactTerm</c>
-	/// labeled alternative in <see cref="ExpressionsParser.set_term"/>.
+	/// labeled alternative in <see cref="DatalogParser.set_term"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitNumberFactTerm([NotNull] ExpressionsParser.NumberFactTermContext context) { }
+	public virtual void ExitNumberFactTerm([NotNull] DatalogParser.NumberFactTermContext context) { }
 	/// <summary>
 	/// Enter a parse tree produced by the <c>bytesFactTerm</c>
-	/// labeled alternative in <see cref="ExpressionsParser.set_term"/>.
+	/// labeled alternative in <see cref="DatalogParser.set_term"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterBytesFactTerm([NotNull] ExpressionsParser.BytesFactTermContext context) { }
+	public virtual void EnterBytesFactTerm([NotNull] DatalogParser.BytesFactTermContext context) { }
 	/// <summary>
 	/// Exit a parse tree produced by the <c>bytesFactTerm</c>
-	/// labeled alternative in <see cref="ExpressionsParser.set_term"/>.
+	/// labeled alternative in <see cref="DatalogParser.set_term"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitBytesFactTerm([NotNull] ExpressionsParser.BytesFactTermContext context) { }
+	public virtual void ExitBytesFactTerm([NotNull] DatalogParser.BytesFactTermContext context) { }
 	/// <summary>
 	/// Enter a parse tree produced by the <c>dateFactTerm</c>
-	/// labeled alternative in <see cref="ExpressionsParser.set_term"/>.
+	/// labeled alternative in <see cref="DatalogParser.set_term"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterDateFactTerm([NotNull] ExpressionsParser.DateFactTermContext context) { }
+	public virtual void EnterDateFactTerm([NotNull] DatalogParser.DateFactTermContext context) { }
 	/// <summary>
 	/// Exit a parse tree produced by the <c>dateFactTerm</c>
-	/// labeled alternative in <see cref="ExpressionsParser.set_term"/>.
+	/// labeled alternative in <see cref="DatalogParser.set_term"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitDateFactTerm([NotNull] ExpressionsParser.DateFactTermContext context) { }
+	public virtual void ExitDateFactTerm([NotNull] DatalogParser.DateFactTermContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="ExpressionsParser.set"/>.
+	/// Enter a parse tree produced by <see cref="DatalogParser.set"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterSet([NotNull] ExpressionsParser.SetContext context) { }
+	public virtual void EnterSet([NotNull] DatalogParser.SetContext context) { }
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="ExpressionsParser.set"/>.
+	/// Exit a parse tree produced by <see cref="DatalogParser.set"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitSet([NotNull] ExpressionsParser.SetContext context) { }
+	public virtual void ExitSet([NotNull] DatalogParser.SetContext context) { }
 
 	/// <inheritdoc/>
 	/// <remarks>The default implementation does nothing.</remarks>

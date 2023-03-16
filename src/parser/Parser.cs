@@ -17,13 +17,12 @@ public class Parser
         var parser = new Parser();
         return parser.ParseBlock(code);
     }
-
-    private readonly ExpressionsVisitor _expressionsVisitor = new();
-    public List<Op> Parse(string rule)
+    
+    public List<Op> ParseExpression(string expression)
     {
-        var parser = InitializeParser(rule, out _);
-        
-        return parser.check().Accept(_expressionsVisitor);
+        var parser = InitializeParser(expression, out _);
+        var expressionsVisitor = new ExpressionsVisitor();;        
+        return parser.expression().Accept(expressionsVisitor);
     }
 
     public Check ParseCheck(string ruleString)
@@ -87,12 +86,12 @@ public class Parser
         return listener.GetBlock();
     }
 
-    ExpressionsParser InitializeParser(string code, out ErrorListener errorListener)
+    DatalogParser InitializeParser(string code, out ErrorListener errorListener)
     {
         var charStream = new AntlrInputStream(code);
-        var lexer = new ExpressionsLexer(charStream);
+        var lexer = new DatalogLexer(charStream);
         var tokenStream = new CommonTokenStream(lexer);
-        var parser = new ExpressionsParser(tokenStream);
+        var parser = new DatalogParser(tokenStream);
         
         errorListener = new ErrorListener();
         parser.AddErrorListener(errorListener);

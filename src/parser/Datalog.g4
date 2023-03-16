@@ -1,4 +1,4 @@
-grammar Expressions;
+grammar Datalog;
 
 
 origin_clause: 'trusting' origin_element (',' origin_element)*;
@@ -46,10 +46,9 @@ set_term: BOOLEAN #booleanFactTerm
     | BYTES #bytesFactTerm
     | DATE #dateFactTerm;
 
-VARIABLE: '$'[a-zA-Z_:0-9]+; //TODO
+VARIABLE: '$'[a-zA-Z_:0-9]+;
 
-
-STRING : '"' ( '\\"' | . )*? '"' ; // match "foo", "\"", "x\"\"y", ... TODO unicode
+STRING : '"' ( '\\"' | . )*? '"' ;
 NUMBER: '-'?[0-9]+;
 BYTES: 'hex:'([a-f] | [0-9])+;
 PUBLICKEYBYTES: '/'([a-f] | [0-9])+;

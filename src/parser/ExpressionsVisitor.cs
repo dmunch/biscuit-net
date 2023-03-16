@@ -3,28 +3,28 @@ namespace biscuit_net.Parser;
 using Antlr4.Runtime.Misc;
 using biscuit_net.Expressions;
 
-public class ExpressionsVisitor : ExpressionsBaseVisitor<List<Op>>
+public class ExpressionsVisitor : DatalogBaseVisitor<List<Op>>
 {
     readonly TermVisitor _termVisitor = new();
     
-    public override List<Op> VisitExpressionParentheses([NotNull] ExpressionsParser.ExpressionParenthesesContext context) 
+    public override List<Op> VisitExpressionParentheses([NotNull] DatalogParser.ExpressionParenthesesContext context) 
     {
         return base.Visit(context.expression());
     }
 
-    public override List<Op> VisitExpressionMult([NotNull] ExpressionsParser.ExpressionMultContext context) 
+    public override List<Op> VisitExpressionMult([NotNull] DatalogParser.ExpressionMultContext context) 
         => VisitExpressionBinary(context.expression(0), context.expression(1), context.mult);
     
-    public override List<Op> VisitExpressionAdd([NotNull] ExpressionsParser.ExpressionAddContext context) 
+    public override List<Op> VisitExpressionAdd([NotNull] DatalogParser.ExpressionAddContext context) 
         => VisitExpressionBinary(context.expression(0), context.expression(1), context.add);
     
-    public override List<Op> VisitExpressionLogic([NotNull] ExpressionsParser.ExpressionLogicContext context) 
+    public override List<Op> VisitExpressionLogic([NotNull] DatalogParser.ExpressionLogicContext context) 
         => VisitExpressionBinary(context.expression(0), context.expression(1), context.logic);
     
-    public override List<Op> VisitExpressionComp([NotNull] ExpressionsParser.ExpressionCompContext context) 
+    public override List<Op> VisitExpressionComp([NotNull] DatalogParser.ExpressionCompContext context) 
         => VisitExpressionBinary(context.expression(0), context.expression(1), context.comp);
     
-    public override List<Op> VisitExpressionMethod([NotNull] ExpressionsParser.ExpressionMethodContext context) 
+    public override List<Op> VisitExpressionMethod([NotNull] DatalogParser.ExpressionMethodContext context) 
     {
         var methodParams = context.term();
 
@@ -37,7 +37,7 @@ public class ExpressionsVisitor : ExpressionsBaseVisitor<List<Op>>
         return operands;
     }
     
-    List<Op> VisitExpressionBinary(ExpressionsParser.ExpressionContext context1, ExpressionsParser.ExpressionContext context2, Antlr4.Runtime.IToken op) 
+    List<Op> VisitExpressionBinary(DatalogParser.ExpressionContext context1, DatalogParser.ExpressionContext context2, Antlr4.Runtime.IToken op) 
     {
         var operands = new List<Op>();
         operands.AddRange(base.Visit(context1));
@@ -70,7 +70,7 @@ public class ExpressionsVisitor : ExpressionsBaseVisitor<List<Op>>
         return new Op(new OpBinary(kind));
     }
 
-    public override List<Op> VisitExpressionUnary([NotNull] ExpressionsParser.ExpressionUnaryContext context) 
+    public override List<Op> VisitExpressionUnary([NotNull] DatalogParser.ExpressionUnaryContext context) 
     {
         var ops = Visit(context.expression());
         ops.Add(new Op(new OpUnary(OpUnary.Kind.Negate)));
@@ -78,7 +78,7 @@ public class ExpressionsVisitor : ExpressionsBaseVisitor<List<Op>>
         return ops;
     }
 
-    public override List<Op> VisitExpressionTerm([NotNull] ExpressionsParser.ExpressionTermContext context) 
+    public override List<Op> VisitExpressionTerm([NotNull] DatalogParser.ExpressionTermContext context) 
     {
         var term = _termVisitor.Visit(context.fact_term());
         return new List<Op> { new Op(term) };

@@ -3,21 +3,21 @@ using Datalog;
 
 using Antlr4.Runtime.Misc;
 
-public class TermVisitor : ExpressionsBaseVisitor<Term>
+public class TermVisitor : DatalogBaseVisitor<Term>
 {
-    public override Term VisitBooleanFactTerm([NotNull] ExpressionsParser.BooleanFactTermContext context) 
+    public override Term VisitBooleanFactTerm([NotNull] DatalogParser.BooleanFactTermContext context) 
     { 
         var text = context.BOOLEAN().GetText();
         return new Boolean(bool.Parse(text));
     }
 
-    public override Term VisitNumberFactTerm([NotNull] ExpressionsParser.NumberFactTermContext context) 
+    public override Term VisitNumberFactTerm([NotNull] DatalogParser.NumberFactTermContext context) 
     { 
         var text = context.NUMBER().GetText();
         return new Integer(long.Parse(text));
     }
 
-    public override Term VisitDateFactTerm([NotNull] ExpressionsParser.DateFactTermContext context) 
+    public override Term VisitDateFactTerm([NotNull] DatalogParser.DateFactTermContext context) 
     { 
         var text = context.DATE().GetText();
         var dateParsed = DateTime.Parse(text);
@@ -25,20 +25,20 @@ public class TermVisitor : ExpressionsBaseVisitor<Term>
         return new Date(dateTAI);
     }
 
-    public override Term VisitStringFactTerm([NotNull] ExpressionsParser.StringFactTermContext context) 
+    public override Term VisitStringFactTerm([NotNull] DatalogParser.StringFactTermContext context) 
     { 
         var text = context.STRING().GetText();
         return new String(text.Trim('"'));
     }
 
-    public override Term VisitBytesFactTerm([NotNull] ExpressionsParser.BytesFactTermContext context) 
+    public override Term VisitBytesFactTerm([NotNull] DatalogParser.BytesFactTermContext context) 
     { 
         var text = context.BYTES().GetText();
         var bytes = HexConvert.FromHexString(text["hex:".Length..]);
         return new Bytes(bytes);
     }
 
-    public override Term VisitSetFactTerm([NotNull] ExpressionsParser.SetFactTermContext context) 
+    public override Term VisitSetFactTerm([NotNull] DatalogParser.SetFactTermContext context) 
     { 
         if(context.set().fact_term() == null)
         {
@@ -57,13 +57,13 @@ public class TermVisitor : ExpressionsBaseVisitor<Term>
         return new Set(terms);
     }
     
-    public override Term VisitExpressionVariable([NotNull] ExpressionsParser.ExpressionVariableContext context) 
+    public override Term VisitExpressionVariable([NotNull] DatalogParser.ExpressionVariableContext context) 
     { 
         return new Variable(context.VARIABLE().GetText().Trim('$'));
     }
 
     
-    public override Term VisitTerm([NotNull] ExpressionsParser.TermContext context) 
+    public override Term VisitTerm([NotNull] DatalogParser.TermContext context) 
     { 
         if(context.VARIABLE() != null)
             return new Variable(context.VARIABLE().GetText().Trim('$'));

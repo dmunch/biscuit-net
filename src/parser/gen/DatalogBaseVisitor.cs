@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-// Generated from Expressions.g4 by ANTLR 4.11.1
+// Generated from Datalog.g4 by ANTLR 4.11.1
 
 // Unreachable code detected
 #pragma warning disable 0162
@@ -25,7 +25,7 @@ using IToken = Antlr4.Runtime.IToken;
 using ParserRuleContext = Antlr4.Runtime.ParserRuleContext;
 
 /// <summary>
-/// This class provides an empty implementation of <see cref="IExpressionsVisitor{Result}"/>,
+/// This class provides an empty implementation of <see cref="IDatalogVisitor{Result}"/>,
 /// which can be extended to create a visitor which only needs to handle a subset
 /// of the available methods.
 /// </summary>
@@ -33,9 +33,9 @@ using ParserRuleContext = Antlr4.Runtime.ParserRuleContext;
 [System.CodeDom.Compiler.GeneratedCode("ANTLR", "4.11.1")]
 [System.Diagnostics.DebuggerNonUserCode]
 [System.CLSCompliant(false)]
-public partial class ExpressionsBaseVisitor<Result> : AbstractParseTreeVisitor<Result>, IExpressionsVisitor<Result> {
+public partial class DatalogBaseVisitor<Result> : AbstractParseTreeVisitor<Result>, IDatalogVisitor<Result> {
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="ExpressionsParser.origin_clause"/>.
+	/// Visit a parse tree produced by <see cref="DatalogParser.origin_clause"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -43,10 +43,10 @@ public partial class ExpressionsBaseVisitor<Result> : AbstractParseTreeVisitor<R
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitOrigin_clause([NotNull] ExpressionsParser.Origin_clauseContext context) { return VisitChildren(context); }
+	public virtual Result VisitOrigin_clause([NotNull] DatalogParser.Origin_clauseContext context) { return VisitChildren(context); }
 	/// <summary>
 	/// Visit a parse tree produced by the <c>originElementAuthority</c>
-	/// labeled alternative in <see cref="ExpressionsParser.origin_element"/>.
+	/// labeled alternative in <see cref="DatalogParser.origin_element"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -54,10 +54,10 @@ public partial class ExpressionsBaseVisitor<Result> : AbstractParseTreeVisitor<R
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitOriginElementAuthority([NotNull] ExpressionsParser.OriginElementAuthorityContext context) { return VisitChildren(context); }
+	public virtual Result VisitOriginElementAuthority([NotNull] DatalogParser.OriginElementAuthorityContext context) { return VisitChildren(context); }
 	/// <summary>
 	/// Visit a parse tree produced by the <c>originElementPrevious</c>
-	/// labeled alternative in <see cref="ExpressionsParser.origin_element"/>.
+	/// labeled alternative in <see cref="DatalogParser.origin_element"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -65,10 +65,10 @@ public partial class ExpressionsBaseVisitor<Result> : AbstractParseTreeVisitor<R
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitOriginElementPrevious([NotNull] ExpressionsParser.OriginElementPreviousContext context) { return VisitChildren(context); }
+	public virtual Result VisitOriginElementPrevious([NotNull] DatalogParser.OriginElementPreviousContext context) { return VisitChildren(context); }
 	/// <summary>
 	/// Visit a parse tree produced by the <c>originElementPublicKey</c>
-	/// labeled alternative in <see cref="ExpressionsParser.origin_element"/>.
+	/// labeled alternative in <see cref="DatalogParser.origin_element"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -76,9 +76,9 @@ public partial class ExpressionsBaseVisitor<Result> : AbstractParseTreeVisitor<R
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitOriginElementPublicKey([NotNull] ExpressionsParser.OriginElementPublicKeyContext context) { return VisitChildren(context); }
+	public virtual Result VisitOriginElementPublicKey([NotNull] DatalogParser.OriginElementPublicKeyContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="ExpressionsParser.signature_alg"/>.
+	/// Visit a parse tree produced by <see cref="DatalogParser.signature_alg"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -86,9 +86,9 @@ public partial class ExpressionsBaseVisitor<Result> : AbstractParseTreeVisitor<R
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitSignature_alg([NotNull] ExpressionsParser.Signature_algContext context) { return VisitChildren(context); }
+	public virtual Result VisitSignature_alg([NotNull] DatalogParser.Signature_algContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="ExpressionsParser.authorizer"/>.
+	/// Visit a parse tree produced by <see cref="DatalogParser.authorizer"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -96,9 +96,9 @@ public partial class ExpressionsBaseVisitor<Result> : AbstractParseTreeVisitor<R
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitAuthorizer([NotNull] ExpressionsParser.AuthorizerContext context) { return VisitChildren(context); }
+	public virtual Result VisitAuthorizer([NotNull] DatalogParser.AuthorizerContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="ExpressionsParser.authorizer_element"/>.
+	/// Visit a parse tree produced by <see cref="DatalogParser.authorizer_element"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -106,9 +106,9 @@ public partial class ExpressionsBaseVisitor<Result> : AbstractParseTreeVisitor<R
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitAuthorizer_element([NotNull] ExpressionsParser.Authorizer_elementContext context) { return VisitChildren(context); }
+	public virtual Result VisitAuthorizer_element([NotNull] DatalogParser.Authorizer_elementContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="ExpressionsParser.block"/>.
+	/// Visit a parse tree produced by <see cref="DatalogParser.block"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -116,9 +116,9 @@ public partial class ExpressionsBaseVisitor<Result> : AbstractParseTreeVisitor<R
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitBlock([NotNull] ExpressionsParser.BlockContext context) { return VisitChildren(context); }
+	public virtual Result VisitBlock([NotNull] DatalogParser.BlockContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="ExpressionsParser.block_element"/>.
+	/// Visit a parse tree produced by <see cref="DatalogParser.block_element"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -126,9 +126,9 @@ public partial class ExpressionsBaseVisitor<Result> : AbstractParseTreeVisitor<R
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitBlock_element([NotNull] ExpressionsParser.Block_elementContext context) { return VisitChildren(context); }
+	public virtual Result VisitBlock_element([NotNull] DatalogParser.Block_elementContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="ExpressionsParser.fact"/>.
+	/// Visit a parse tree produced by <see cref="DatalogParser.fact"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -136,9 +136,9 @@ public partial class ExpressionsBaseVisitor<Result> : AbstractParseTreeVisitor<R
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitFact([NotNull] ExpressionsParser.FactContext context) { return VisitChildren(context); }
+	public virtual Result VisitFact([NotNull] DatalogParser.FactContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="ExpressionsParser.rule_"/>.
+	/// Visit a parse tree produced by <see cref="DatalogParser.rule_"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -146,9 +146,9 @@ public partial class ExpressionsBaseVisitor<Result> : AbstractParseTreeVisitor<R
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitRule_([NotNull] ExpressionsParser.Rule_Context context) { return VisitChildren(context); }
+	public virtual Result VisitRule_([NotNull] DatalogParser.Rule_Context context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="ExpressionsParser.check"/>.
+	/// Visit a parse tree produced by <see cref="DatalogParser.check"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -156,9 +156,9 @@ public partial class ExpressionsBaseVisitor<Result> : AbstractParseTreeVisitor<R
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitCheck([NotNull] ExpressionsParser.CheckContext context) { return VisitChildren(context); }
+	public virtual Result VisitCheck([NotNull] DatalogParser.CheckContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="ExpressionsParser.policy"/>.
+	/// Visit a parse tree produced by <see cref="DatalogParser.policy"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -166,9 +166,9 @@ public partial class ExpressionsBaseVisitor<Result> : AbstractParseTreeVisitor<R
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitPolicy([NotNull] ExpressionsParser.PolicyContext context) { return VisitChildren(context); }
+	public virtual Result VisitPolicy([NotNull] DatalogParser.PolicyContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="ExpressionsParser.rule_body"/>.
+	/// Visit a parse tree produced by <see cref="DatalogParser.rule_body"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -176,9 +176,9 @@ public partial class ExpressionsBaseVisitor<Result> : AbstractParseTreeVisitor<R
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitRule_body([NotNull] ExpressionsParser.Rule_bodyContext context) { return VisitChildren(context); }
+	public virtual Result VisitRule_body([NotNull] DatalogParser.Rule_bodyContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="ExpressionsParser.rule_body_element"/>.
+	/// Visit a parse tree produced by <see cref="DatalogParser.rule_body_element"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -186,9 +186,9 @@ public partial class ExpressionsBaseVisitor<Result> : AbstractParseTreeVisitor<R
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitRule_body_element([NotNull] ExpressionsParser.Rule_body_elementContext context) { return VisitChildren(context); }
+	public virtual Result VisitRule_body_element([NotNull] DatalogParser.Rule_body_elementContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="ExpressionsParser.predicate"/>.
+	/// Visit a parse tree produced by <see cref="DatalogParser.predicate"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -196,10 +196,10 @@ public partial class ExpressionsBaseVisitor<Result> : AbstractParseTreeVisitor<R
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitPredicate([NotNull] ExpressionsParser.PredicateContext context) { return VisitChildren(context); }
+	public virtual Result VisitPredicate([NotNull] DatalogParser.PredicateContext context) { return VisitChildren(context); }
 	/// <summary>
 	/// Visit a parse tree produced by the <c>expressionAdd</c>
-	/// labeled alternative in <see cref="ExpressionsParser.expression"/>.
+	/// labeled alternative in <see cref="DatalogParser.expression"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -207,10 +207,10 @@ public partial class ExpressionsBaseVisitor<Result> : AbstractParseTreeVisitor<R
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitExpressionAdd([NotNull] ExpressionsParser.ExpressionAddContext context) { return VisitChildren(context); }
+	public virtual Result VisitExpressionAdd([NotNull] DatalogParser.ExpressionAddContext context) { return VisitChildren(context); }
 	/// <summary>
 	/// Visit a parse tree produced by the <c>expressionLogic</c>
-	/// labeled alternative in <see cref="ExpressionsParser.expression"/>.
+	/// labeled alternative in <see cref="DatalogParser.expression"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -218,10 +218,10 @@ public partial class ExpressionsBaseVisitor<Result> : AbstractParseTreeVisitor<R
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitExpressionLogic([NotNull] ExpressionsParser.ExpressionLogicContext context) { return VisitChildren(context); }
+	public virtual Result VisitExpressionLogic([NotNull] DatalogParser.ExpressionLogicContext context) { return VisitChildren(context); }
 	/// <summary>
 	/// Visit a parse tree produced by the <c>expressionUnary</c>
-	/// labeled alternative in <see cref="ExpressionsParser.expression"/>.
+	/// labeled alternative in <see cref="DatalogParser.expression"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -229,10 +229,10 @@ public partial class ExpressionsBaseVisitor<Result> : AbstractParseTreeVisitor<R
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitExpressionUnary([NotNull] ExpressionsParser.ExpressionUnaryContext context) { return VisitChildren(context); }
+	public virtual Result VisitExpressionUnary([NotNull] DatalogParser.ExpressionUnaryContext context) { return VisitChildren(context); }
 	/// <summary>
 	/// Visit a parse tree produced by the <c>expressionParentheses</c>
-	/// labeled alternative in <see cref="ExpressionsParser.expression"/>.
+	/// labeled alternative in <see cref="DatalogParser.expression"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -240,10 +240,10 @@ public partial class ExpressionsBaseVisitor<Result> : AbstractParseTreeVisitor<R
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitExpressionParentheses([NotNull] ExpressionsParser.ExpressionParenthesesContext context) { return VisitChildren(context); }
+	public virtual Result VisitExpressionParentheses([NotNull] DatalogParser.ExpressionParenthesesContext context) { return VisitChildren(context); }
 	/// <summary>
 	/// Visit a parse tree produced by the <c>expressionComp</c>
-	/// labeled alternative in <see cref="ExpressionsParser.expression"/>.
+	/// labeled alternative in <see cref="DatalogParser.expression"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -251,10 +251,10 @@ public partial class ExpressionsBaseVisitor<Result> : AbstractParseTreeVisitor<R
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitExpressionComp([NotNull] ExpressionsParser.ExpressionCompContext context) { return VisitChildren(context); }
+	public virtual Result VisitExpressionComp([NotNull] DatalogParser.ExpressionCompContext context) { return VisitChildren(context); }
 	/// <summary>
 	/// Visit a parse tree produced by the <c>expressionMethod</c>
-	/// labeled alternative in <see cref="ExpressionsParser.expression"/>.
+	/// labeled alternative in <see cref="DatalogParser.expression"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -262,10 +262,10 @@ public partial class ExpressionsBaseVisitor<Result> : AbstractParseTreeVisitor<R
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitExpressionMethod([NotNull] ExpressionsParser.ExpressionMethodContext context) { return VisitChildren(context); }
+	public virtual Result VisitExpressionMethod([NotNull] DatalogParser.ExpressionMethodContext context) { return VisitChildren(context); }
 	/// <summary>
 	/// Visit a parse tree produced by the <c>expressionTerm</c>
-	/// labeled alternative in <see cref="ExpressionsParser.expression"/>.
+	/// labeled alternative in <see cref="DatalogParser.expression"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -273,10 +273,10 @@ public partial class ExpressionsBaseVisitor<Result> : AbstractParseTreeVisitor<R
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitExpressionTerm([NotNull] ExpressionsParser.ExpressionTermContext context) { return VisitChildren(context); }
+	public virtual Result VisitExpressionTerm([NotNull] DatalogParser.ExpressionTermContext context) { return VisitChildren(context); }
 	/// <summary>
 	/// Visit a parse tree produced by the <c>expressionMult</c>
-	/// labeled alternative in <see cref="ExpressionsParser.expression"/>.
+	/// labeled alternative in <see cref="DatalogParser.expression"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -284,10 +284,10 @@ public partial class ExpressionsBaseVisitor<Result> : AbstractParseTreeVisitor<R
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitExpressionMult([NotNull] ExpressionsParser.ExpressionMultContext context) { return VisitChildren(context); }
+	public virtual Result VisitExpressionMult([NotNull] DatalogParser.ExpressionMultContext context) { return VisitChildren(context); }
 	/// <summary>
 	/// Visit a parse tree produced by the <c>expressionVariable</c>
-	/// labeled alternative in <see cref="ExpressionsParser.expression"/>.
+	/// labeled alternative in <see cref="DatalogParser.expression"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -295,9 +295,9 @@ public partial class ExpressionsBaseVisitor<Result> : AbstractParseTreeVisitor<R
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitExpressionVariable([NotNull] ExpressionsParser.ExpressionVariableContext context) { return VisitChildren(context); }
+	public virtual Result VisitExpressionVariable([NotNull] DatalogParser.ExpressionVariableContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="ExpressionsParser.term"/>.
+	/// Visit a parse tree produced by <see cref="DatalogParser.term"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -305,10 +305,10 @@ public partial class ExpressionsBaseVisitor<Result> : AbstractParseTreeVisitor<R
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitTerm([NotNull] ExpressionsParser.TermContext context) { return VisitChildren(context); }
+	public virtual Result VisitTerm([NotNull] DatalogParser.TermContext context) { return VisitChildren(context); }
 	/// <summary>
 	/// Visit a parse tree produced by the <c>setTerm</c>
-	/// labeled alternative in <see cref="ExpressionsParser.fact_term"/>.
+	/// labeled alternative in <see cref="DatalogParser.fact_term"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -316,10 +316,10 @@ public partial class ExpressionsBaseVisitor<Result> : AbstractParseTreeVisitor<R
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitSetTerm([NotNull] ExpressionsParser.SetTermContext context) { return VisitChildren(context); }
+	public virtual Result VisitSetTerm([NotNull] DatalogParser.SetTermContext context) { return VisitChildren(context); }
 	/// <summary>
 	/// Visit a parse tree produced by the <c>setFactTerm</c>
-	/// labeled alternative in <see cref="ExpressionsParser.fact_term"/>.
+	/// labeled alternative in <see cref="DatalogParser.fact_term"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -327,10 +327,10 @@ public partial class ExpressionsBaseVisitor<Result> : AbstractParseTreeVisitor<R
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitSetFactTerm([NotNull] ExpressionsParser.SetFactTermContext context) { return VisitChildren(context); }
+	public virtual Result VisitSetFactTerm([NotNull] DatalogParser.SetFactTermContext context) { return VisitChildren(context); }
 	/// <summary>
 	/// Visit a parse tree produced by the <c>booleanFactTerm</c>
-	/// labeled alternative in <see cref="ExpressionsParser.set_term"/>.
+	/// labeled alternative in <see cref="DatalogParser.set_term"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -338,10 +338,10 @@ public partial class ExpressionsBaseVisitor<Result> : AbstractParseTreeVisitor<R
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitBooleanFactTerm([NotNull] ExpressionsParser.BooleanFactTermContext context) { return VisitChildren(context); }
+	public virtual Result VisitBooleanFactTerm([NotNull] DatalogParser.BooleanFactTermContext context) { return VisitChildren(context); }
 	/// <summary>
 	/// Visit a parse tree produced by the <c>stringFactTerm</c>
-	/// labeled alternative in <see cref="ExpressionsParser.set_term"/>.
+	/// labeled alternative in <see cref="DatalogParser.set_term"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -349,10 +349,10 @@ public partial class ExpressionsBaseVisitor<Result> : AbstractParseTreeVisitor<R
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitStringFactTerm([NotNull] ExpressionsParser.StringFactTermContext context) { return VisitChildren(context); }
+	public virtual Result VisitStringFactTerm([NotNull] DatalogParser.StringFactTermContext context) { return VisitChildren(context); }
 	/// <summary>
 	/// Visit a parse tree produced by the <c>numberFactTerm</c>
-	/// labeled alternative in <see cref="ExpressionsParser.set_term"/>.
+	/// labeled alternative in <see cref="DatalogParser.set_term"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -360,10 +360,10 @@ public partial class ExpressionsBaseVisitor<Result> : AbstractParseTreeVisitor<R
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitNumberFactTerm([NotNull] ExpressionsParser.NumberFactTermContext context) { return VisitChildren(context); }
+	public virtual Result VisitNumberFactTerm([NotNull] DatalogParser.NumberFactTermContext context) { return VisitChildren(context); }
 	/// <summary>
 	/// Visit a parse tree produced by the <c>bytesFactTerm</c>
-	/// labeled alternative in <see cref="ExpressionsParser.set_term"/>.
+	/// labeled alternative in <see cref="DatalogParser.set_term"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -371,10 +371,10 @@ public partial class ExpressionsBaseVisitor<Result> : AbstractParseTreeVisitor<R
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitBytesFactTerm([NotNull] ExpressionsParser.BytesFactTermContext context) { return VisitChildren(context); }
+	public virtual Result VisitBytesFactTerm([NotNull] DatalogParser.BytesFactTermContext context) { return VisitChildren(context); }
 	/// <summary>
 	/// Visit a parse tree produced by the <c>dateFactTerm</c>
-	/// labeled alternative in <see cref="ExpressionsParser.set_term"/>.
+	/// labeled alternative in <see cref="DatalogParser.set_term"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -382,9 +382,9 @@ public partial class ExpressionsBaseVisitor<Result> : AbstractParseTreeVisitor<R
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitDateFactTerm([NotNull] ExpressionsParser.DateFactTermContext context) { return VisitChildren(context); }
+	public virtual Result VisitDateFactTerm([NotNull] DatalogParser.DateFactTermContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="ExpressionsParser.set"/>.
+	/// Visit a parse tree produced by <see cref="DatalogParser.set"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -392,5 +392,5 @@ public partial class ExpressionsBaseVisitor<Result> : AbstractParseTreeVisitor<R
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitSet([NotNull] ExpressionsParser.SetContext context) { return VisitChildren(context); }
+	public virtual Result VisitSet([NotNull] DatalogParser.SetContext context) { return VisitChildren(context); }
 }

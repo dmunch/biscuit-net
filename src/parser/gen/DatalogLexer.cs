@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-// Generated from Expressions.g4 by ANTLR 4.11.1
+// Generated from Datalog.g4 by ANTLR 4.11.1
 
 // Unreachable code detected
 #pragma warning disable 0162
@@ -29,7 +29,7 @@ using DFA = Antlr4.Runtime.Dfa.DFA;
 
 [System.CodeDom.Compiler.GeneratedCode("ANTLR", "4.11.1")]
 [System.CLSCompliant(false)]
-public partial class ExpressionsLexer : Lexer {
+public partial class DatalogLexer : Lexer {
 	protected static DFA[] decisionToDFA;
 	protected static PredictionContextCache sharedContextCache = new PredictionContextCache();
 	public const int
@@ -56,10 +56,10 @@ public partial class ExpressionsLexer : Lexer {
 	};
 
 
-	public ExpressionsLexer(ICharStream input)
+	public DatalogLexer(ICharStream input)
 	: this(input, Console.Out, Console.Error) { }
 
-	public ExpressionsLexer(ICharStream input, TextWriter output, TextWriter errorOutput)
+	public DatalogLexer(ICharStream input, TextWriter output, TextWriter errorOutput)
 	: base(input, output, errorOutput)
 	{
 		Interpreter = new LexerATNSimulator(this, _ATN, decisionToDFA, sharedContextCache);
@@ -88,7 +88,7 @@ public partial class ExpressionsLexer : Lexer {
 		}
 	}
 
-	public override string GrammarFileName { get { return "Expressions.g4"; } }
+	public override string GrammarFileName { get { return "Datalog.g4"; } }
 
 	public override string[] RuleNames { get { return ruleNames; } }
 
@@ -98,7 +98,7 @@ public partial class ExpressionsLexer : Lexer {
 
 	public override int[] SerializedAtn { get { return _serializedATN; } }
 
-	static ExpressionsLexer() {
+	static DatalogLexer() {
 		decisionToDFA = new DFA[_ATN.NumberOfDecisions];
 		for (int i = 0; i < _ATN.NumberOfDecisions; i++) {
 			decisionToDFA[i] = new DFA(_ATN.GetDecisionState(i), i);
