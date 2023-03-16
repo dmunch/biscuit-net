@@ -169,6 +169,10 @@ dotnet nuget add source https://nuget.pkg.github.com/dmunch/index.json
 dotnet add package biscuit_net.Parser
 ```
 
+## A word of caution: hic sunt dracones
+
+This code should NOT be used in production scenarios before further scrutinizing and reviewing happend. You have been warned. 
+
 ## License
 
 Licensed under [Apache License, Version 2.0](./LICENSE).
