@@ -153,7 +153,7 @@ var token1 = Biscuit.New(rootKey)
 
 The most interesting bits of this implementation are:
 - [Datalog Interpreter](src/lib/Datalog)
-- [ANTLR](https://www.antlr.org/) based parser [grammar](src/Parser/Datalog.g4)
+- [ANTLR](https://www.antlr.org/) based parser [grammar](src/parser/Datalog.g4)
 - [Ed2559](src/lib/Ed25519.cs) cryptography, using [NSec/libsodium](https://nsec.rocks/)
 
 ## NuGet Prereleases
