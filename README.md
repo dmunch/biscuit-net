@@ -30,6 +30,8 @@ Non goals:
 
 ## Basic Usage
 
+These usage samples and additinal ones, as well es required usings can be found in  [BiscuitBuilderTests.cs](tests/tests/BiscuitBuilderTests.cs).
+
 ### Create a biscuit
 ```csharp
 var rootKey = Ed25519.NewSigningKey();
@@ -155,6 +157,12 @@ The most interesting bits of this implementation are:
 - [Datalog Interpreter](src/lib/Datalog)
 - [ANTLR](https://www.antlr.org/) based parser [grammar](src/parser/Datalog.g4)
 - [Ed2559](src/lib/Ed25519.cs) cryptography, using [NSec/libsodium](https://nsec.rocks/)
+
+## Test coverage
+
+The implementation currently passes all the tests of the conformance [test suite](https://github.com/biscuit-auth/biscuit/tree/master/samples/current) published as part of the [Biscuit specification](https://github.com/biscuit-auth/biscuit/blob/master/SPECIFICATIONS.md).
+
+There are also additional unit-like tests, however those could be a more complete. Feel free to chip in.
 
 ## NuGet Prereleases
 
