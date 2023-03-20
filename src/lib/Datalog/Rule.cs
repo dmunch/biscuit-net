@@ -13,11 +13,10 @@ using Expressions;
 public record Rule(
         Fact Head, 
         IEnumerable<Fact> Body, 
-        IEnumerable<Expression> Constraints,
-        Scope Scope)
+        IEnumerable<Expression> Constraints)
     {
-        public Rule(Fact head, params Fact[] body) : this(head, body.AsEnumerable(), Enumerable.Empty<Expression>(), Scope.DefaultRuleScope) {}
-        public Rule(Fact head, params Expression[] expressions) : this(head, Enumerable.Empty<Fact>(), expressions, Scope.DefaultRuleScope) {}
+        public Rule(Fact head, params Fact[] body) : this(head, body.AsEnumerable(), Enumerable.Empty<Expression>()) {}
+        public Rule(Fact head, params Expression[] expressions) : this(head, Enumerable.Empty<Fact>(), expressions) {}
         public virtual bool Equals(Rule? other) => Head == other?.Head && Body.SequenceEqual(other.Body) && Constraints.SequenceEqual(other.Constraints);
         public override int GetHashCode() => HashCode.Combine(Head, Body.Aggregate(0, HashCode.Combine), Constraints.Aggregate(0, HashCode.Combine));
     }

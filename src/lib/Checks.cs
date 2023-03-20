@@ -3,9 +3,9 @@ using System.Diagnostics.CodeAnalysis;
 namespace biscuit_net;
 using Datalog;
 
-public record Check(IEnumerable<Rule> Rules, Check.CheckKind Kind)
+public record Check(IEnumerable<RuleScoped> Rules, Check.CheckKind Kind)
 {
-    public Check(params Rule[] rules) : this(rules.AsEnumerable(), CheckKind.One) {}
+    public Check(params RuleScoped[] rules) : this(rules.AsEnumerable(), CheckKind.One) {}
 
     public enum CheckKind
     {
@@ -48,7 +48,7 @@ public static class Checks
         return true;
     }
 
-    public static bool TryCheckOne(FactSet factSet, BlockTrustedOriginSet trustedOrigins, IEnumerable<Rule> rules)
+    public static bool TryCheckOne(FactSet factSet, BlockTrustedOriginSet trustedOrigins, IEnumerable<RuleScoped> rules)
     {
         var ruleResult = false;
 
@@ -65,7 +65,7 @@ public static class Checks
         return ruleResult;   
     }
 
-    static bool TryCheckAll(FactSet factSet, BlockTrustedOriginSet trustedOrigins, IEnumerable<Rule> rules)
+    static bool TryCheckAll(FactSet factSet, BlockTrustedOriginSet trustedOrigins, IEnumerable<RuleScoped> rules)
     {
         foreach(var rule in rules)
         {

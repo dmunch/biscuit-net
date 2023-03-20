@@ -2,33 +2,6 @@ namespace biscuit_net.Datalog;
 
 public static class Evaluator
 {
-    public static HashSet<Fact> Apply(this IEnumerable<Rule> rules, IEnumerable<Fact> blockFacts, Func<Scope, IEnumerable<Fact>> additionalFacts)
-    {
-        var seed = new HashSet<Fact>();
-
-        foreach(var r in rules)
-        {
-            var kb = r.Scope.IsEmpty ? blockFacts : additionalFacts(r.Scope);
-
-            var nextKb = r.Apply(kb);
-            seed.UnionWith(nextKb);
-        }
-        return seed;
-    }
-
-    public static HashSet<Fact> Evaluate(this IEnumerable<Fact> blockFacts, IEnumerable<Rule> rules, Func<Scope, IEnumerable<Fact>> additionalFacts)
-    {
-        var nextKb = rules.Apply(blockFacts, additionalFacts);
-
-        if (nextKb.IsProperSupersetOf(blockFacts))
-        {
-            nextKb.UnionWith(blockFacts);
-            return blockFacts.Evaluate(rules, additionalFacts);
-        }
-
-        return nextKb;
-    }
-
     public static HashSet<Fact> Evaluate(this IEnumerable<Fact> kb, Rule rule)
     {
         var nextKb = rule.Apply(kb);

@@ -4,17 +4,17 @@ using Datalog;
 public class AuthorizerBlock
 {
     readonly List<Fact> _facts = new();
-    readonly List<Rule> _rules = new();
+    readonly List<RuleScoped> _rules = new();
     readonly List<Check> _checks = new();
     readonly List<Policy> _policies = new();
 
     public IEnumerable<Fact> Facts { get => _facts; }
-    public IEnumerable<Rule> Rules { get => _rules; }
+    public IEnumerable<RuleScoped> Rules { get => _rules; }
     public IEnumerable<Check> Checks { get => _checks; }
     public IEnumerable<Policy> Policies { get => _policies; }
     
     public AuthorizerBlock Add(Fact fact) { _facts.Add(fact); return this; }
-    public AuthorizerBlock Add(Rule rule) { _rules.Add(rule); return this; }
+    public AuthorizerBlock Add(RuleScoped rule) { _rules.Add(rule); return this; }
     public AuthorizerBlock Add(Check check) { _checks.Add(check); return this; }
     public AuthorizerBlock Add(Policy policy) { _policies.Add(policy); return this; }
 

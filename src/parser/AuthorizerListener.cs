@@ -9,7 +9,7 @@ public class AuthorizerListener : DatalogBaseListener
 {
     readonly TermVisitor _termVisitor = new();
     readonly List<Fact> _facts = new();
-    readonly List<Rule> _rules = new();
+    readonly List<RuleScoped> _rules = new();
     readonly List<Policy> _policies = new();
     readonly List<Check> _checks = new();
 
@@ -98,9 +98,9 @@ public class AuthorizerListener : DatalogBaseListener
         _checks.Add(check);
     }
 
-    static List<Rule> GetHeadlessRules(Fact head, IEnumerable<DatalogParser.Rule_bodyContext> ruleBodyContexts)
+    static List<RuleScoped> GetHeadlessRules(Fact head, IEnumerable<DatalogParser.Rule_bodyContext> ruleBodyContexts)
     {
-        var rules = new List<Rule>();
+        var rules = new List<RuleScoped>();
         foreach(var ruleBodyContext in ruleBodyContexts) 
         {
             var ruleBodyListener = new RuleBodyListener();

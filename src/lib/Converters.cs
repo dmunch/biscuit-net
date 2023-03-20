@@ -39,13 +39,13 @@ public static class Converters
         };
     }
 
-    static public IEnumerable<Rule> ToRules(this IEnumerable<RuleV2> rules, SymbolTable symbols, KeyTable keys)
+    static public IEnumerable<RuleScoped> ToRules(this IEnumerable<RuleV2> rules, SymbolTable symbols, KeyTable keys)
     {
         return rules.Select(rule =>  {
             var head = ToFact(rule.Head, symbols);
             var body = rule.Bodies.Select(body => ToFact(body, symbols));
 
-            return new Rule(head, body, ToParserExpr(rule.Expressions, symbols), ToScope(rule.Scopes, keys));
+            return new RuleScoped(head, body, ToParserExpr(rule.Expressions, symbols), ToScope(rule.Scopes, keys));
         }).ToList();
     }
 
@@ -58,7 +58,7 @@ public static class Converters
 
                     
 
-                    return new Rule(head, body, ToParserExpr(query.Expressions, symbols), ToScope(query.Scopes, keys));
+                    return new RuleScoped(head, body, ToParserExpr(query.Expressions, symbols), ToScope(query.Scopes, keys));
                 });
                 
                 var kind = check.kind switch 
@@ -71,9 +71,9 @@ public static class Converters
         });
     }
 
-    static public Datalog.Scope ToScope(IEnumerable<Proto.Scope> scopes, KeyTable keys)
+    static public Scope ToScope(IEnumerable<Proto.Scope> scopes, KeyTable keys)
     {
-        return new Datalog.Scope(
+        return new Scope(
                 ToScopeTypes(scopes),
                 ToTrustedPublicKeys(scopes, keys)
         );

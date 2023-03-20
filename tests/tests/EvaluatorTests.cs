@@ -20,7 +20,7 @@ public class EvaluatorTests
 
         var block = parser.ParseAuthorizer(code);
         
-        var facts = block.Facts.Evaluate(block.Rules, scope => Enumerable.Empty<Fact>());
+        var facts = block.Facts.Evaluate(block.Rules.First());
 
         var assertCode = """
             opi("file1", "read");
@@ -45,7 +45,7 @@ public class EvaluatorTests
         """;
 
         var block = parser.ParseAuthorizer(code);        
-        var facts = block.Facts.Evaluate(block.Rules, scope => Enumerable.Empty<Fact>());
+        var facts = block.Facts.Evaluate(block.Rules.First());
 
         var assertCode = """
             role_with_permissions2_2("role2");

@@ -56,12 +56,12 @@ public static class ProtoConverters
         return new TermV2() { Set = termSet }; 
     }
 
-    static public IEnumerable<RuleV2> ToRulesV2(IEnumerable<Rule> rules, SymbolTable symbols, KeyTable keys)
+    static public IEnumerable<RuleV2> ToRulesV2(IEnumerable<RuleScoped> rules, SymbolTable symbols, KeyTable keys)
     {
         return rules.Select(rule => ToRuleV2(rule, symbols, keys)).ToList();
     }
 
-    static public RuleV2 ToRuleV2(Rule rule, SymbolTable symbols, KeyTable keys)
+    static public RuleV2 ToRuleV2(RuleScoped rule, SymbolTable symbols, KeyTable keys)
     {
         var ruleV2 = new RuleV2
         {

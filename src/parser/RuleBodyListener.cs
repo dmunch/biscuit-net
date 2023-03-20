@@ -16,7 +16,7 @@ public class RuleBodyListener : DatalogBaseListener
     readonly List<PublicKey> _publicKeys = new();
 
     Fact? _head = null;
-    public Rule GetRule()
+    public RuleScoped GetRule()
     {
         if(_head == null) 
         {
@@ -26,9 +26,9 @@ public class RuleBodyListener : DatalogBaseListener
         return GetHeadlessRule(_head);
     }
 
-    public Rule GetHeadlessRule(Fact head)
+    public RuleScoped GetHeadlessRule(Fact head)
     {
-        return new Rule(
+        return new RuleScoped(
             head, 
             _facts,
             _expressions,

@@ -36,7 +36,7 @@ public class Parser
         //return ruleListener.GetHeadlessRule(new Datalog.Fact("check1"));
     }
 
-    public Datalog.Rule ParseHeadlessRule(string ruleString, Datalog.Fact head)
+    public RuleScoped ParseHeadlessRule(string ruleString, Datalog.Fact head)
     {
         var parser = InitializeParser(ruleString, out _);
 
@@ -46,7 +46,7 @@ public class Parser
         return listener.GetHeadlessRule(head);
     }
 
-    public Datalog.Rule ParseRule(string ruleString)
+    public RuleScoped ParseRule(string ruleString)
     {
         var parser = InitializeParser(ruleString, out _);
 

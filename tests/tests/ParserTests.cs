@@ -53,14 +53,14 @@ public class ParserTests
         var parser = new Parser();
         var rule = parser.ParseRule(text);
 
-        Assert.Equal(new Rule(
+        Assert.Equal(new RuleScoped(
             new Fact("rule", new Variable("rulevar")), 
             new List<Fact>
             {
                 new Fact("fact", new Variable("rulevar"))                
             }, 
             new List<Expression>(),
-            Scope.DefaultBlockScope
+            Scope.DefaultRuleScope
         ), rule);
     }
 
@@ -70,7 +70,7 @@ public class ParserTests
         var parser = new Parser();
         var check = parser.ParseCheck("check if right($0, $1), resource($0), operation($1)");
 
-        Assert.Equal(new Rule(
+        Assert.Equal(new RuleScoped(
             new Fact("check1"), 
             new List<Fact>
             {
@@ -79,7 +79,7 @@ public class ParserTests
                 new Fact("operation", new Variable("1")),
             }, 
             new List<Expression>(),
-            Scope.DefaultBlockScope
+            Scope.DefaultRuleScope
         ), check.Rules.First());
     }
 
@@ -90,23 +90,23 @@ public class ParserTests
         var check = parser.ParseCheck("check if must_be_present($0) or must_be_present($1)");
 
         Assert.Equal(new Check(new[]{
-            new Rule(
+            new RuleScoped(
                 new Fact("check1"), 
                 new []
                 {
                     new Fact("must_be_present", new Variable("0"))
                 }, 
                 Enumerable.Empty<Expression>(),
-                Scope.DefaultBlockScope
+                Scope.DefaultRuleScope
             ),
-            new Rule(
+            new RuleScoped(
                 new Fact("check1"), 
                 new []
                 {
                     new Fact("must_be_present", new Variable("1"))
                 }, 
                 Enumerable.Empty<Expression>(),
-                Scope.DefaultBlockScope
+                Scope.DefaultRuleScope
             )
         }, Check.CheckKind.One)
         , check);
@@ -136,11 +136,11 @@ public class ParserTests
             facts.Add(new Fact(name.Value, new Integer(intValue)));
         }
         
-        Assert.Equal(new Rule(
+        Assert.Equal(new RuleScoped(
             new Fact("check1"), 
             facts,
             Enumerable.Empty<Expression>(),
-            Scope.DefaultBlockScope
+            Scope.DefaultRuleScope
         ), check.Rules.First());
     }
 
@@ -151,14 +151,14 @@ public class ParserTests
         var check = parser.ParseCheck("check if ns::fact_123(\"hello é\t😁\");");
 
         
-        Assert.Equal(new Rule(
+        Assert.Equal(new RuleScoped(
             new Fact("check1"), 
             new []
             {
                 new Fact("ns::fact_123", new biscuit_net.Datalog.String("hello é\t😁"))
             }, 
             Enumerable.Empty<Expression>(),
-            Scope.DefaultBlockScope
+            Scope.DefaultRuleScope
         ), check.Rules.First());
     }
 
@@ -218,14 +218,14 @@ public class ParserTests
 
         var rule = block.Rules.First();
         
-        Assert.Equal(new Rule(
+        Assert.Equal(new RuleScoped(
             new Fact("rule", new Variable("rulevar")), 
             new List<Fact>
             {
-                new Fact("fact", new Variable("rulevar"))                
+                new Fact("fact", new Variable("rulevar"))
             }, 
             new List<Expression>(),
-            Scope.DefaultBlockScope
+            Scope.DefaultRuleScope
         ), rule);
     }
 
@@ -241,26 +241,26 @@ public class ParserTests
 
         var rule1 = block.Rules.First();
         
-        Assert.Equal(new Rule(
+        Assert.Equal(new RuleScoped(
             new Fact("rule1", new Variable("rule1var")), 
             new List<Fact>
             {
-                new Fact("fact1", new Variable("rule1var"))                
+                new Fact("fact1", new Variable("rule1var"))
             }, 
             new List<Expression>(),
-            Scope.DefaultBlockScope
+            Scope.DefaultRuleScope
         ), rule1);
 
         var rule2 = block.Rules.ElementAt(1);
         
-        Assert.Equal(new Rule(
+        Assert.Equal(new RuleScoped(
             new Fact("rule2", new Variable("rule2var")), 
             new List<Fact>
             {
-                new Fact("fact2", new Variable("rule2var"))                
+                new Fact("fact2", new Variable("rule2var"))
             }, 
             new List<Expression>(),
-            Scope.DefaultBlockScope
+            Scope.DefaultRuleScope
         ), rule2);
     }
 
@@ -284,26 +284,26 @@ public class ParserTests
 
         var rule1 = block.Rules.First();
         
-        Assert.Equal(new Rule(
+        Assert.Equal(new RuleScoped(
             new Fact("rule1", new Variable("rule1var")), 
             new List<Fact>
             {
                 new Fact("fact1", new Variable("rule1var"))                
             }, 
             new List<Expression>(),
-            Scope.DefaultBlockScope
+            Scope.DefaultRuleScope
         ), rule1);
 
         var rule2 = block.Rules.ElementAt(1);
         
-        Assert.Equal(new Rule(
+        Assert.Equal(new RuleScoped(
             new Fact("rule2", new Variable("rule2var")), 
             new List<Fact>
             {
                 new Fact("fact2", new Variable("rule2var"))                
             }, 
             new List<Expression>(),
-            Scope.DefaultBlockScope
+            Scope.DefaultRuleScope
         ), rule2);
     }
 }

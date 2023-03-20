@@ -16,7 +16,7 @@ public class Authorizer
     readonly AuthorizerBlock _authorizerBlock = new();
     
     public void Add(Fact fact) => _authorizerBlock.Add(fact);
-    public void Add(Rule rule) => _authorizerBlock.Add(rule);
+    public void Add(RuleScoped rule) => _authorizerBlock.Add(rule);
     public void Add(Check check) => _authorizerBlock.Add(check);
     public void Add(Policy policy) => _authorizerBlock.Add(policy);
     public void Add(AuthorizerBlock authorizer) => _authorizerBlock.Add(authorizer);

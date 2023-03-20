@@ -1,9 +1,10 @@
 
 global using Origin = System.UInt32;
 
-namespace biscuit_net.Datalog;
+namespace biscuit_net;
+using Datalog;
 
-public static class Origins
+public static class KnownOrigins
 {
     public const Origin Authority = 0;
     public const Origin Authorizer = Origin.MaxValue;
@@ -15,6 +16,7 @@ public class TrustedOrigins : SortedSet<Origin>
     {
     }
 }
+
 
 public class BlockTrustedOriginSet
 {
@@ -53,7 +55,7 @@ public class TrustedOriginSet
             .ToLookup(b => b.block.SignedBy!, b => (uint) b.idx);
 
         //populate block scopes 
-        trustedOrigins[Datalog.Origins.Authority] = Origins(Datalog.Origins.Authority, authority.Scope, publicKeys);
+        trustedOrigins[KnownOrigins.Authority] = Origins(KnownOrigins.Authority, authority.Scope, publicKeys);
 
         uint blockId = 1;
         foreach(var block in blocks)
@@ -61,7 +63,7 @@ public class TrustedOriginSet
             trustedOrigins[blockId] = Origins(blockId, block.Scope, publicKeys);
             blockId++;
         }
-        trustedOrigins[Datalog.Origins.Authorizer] = Origins(Datalog.Origins.Authorizer, scope, publicKeys);
+        trustedOrigins[KnownOrigins.Authorizer] = Origins(KnownOrigins.Authorizer, scope, publicKeys);
 
         return new TrustedOriginSet(publicKeys, trustedOrigins);
     }
@@ -100,12 +102,12 @@ public class TrustedOriginSet
         
         var trustedOrigin = scope.Types.Any(type => type == ScopeType.Previous)
             ? Previous(blockId)
-            : new TrustedOrigins(blockId, Datalog.Origins.Authorizer);
+            : new TrustedOrigins(blockId, KnownOrigins.Authorizer);
         
 
         if(scope.Types.Any(type => type == ScopeType.Authority))
         {
-            trustedOrigin.Add(Datalog.Origins.Authority);
+            trustedOrigin.Add(KnownOrigins.Authority);
         }
 
         foreach(var key in scope.Keys)
@@ -123,7 +125,7 @@ public class TrustedOriginSet
 
     static TrustedOrigins Previous(Origin blockId)
     {
-        var trustedOrigin = new TrustedOrigins(Datalog.Origins.Authority, Datalog.Origins.Authorizer);
+        var trustedOrigin = new TrustedOrigins(KnownOrigins.Authority, KnownOrigins.Authorizer);
         for(uint blockIdx = 1; blockIdx <= blockId; blockIdx++)
         {
             trustedOrigin.Add(blockIdx);

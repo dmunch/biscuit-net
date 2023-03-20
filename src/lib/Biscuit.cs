@@ -79,7 +79,7 @@ public class Biscuit
         keys.Add(block.publicKeys.Select(Converters.ToPublicKey));
         
         var scope = Converters.ToScope(block.Scopes, keys);
-        scope = scope.IsEmpty ? Datalog.Scope.DefaultBlockScope : scope; 
+        scope = scope.IsEmpty ? Scope.DefaultBlockScope : scope; 
 
         return new Block(
             block.FactsV2s.ToFacts(symbols),

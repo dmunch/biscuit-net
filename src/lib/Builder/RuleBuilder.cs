@@ -14,13 +14,13 @@ public class CheckBuilder
 {
     readonly BlockBuilder _topLevelBuilder;
     readonly Check.CheckKind _kind;
-    readonly List<Rule> _rules;
+    readonly List<RuleScoped> _rules;
     
     public CheckBuilder(BlockBuilder topLevelBuilder, Check.CheckKind kind)
     {
         _topLevelBuilder = topLevelBuilder;
         _kind = kind;
-        _rules = new List<Rule>();
+        _rules = new List<RuleScoped>();
     }
 
     public CheckBuilder(BlockBuilder topLevelBuilder, Check existingCheck)
@@ -31,7 +31,7 @@ public class CheckBuilder
     }
 
     
-    public CheckBuilder Add(Rule rule)
+    public CheckBuilder Add(RuleScoped rule)
     {
         _rules.Add(rule);
         return this;
@@ -49,7 +49,7 @@ public class CheckRuleBuilder : RuleBuilderBase
 {
     readonly CheckBuilder _topLevelBuilder;
 
-    public CheckRuleBuilder(CheckBuilder toplevelBuilder, Rule other) : base(other)
+    public CheckRuleBuilder(CheckBuilder toplevelBuilder, RuleScoped other) : base(other)
     {
         _topLevelBuilder = toplevelBuilder;
     }
@@ -65,7 +65,7 @@ public class BlockRuleBuilder : RuleBuilderBase
 {
     readonly BlockBuilder _topLevelBuilder;
 
-    public BlockRuleBuilder(BlockBuilder toplevelBuilder, Rule other) : base(other)
+    public BlockRuleBuilder(BlockBuilder toplevelBuilder, RuleScoped other) : base(other)
     {
         _topLevelBuilder = toplevelBuilder;
     }
@@ -96,7 +96,7 @@ public class RuleBuilderBase
         _trustedKeys = new List<PublicKey>();
     }
 
-    public RuleBuilderBase(Rule existingRule)
+    public RuleBuilderBase(RuleScoped existingRule)
     {
         
         _head = existingRule.Head;
@@ -106,8 +106,8 @@ public class RuleBuilderBase
         _trustedKeys = existingRule.Scope.Keys.ToList();
     }
     
-    protected Rule GetRule()
+    protected RuleScoped GetRule()
     {
-        return new Rule(_head, _body, _constraints, new Scope(_scopeTypes, _trustedKeys));
+        return new RuleScoped(_head, _body, _constraints, new Scope(_scopeTypes, _trustedKeys));
     }
 }

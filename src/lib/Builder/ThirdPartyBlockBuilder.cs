@@ -9,11 +9,11 @@ public record ThirdPartyBlockRequest(PublicKey PreviousKey, IEnumerable<PublicKe
 public class ThirdPartyBlockBuilder
 {
     public List<Fact> Facts { get; } = new List<Fact>();
-    public List<Rule> Rules { get; } = new List<Rule>();
+    public List<RuleScoped> Rules { get; } = new List<RuleScoped>();
     public List<Check> Checks { get; } = new List<Check>();
 
     public ThirdPartyBlockBuilder Add(Fact fact) { Facts.Add(fact); return this; }
-    public ThirdPartyBlockBuilder Add(Rule rule) { Rules.Add(rule); return this; }
+    public ThirdPartyBlockBuilder Add(RuleScoped rule) { Rules.Add(rule); return this; }
     public ThirdPartyBlockBuilder Add(Check check) { Checks.Add(check); return this; } 
 
     Proto.Block ToProto(IEnumerable<PublicKey> previousKeys)

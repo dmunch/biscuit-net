@@ -42,7 +42,7 @@ public class ThirdPartyBlockSigner: IBlockSigner
 public class BlockBuilder : IBlockSigner
 {
     public List<Fact> Facts { get; } = new List<Fact>();
-    public List<Rule> Rules { get; } = new List<Rule>();
+    public List<RuleScoped> Rules { get; } = new List<RuleScoped>();
     public List<Check> Checks { get; } = new List<Check>();
 
     public List<ScopeType> ScopeTypes { get; } = new List<ScopeType>() { ScopeType.Authority } ;
@@ -56,7 +56,7 @@ public class BlockBuilder : IBlockSigner
     }
 
     public BlockBuilder Add(Fact fact) { Facts.Add(fact); return this; }
-    public BlockBuilder Add(Rule rule) { Rules.Add(rule); return this; }
+    public BlockBuilder Add(RuleScoped rule) { Rules.Add(rule); return this; }
     public BlockBuilder Add(Check check) { Checks.Add(check); return this; } 
 
     public BlockBuilder Trusts(ScopeType scopeType) { ScopeTypes.Add(scopeType); return this; }
