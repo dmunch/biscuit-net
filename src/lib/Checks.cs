@@ -19,7 +19,7 @@ public record Check(IEnumerable<RuleScoped> Rules, Check.CheckKind Kind)
 
 public static class Checks
 {
-    public static bool TryCheck(FactSet factSet, BlockTrustedOriginSet trustedOrigins, IEnumerable<Check> checks, [NotNullWhen(false)] out int? failedCheckId, [NotNullWhen(false)] out Check? failedCheck)
+    public static bool TryCheck(IEnumerable<Check> checks, Func<RuleScoped, IEnumerable<Fact>> factProvider, [NotNullWhen(false)] out int? failedCheckId, [NotNullWhen(false)] out Check? failedCheck)
     {
         var result = true; 
         var checkId = 0;
@@ -27,8 +27,8 @@ public static class Checks
         {
             result &= check.Kind switch 
             {
-                Check.CheckKind.One => TryCheckOne(factSet, trustedOrigins, check.Rules),
-                Check.CheckKind.All => TryCheckAll(factSet, trustedOrigins, check.Rules),
+                Check.CheckKind.One => TryCheckOne(check.Rules, factProvider),
+                Check.CheckKind.All => TryCheckAll(check.Rules, factProvider),
                 _ => throw new NotSupportedException()
             };
             
@@ -48,13 +48,13 @@ public static class Checks
         return true;
     }
 
-    public static bool TryCheckOne(FactSet factSet, BlockTrustedOriginSet trustedOrigins, IEnumerable<RuleScoped> rules)
+    public static bool TryCheckOne(IEnumerable<RuleScoped> rules, Func<RuleScoped, IEnumerable<Fact>> factProvider)
     {
         var ruleResult = false;
 
         foreach(var rule in rules)
         {
-            var facts = factSet.Filter(trustedOrigins.Origins(rule.Scope));
+            var facts = factProvider(rule);
 
             var eval = facts.Evaluate(rule);
             ruleResult |= eval.Any();
@@ -65,11 +65,11 @@ public static class Checks
         return ruleResult;   
     }
 
-    static bool TryCheckAll(FactSet factSet, BlockTrustedOriginSet trustedOrigins, IEnumerable<RuleScoped> rules)
+    static bool TryCheckAll(IEnumerable<RuleScoped> rules, Func<RuleScoped, IEnumerable<Fact>> factProvider)
     {
         foreach(var rule in rules)
         {
-            var facts = factSet.Filter(trustedOrigins.Origins(rule.Scope));
+            var facts = factProvider(rule);
 
             //for check all, we want to evaluate the expressions once we found all matches
             //so we evaluate the body without taking into account the expressions first

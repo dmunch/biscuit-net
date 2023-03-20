@@ -32,16 +32,16 @@ public class World
         try
         {
             //run authority rules             
-            RunRules(trustedOrigins.With(KnownOrigins.Authority), authority.Rules);
+            RunRules(KnownOrigins.Authority, trustedOrigins, authority.Rules);
 
             //run block rules 
             uint blockId = 1;
             foreach(var block in blocks)
             {            
-                RunRules(trustedOrigins.With(blockId++), block.Rules);
+                RunRules(blockId++, trustedOrigins, block.Rules);
             }
 
-            RunRules(trustedOrigins.With(KnownOrigins.Authorizer), authorizer.Rules);
+            RunRules(KnownOrigins.Authorizer, trustedOrigins, authorizer.Rules);
         } catch(OverflowException)
         {
             err = new Error(new FailedExecution("Overflow"));
@@ -52,37 +52,27 @@ public class World
         return true;
     }
 
-    void RunRules(BlockTrustedOriginSet origins, IEnumerable<RuleScoped> rules) 
+    void RunRules(uint blockId, TrustedOriginSet origins, IEnumerable<RuleScoped> rules) 
     {
         var executionFacts = new HashSet<Fact>();
         foreach(var rule in rules)
         {
-            if(!rule.Scope.IsEmpty) 
-            {
-                var facts = _facts.Filter(origins.Origins(rule.Scope));
-                executionFacts.UnionWith(facts.Evaluate(rule));
-            }
-            else
-            {
-                var facts = _facts.Filter(origins.Origins());
-                executionFacts.UnionWith(facts.Evaluate(rule));
-            }
+            var facts = _facts.Filter(origins.Origins(blockId, rule.Scope));
+            executionFacts.UnionWith(facts.Evaluate(rule));
         }
-        /*
-        var executionFacts = _facts
-            .Filter(origins.Origins())
-            .Evaluate(rules, scope => _facts.Filter(origins.Origins(scope)));
-        */
-        _facts.UnionWith(origins.BlockId, executionFacts);
+        _facts.UnionWith(blockId, executionFacts);
     }
-
+            
     public bool RunChecks(Block authority, IEnumerable<Block> blocks, AuthorizerBlock authorizerBlock, TrustedOriginSet trustedOrigins, [NotNullWhen(false)] out Error? err) 
     {
         try
         {
+            IEnumerable<Fact> FactProvider(RuleScoped rule, uint blockId) 
+                => _facts.Filter(trustedOrigins.Origins(blockId, rule.Scope));
+
             //run checks
             //run authority checks
-            if(!Checks.TryCheck(_facts, trustedOrigins.With(KnownOrigins.Authority), authority.Checks, out var failedCheckId, out var failedCheck))
+            if(!Checks.TryCheck(authority.Checks, rule => FactProvider(rule, KnownOrigins.Authority), out var failedCheckId, out var failedCheck))
             {
                 err = new Error(new FailedBlockCheck(0, failedCheckId.Value/*, failedRule*/));
                 return false;
@@ -92,7 +82,7 @@ public class World
             uint blockId = 1;
             foreach(var block in blocks)
             {
-                if(!Checks.TryCheck(_facts, trustedOrigins.With(blockId), block.Checks, out var failedBlockCheckId, out var failedBlockCheck))
+                if(!Checks.TryCheck(block.Checks, rule => FactProvider(rule, blockId), out var failedBlockCheckId, out var failedBlockCheck))
                 {
                     err = new Error(new FailedBlockCheck(blockId, failedBlockCheckId.Value/*, failedRule*/));
                     return false;
@@ -101,7 +91,7 @@ public class World
             }
 
             //run authorizer checks
-            if(!Checks.TryCheck(_facts, trustedOrigins.With(KnownOrigins.Authorizer), authorizerBlock.Checks, out var failedAuthorizerCheckId, out var failedAuthorizerCheck))
+            if(!Checks.TryCheck(authorizerBlock.Checks, rule => FactProvider(rule, KnownOrigins.Authorizer), out var failedAuthorizerCheckId, out var failedAuthorizerCheck))
             {
                 err = new Error(new FailedAuthorizerCheck(failedAuthorizerCheckId.Value/*, failedAuthorizerRule*/));
                 return false;
@@ -121,10 +111,13 @@ public class World
     {
         try 
         {
+            IEnumerable<Fact> FactProvider(RuleScoped rule, uint blockId) 
+                => _facts.Filter(trustedOrigins.Origins(blockId, rule.Scope));
+    
             //validate policies 
             foreach(var policy in authorizerBlock.Policies)
             {
-                if(Checks.TryCheckOne(_facts, trustedOrigins.With(KnownOrigins.Authorizer), policy.Rules))
+                if(Checks.TryCheckOne(policy.Rules, rule => FactProvider(rule, KnownOrigins.Authorizer)))
                 {
                     err = new Error(new FailedLogic(new Unauthorized(policy.Kind)));
                     return policy.Kind switch {

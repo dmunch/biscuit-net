@@ -17,23 +17,6 @@ public class TrustedOrigins : SortedSet<Origin>
     }
 }
 
-
-public class BlockTrustedOriginSet
-{
-    public Origin BlockId { get; }
-    public TrustedOriginSet OriginSet { get; }
-
-    public BlockTrustedOriginSet(Origin blockId, TrustedOriginSet originSet) 
-    {
-        BlockId = blockId;
-        OriginSet = originSet;
-    }
-
-    public TrustedOrigins Origins() => OriginSet.Origins(BlockId);
-    public TrustedOrigins Origins(Scope scope) => OriginSet.Origins(BlockId, scope);
-}
-
-
 public class TrustedOriginSet
 {
     readonly ILookup<PublicKey, Origin> _publicKeys;
@@ -67,8 +50,6 @@ public class TrustedOriginSet
 
         return new TrustedOriginSet(publicKeys, trustedOrigins);
     }
-
-    public BlockTrustedOriginSet With(Origin blockId) => new(blockId, this);
 
     public TrustedOrigins Origins(Origin blockId)
     {
@@ -144,17 +125,6 @@ public class FactSet : OriginSet<HashSet<Fact>, Fact>
     public void UnionWith(Origin origin, HashSet<Fact> other)
     {
         Get(origin).UnionWith(other);
-    }
-}
-
-public class RuleSet : OriginSet<List<(int, Rule)>, (int, Rule)>
-{
-    public RuleSet() 
-    {
-    }
-
-    public RuleSet(Origin origin, List<(int, Rule)> intialValue) : base(origin, intialValue)
-    {
     }
 }
 
