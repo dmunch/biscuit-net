@@ -60,5 +60,9 @@ set: '['  ( fact_term (  ',' set_term)* )? ']';
 METHOD_INVOCATION: '.' ([a-z] | [A-Z] ) ([a-z] | [A-Z] | [0-9] | '_' )*;
 NAME: [a-zA-Z][a-zA-Z_:0-9]+;
 
+SINGLE_LINE_COMMENT:  '//' InputCharacter* -> skip;
+DELIMITED_COMMENT:       '/*'  .*? '*/'    -> skip;
+
+fragment InputCharacter: ~[\r\n\u0085\u2028\u2029];
 
 WS : [ \t\r\n]+ -> skip ; // skip spaces, tabs, newlines

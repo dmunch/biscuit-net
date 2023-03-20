@@ -263,4 +263,47 @@ public class ParserTests
             Scope.DefaultBlockScope
         ), rule2);
     }
+
+    [Fact]
+    public void Should_Allow_Comments()
+    {
+        var text = """
+            /* some block comment */ 
+            rule1($rule1var) <- fact1($rule1var);
+            //arbitrary comment
+            /* 
+                multinline block comment
+            */
+            rule2($rule2var) <- fact2($rule2var);
+        """;
+            
+        var parser = new Parser();
+        var block = parser.ParseAuthorizer(text);
+
+        Assert.Equal(2, block.Rules.Count());
+
+        var rule1 = block.Rules.First();
+        
+        Assert.Equal(new Rule(
+            new Fact("rule1", new Variable("rule1var")), 
+            new List<Fact>
+            {
+                new Fact("fact1", new Variable("rule1var"))                
+            }, 
+            new List<Expression>(),
+            Scope.DefaultBlockScope
+        ), rule1);
+
+        var rule2 = block.Rules.ElementAt(1);
+        
+        Assert.Equal(new Rule(
+            new Fact("rule2", new Variable("rule2var")), 
+            new List<Fact>
+            {
+                new Fact("fact2", new Variable("rule2var"))                
+            }, 
+            new List<Expression>(),
+            Scope.DefaultBlockScope
+        ), rule2);
+    }
 }

@@ -41,7 +41,7 @@ public partial class DatalogParser : Parser {
 		T__17=18, T__18=19, T__19=20, T__20=21, T__21=22, T__22=23, T__23=24, 
 		T__24=25, T__25=26, T__26=27, T__27=28, T__28=29, VARIABLE=30, STRING=31, 
 		NUMBER=32, BYTES=33, PUBLICKEYBYTES=34, BOOLEAN=35, DATE=36, METHOD_INVOCATION=37, 
-		NAME=38, WS=39;
+		NAME=38, SINGLE_LINE_COMMENT=39, DELIMITED_COMMENT=40, WS=41;
 	public const int
 		RULE_origin_clause = 0, RULE_origin_element = 1, RULE_signature_alg = 2, 
 		RULE_authorizer = 3, RULE_authorizer_element = 4, RULE_block = 5, RULE_block_element = 6, 
@@ -65,7 +65,8 @@ public partial class DatalogParser : Parser {
 		null, null, null, null, null, null, null, null, null, null, null, null, 
 		null, null, null, null, null, null, null, null, null, null, null, null, 
 		null, null, null, null, null, null, "VARIABLE", "STRING", "NUMBER", "BYTES", 
-		"PUBLICKEYBYTES", "BOOLEAN", "DATE", "METHOD_INVOCATION", "NAME", "WS"
+		"PUBLICKEYBYTES", "BOOLEAN", "DATE", "METHOD_INVOCATION", "NAME", "SINGLE_LINE_COMMENT", 
+		"DELIMITED_COMMENT", "WS"
 	};
 	public static readonly IVocabulary DefaultVocabulary = new Vocabulary(_LiteralNames, _SymbolicNames);
 
@@ -2065,7 +2066,7 @@ public partial class DatalogParser : Parser {
 	}
 
 	private static int[] _serializedATN = {
-		4,1,39,217,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,2,6,7,6,2,7,
+		4,1,41,217,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,2,6,7,6,2,7,
 		7,7,2,8,7,8,2,9,7,9,2,10,7,10,2,11,7,11,2,12,7,12,2,13,7,13,2,14,7,14,
 		2,15,7,15,2,16,7,16,2,17,7,17,2,18,7,18,1,0,1,0,1,0,1,0,5,0,43,8,0,10,
 		0,12,0,46,9,0,1,1,1,1,1,1,1,1,1,1,3,1,53,8,1,1,2,1,2,1,3,5,3,58,8,3,10,
