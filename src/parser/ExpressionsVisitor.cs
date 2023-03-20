@@ -26,11 +26,13 @@ public class ExpressionsVisitor : DatalogBaseVisitor<List<Op>>
     
     public override List<Op> VisitExpressionMethod([NotNull] DatalogParser.ExpressionMethodContext context) 
     {
-        var methodParams = context.term();
-
         var operands = new List<Op>();
         operands.AddRange(base.Visit(context.expression()));
-        operands.Add(new Op(_termVisitor.Visit(methodParams[0])));
+        
+        foreach(var termContext in context.term())
+        {
+            operands.Add(new Op(_termVisitor.Visit(termContext)));
+        }
         
         operands.Add(ToBinaryOp(context.METHOD_INVOCATION().GetText().TrimStart('.')));
 
@@ -82,5 +84,11 @@ public class ExpressionsVisitor : DatalogBaseVisitor<List<Op>>
     {
         var term = _termVisitor.Visit(context.fact_term());
         return new List<Op> { new Op(term) };
+    }
+
+    public override List<Op> VisitExpressionVariable([NotNull] DatalogParser.ExpressionVariableContext context) 
+    {
+        var variable = new Datalog.Variable(context.VARIABLE().GetText().TrimStart('$'));
+        return new List<Op> { new Op(variable) };
     }
 }
