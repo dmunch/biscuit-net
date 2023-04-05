@@ -145,14 +145,16 @@ public class OriginSet<T, I> where T : ICollection<I>
 
     public void Add(Origin origin, T value)
     {
-        _dict.Add(origin, value);
+        //we try to add - if it fails, value is already there
+        //which we can safely ignore
+        _dict.TryAdd(origin, value);
     }
 
     public void Add(Origin origin, ICollection<T> values)
     {
         foreach(var value in values)
         {
-            _dict.Add(origin, value);
+            Add(origin, value);
         }
     }
 

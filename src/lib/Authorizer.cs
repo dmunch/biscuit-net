@@ -13,6 +13,7 @@ public class VersionException : Exception
 public class Authorizer
 {
     public World World { get; } = new World();
+
     readonly AuthorizerBlock _authorizerBlock = new();
     
     public void Add(Fact fact) => _authorizerBlock.Add(fact);
@@ -28,9 +29,17 @@ public class Authorizer
     }
     
     public bool TryAuthorize(Biscuit b, [NotNullWhen(false)] out Error? err)
-    {        
-        
+    {
+        World.AddFacts(b.Authority, b.Blocks, _authorizerBlock);
         return TryAuthorize(b.Authority, b.Blocks, World, _authorizerBlock, out err);
+    }
+
+    public static bool TryAuthorize(Block authority, IEnumerable<Block> blocks, AuthorizerBlock authorizerBlock, out World world, [NotNullWhen(false)] out Error? err)
+    {
+        world = new World();
+        world.AddFacts(authority, blocks, authorizerBlock);
+
+        return TryAuthorize(authority, blocks, world, authorizerBlock, out err);
     }
 
     public static bool TryAuthorize(Block authority, IEnumerable<Block> blocks, World world, AuthorizerBlock authorizerBlock, [NotNullWhen(false)] out Error? err)
@@ -51,8 +60,7 @@ public class Authorizer
         }
 
         var trustedOrigins = TrustedOriginSet.Build(authority, blocks, Scope.DefaultBlockScope);
-
-        world.AddFacts(authority, blocks, authorizerBlock);
+        
         if(!world.RunRules(authority, blocks, authorizerBlock, trustedOrigins, out err))
         {
             return false;

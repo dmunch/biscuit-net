@@ -66,9 +66,8 @@ public class AuthorizerTests
                     )
                 )
                 .Add(Policy.AllowPolicy);
-
-            var world = new World();
-            return Authorizer.TryAuthorize(biscuit.Authority, biscuit.Blocks, world, authorizerBlock, out _);
+            
+            return Authorizer.TryAuthorize(biscuit.Authority, biscuit.Blocks, authorizerBlock, out var _, out _);
 
         }
         Assert.True(Verify("alice", "file1", "write"));
@@ -171,14 +170,10 @@ public class AuthorizerTests
                         new F("right", "$0", "$1")
                     )
             }));
-        
-        var worldAllow = new World();
-        var worldDeny = new World();
-        var worldNoMatchingPolicy = new World();
-
-        Assert.True(Authorizer.TryAuthorize(biscuit.Authority, biscuit.Blocks, worldAllow, authorizerBlockAllow, out var _));
-        Assert.False(Authorizer.TryAuthorize(biscuit.Authority, biscuit.Blocks, worldDeny, authorizerBlockDeny, out var _));
-        Assert.False(Authorizer.TryAuthorize(biscuit.Authority, biscuit.Blocks, worldNoMatchingPolicy, authorizerBlockNoMatchingPolicy, out var errorNoMatchingPolicy));
+                
+        Assert.True(Authorizer.TryAuthorize(biscuit.Authority, biscuit.Blocks, authorizerBlockAllow, out var _, out var _));
+        Assert.False(Authorizer.TryAuthorize(biscuit.Authority, biscuit.Blocks, authorizerBlockDeny, out var _, out var _));
+        Assert.False(Authorizer.TryAuthorize(biscuit.Authority, biscuit.Blocks, authorizerBlockNoMatchingPolicy, out var _, out var errorNoMatchingPolicy));
 
         Assert.Equal(new Error(new FailedLogic(new NoMatchingPolicy())), errorNoMatchingPolicy);
     }
