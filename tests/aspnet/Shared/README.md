@@ -1,0 +1,1 @@
+This code has been taken from https://github.com/dotnet/aspnetcore/tree/main/src/Security/Authentication/test
